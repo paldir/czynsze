@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<%#Page trace="no"%>
+
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+   <Title>Czynsze</title>
+</head>
+
+<body>
+ <%#Code locality="page-global"%>
+ <%
+    #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+    #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+ %>
+
+  <!--- Page content goes here --->
+   <%
+      dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+      SELECT kod_1, adres, adres_2 FROM budynki
+
+      ? HTMLWriter(): h1("Budynki")
+      ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."})
+      ? HTMLWriter(): a("DodajBudynek.cxp", "Dodaj")
+
+      dbHelper: CloseConnection()
+   %>
+
+</body>
+
+</html>

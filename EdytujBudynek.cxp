@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<%#Page trace="no"%>
+
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+   <title>Edycja budynku</title>
+</head>
+
+<body>
+ <%#Code locality="page-global"%>
+ <%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+ %>
+
+ <%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+ %>
+
+  <!--- Page content goes here --->
+   <%
+      ? HTMLWriter(): h1("Edycja budynku")
+   %>
+
+   <form id="formOfAddingNewBuilding" method="get" action="EdytowanieBudynku.cxp">
+      <table>
+         <tr valign="top">
+            <td>
+             <%
+               SELECT * FROM budynki
+
+               FOR i:=1 to LastRec()
+                  IF Var2Char(FieldGet(3))==Var2Char(::Params: kod_1)
+                     exit
+                  ENDIF
+
+                  DbSkip()
+               NEXT
+
+               ? HTMLWriter(): inputText("kod_1", "Kod budynku:", "5", Var2Char(FieldGet(3)), "disabled")+"<br /><br />"
+               ? HTMLWriter(): inputText("il_miesz", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" lokali:", "3", Var2Char(FieldGet(2)))+"<br /><br />"
+               ? HTMLWriter(): inputRadio("sp_rozl", "Sposób rozliczania:", {"0", "1"}, {"0", "1"}, {"budynek", "lokale"}, Var2Char(FieldGet(26)))+"<br />"
+               ? HTMLWriter(): inputText("adres", "Adres: ", "30", Var2Char(FieldGet(1)))+"<br />"
+               ? HTMLWriter(): inputText("adres_2", "Adres cd.:", "30", Var2Char(FieldGet(5)))+"<br /><br />"
+               ? HTMLWriter(): inputText("udzial_w_k", "Udzia"+HTMLWriter(): _l()+" w koszt.:", "6", Var2Char(FieldGet(24)))
+             %>
+            </td>
+            <td>
+             <%
+                ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "6", "420", Var2Char(FieldGet(6))+Var2Char(FieldGet(7))+Var2Char(FieldGet(8))+Var2Char(FieldGet(9))+Var2Char(FieldGet(10))+Var2Char(FieldGet(11)))
+             %>
+            </td>
+         </tr>
+      </table>
+      <%
+         ? HTMLWriter(): inputSubmit("Submit", "Edytuj")
+      %>
+   </form>
+
+   <%
+      dbHelper: CloseConnection()
+   %>
+
+</body>
+
+</html>

@@ -24,11 +24,11 @@
             <td>
              <%
                 ? HTMLWriter(): inputText("kod_1", "Kod budynku:", "5")+"<br /><br />"
-                ? HTMLWriter(): inputText("il_miesz", "Ilo&#347;&#263; lokali:", "3")+"<br /><br />"
+                ? HTMLWriter(): inputText("il_miesz", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" lokali:", "3")+"<br /><br />"
                 ? HTMLWriter(): inputRadio("sp_rozl", "Sposób rozliczania:", {"0", "1"}, {"0", "1"}, {"budynek", "lokale"})+"<br />"
                 ? HTMLWriter(): inputText("adres", "Adres: ", "30")+"<br />"
                 ? HTMLWriter(): inputText("adres_2", "Adres cd.:", "30")+"<br /><br />"
-                ? HTMLWriter(): inputText("udzial_w_k", "Udzia&#322; w koszt.:", "6")
+                ? HTMLWriter(): inputText("udzial_w_k", "Udzia"+HTMLWriter(): _l()+" w koszt.:", "6")
              %>
             </td>
             <td>

@@ -19,20 +19,14 @@ CLASS Validation
       CLASS METHOD Building
 ENDCLASS
 
-CLASS METHOD Validation: Building(kod_1, il_miesz, udzial_w_k)
+CLASS METHOD Validation: Building(dbHelper, kod_1, il_miesz, udzial_w_k)
    result:=""
 
-   SELECT kod_1 FROM budynki
+   dbHelper: SQLSelect({"kod_1"}, "budynki", "kod_1="+kod_1)
 
-   FOR i:=1 to LastRec()
-      IF Var2Char(FieldGet(1))==Var2Char(kod_1)
-         result+="Kod budynku jest ju"+HTMLWriter(): _z()+" u"+HTMLWriter(): _z()+"ywany! <br />"
-
-         exit
-      ENDIF
-
-      DbSkip()
-   NEXT
+   IF LastRec()>0
+      result+="Kod budynku jest ju"+HTMLWriter(): _z()+" u"+HTMLWriter(): _z()+"ywany! <br />"
+   ENDIF
 
    FOR i:=1 to Len(kod_1)
       IF !IsDigit(kod_1[i])

@@ -18,7 +18,7 @@ CLASS HTMLWriter
       CLASS METHOD table
       CLASS METHOD a
       CLASS METHOD h1
-      CLASS METHOD inputText, inputRadio, inputSubmit
+      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden
       CLASS METHOD textarea
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z
 ENDCLASS
@@ -90,6 +90,9 @@ RETURN result
 
 CLASS METHOD HTMLWriter: inputSubmit(name, value)
 RETURN "<input type='submit' name='"+name+"' value='"+value+"' />"
+
+CLASS METHOD HTMLWriter: inputHidden(name, value)
+RETURN "<input type='hidden' name='"+name+"' value='"+value+"' />"
 
 CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text)
    IF text==NIL

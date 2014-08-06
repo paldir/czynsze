@@ -1,55 +1,26 @@
-<!DOCTYPE html>
-<%#Page trace="no"%>
-
-<html>
-<head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-   <title>Dodawanie budynku</title>
-</head>
-
-<body>
- <%#Code locality="page-global"%>
- <%
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
     #include "C:\inetpub\wwwroot\czynsze\Validation.ch"
- %>
+%>
 
-  <!--- Page content goes here --->
+@SECTION Body
 
-   <%
+<%
       dbHelper:=DbHelper(): new("localhost", "czynsze")
-      validationResult:=Validation(): Building(::Params: kod_1, ::Params: il_miesz, ::Params: udzial_w_k)
+      validationResult:=Validation(): Building(dbHelper, ::Params: kod_1, ::Params: il_miesz, ::Params: udzial_w_k)
 
       IF validationResult==""
-       use budynki
-       DbAppend()
+         dbHelper: SQLInsert("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, ::Params: il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), ::Params: udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)})
 
-       FIELD->kod_1:=Val(::Params: kod_1)
-       FIELD->il_miesz:=Val(::Params: il_miesz)
-       FIELD->sp_rozl:=Val(::Params: sp_rozl)
-       FIELD->adres:=::Params: adres
-       FIELD->adres_2:=::Params: adres_2
-       FIELD->udzial_w_k:=Val(::Params: udzial_w_k)
-       FIELD->uwagi_1:=SubStr(::Params: uwagi, 1, 70)
-       FIELD->uwagi_2:=SubStr(::Params: uwagi, 71, 70)
-       FIELD->uwagi_3:=SubStr(::Params: uwagi, 141, 70)
-       FIELD->uwagi_4:=SubStr(::Params: uwagi, 211, 70)
-       FIELD->uwagi_5:=SubStr(::Params: uwagi, 281, 70)
-       FIELD->uwagi_6:=SubStr(::Params: uwagi, 351, 70)
-
-       close
-
-       ? "Budynek dodany <br />"
-       ? HTMLWriter(): a("Budynki.cxp", "Powrót")
+         ? "Budynek dodany <br />"
+         ? HTMLWriter(): a("Budynki.cxp", "Powrót")
       ELSE
          ? validationResult
          ? HTMLWriter(): a("javascript: history.back()", "Powr"+HTMLWriter(): _o()+"t")
       ENDIF
 
       dbHelper: CloseConnection()
-   %>
-
-</body>
-
-</html>
+%>

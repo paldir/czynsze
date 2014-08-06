@@ -9,7 +9,7 @@
 <%
       dbHelper:=DbHelper(): new("localhost", "czynsze")
 
-      SELECT kod_1, adres, adres_2 FROM budynki
+      dbHelper: SQLSelect({"kod_1", "adres", "adres_2"}, "budynki", ,"kod_1")
 
       ? HTMLWriter(): h1("Budynki")
       ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."})

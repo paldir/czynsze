@@ -17,10 +17,10 @@ CLASS DbHelper
    EXPORTED:
       METHOD init
       METHOD CloseConnection
+      METHOD ExecuteQuery
       METHOD SQLSelect, SQLInsert, SQLUpdate, SQLDelete
    HIDDEN:
       VAR oSession
-      METHOD ExecuteQuery
       METHOD ExecuteStatement
 ENDCLASS
 
@@ -101,4 +101,4 @@ RETURN self
 
 METHOD SQLDelete(table, where)
    ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)
-RETURN self   
+RETURN self

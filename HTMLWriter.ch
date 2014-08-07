@@ -18,12 +18,14 @@ CLASS HTMLWriter
       CLASS METHOD table
       CLASS METHOD a
       CLASS METHOD h1
-      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden
+      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton
       CLASS METHOD textarea
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z
+   HIDDEN:
+      CLASS METHOD RemoveBlankChars
 ENDCLASS
 
-CLASS METHOD HTMLWriter: table(headers)
+CLASS METHOD HTMLWriter: table(headers, editUrl, deleteUrl)
    result:="<table border='1'>"
    result+="<tr>"
 
@@ -40,8 +42,8 @@ CLASS METHOD HTMLWriter: table(headers)
          result+="<td>"+Var2Char(FieldGet(j))+"</td>"
       NEXT
 
-      result+="<td>"+::a("EdytujBudynek.cxp?kod_1="+Var2Char(FieldGet(1)), "Edytuj")+"</td>"
-      result+="<td>"+::a("UsunBudynek.cxp?kod_1="+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
+      result+="<td>"+::a(editUrl+Var2Char(FieldGet(1)), "Edytuj")+"</td>"
+      result+="<td>"+::a(deleteUrl+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
 
       result+="</tr>"
       DbSkip()
@@ -56,17 +58,22 @@ RETURN "<a href='"+href+"'>"+text+"</a>"
 CLASS METHOD HTMLWriter: h1(text)
 RETURN "<h1>"+text+"</h1>"
 
-CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled)
+CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onkeypress)
    IF value==NIL
-      value=""
+      value:=""
    ENDIF
 
    IF disabled==NIL
-      disabled=""
+      disabled:=""
    ENDIF
 
+   IF onkeypress==NIL
+      onkeypress:=""
+   ENDIF
+
+   value:=::RemoveBlankChars(value)
    result:="<label for='"+name+"'>"+label+"</label><br />"
-   result+="<input type='text' name='"+name+"' maxlength='"+maxlength+"' value='"+value+"' "+disabled+" />"
+   result+="<input type='text' name='"+name+"' maxlength='"+maxlength+"' value='"+value+"' "+disabled+" onkeypress='"+onkeypress+"' />"
 RETURN result
 
 CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked)
@@ -94,11 +101,15 @@ RETURN "<input type='submit' name='"+name+"' value='"+value+"' />"
 CLASS METHOD HTMLWriter: inputHidden(name, value)
 RETURN "<input type='hidden' name='"+name+"' value='"+value+"' />"
 
+CLASS METHOD HTMLWriter: inputButton(onclick, value)
+RETURN "<input type='button' onclick='"+onclick+"' value='"+value+"' />"
+
 CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text)
    IF text==NIL
       text:=""
    ENDIF
 
+   text:=::RemoveBlankChars(text)
    result:="<label for='"+name+"'>"+label+"</label><br />"
    result+="<textarea name='"+name+"' rows='"+rows+"' maxlength='"+maxlength+"'>"+text+"</textarea>"
 RETURN result
@@ -129,3 +140,15 @@ RETURN "&#378;"
 
 CLASS METHOD HTMLWriter: _z()
 RETURN "&#380;"
+
+CLASS METHOD HTMLWriter: RemoveBlankChars(chars)
+   i:=Len(chars)
+
+   IF i>0
+      DO WHILE chars[i]==" " .AND. i!=1
+         i--
+      ENDDO
+
+      chars:=SubStr(chars, 1, i)
+   ENDIF
+RETURN chars

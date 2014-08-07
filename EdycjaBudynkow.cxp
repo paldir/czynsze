@@ -1,0 +1,61 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+    #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+    #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+    #include "C:\inetpub\wwwroot\czynsze\Validation.ch"
+%>
+
+@section Head
+<title>Edycja budynk@(HTMLWriter(): _o())w</title>
+
+@section Body
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   DO CASE
+      CASE ::Params: action=="add"
+         t_il_miesz:=::Params: il_miesz
+         t_udzial_w_k:=::Params: udzial_w_k
+
+         validationResult:=Validation(): Building(dbHelper, .T., ::Params: kod_1, @t_il_miesz, @t_udzial_w_k)
+
+         IF validationResult==""
+            dbHelper: SQLInsert("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)})
+
+            ? "Budynek dodany <br />"
+            ? HTMLWriter(): a("Budynki.cxp", "Powrót")
+         ELSE
+            ? validationResult
+            ? HTMLWriter(): a("javascript: history.back()", "Poprawa")
+         ENDIF
+      CASE ::Params: action=="edit"
+         IF ::Params: kod_1!=::Params: kod_1_old
+            validate_kod_1:=.T.
+         ELSE
+            validate_kod_1:=.F.
+         ENDIF
+
+         validationResult:=Validation(): Building(dbHelper, validate_kod_1, ::Params: kod_1, ::Params: il_miesz, ::Params: udzial_w_k)
+
+         IF validationResult==""
+            values:="il_miesz="+::Params: il_miesz+", sp_rozl="+::Params: sp_rozl+", adres='"+::Params: adres+"', adres_2='"+::Params: adres_2+"', udzial_w_k="+::Params: udzial_w_k+", uwagi_1='"+SubStr(::Params: uwagi, 1, 70)+"', uwagi_2='"+SubStr(::Params: uwagi, 71, 70)+"', uwagi_3='"+SubStr(::Params: uwagi, 141, 70)+"', uwagi_4='"+SubStr(::Params: uwagi, 211, 70)+"', uwagi_5='"+SubStr(::Params: uwagi, 281, 70)+"', uwagi_6='"+SubStr(::Params: uwagi, 351, 70)+"'"
+
+            dbHelper: SQLUpdate("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, ::Params: il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), ::Params: udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)}, "kod_1="+::Params: kod_1_old)
+
+            ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
+            ? HTMLWriter(): inputButton("Budynki.cxp", "Powrót")
+         ELSE
+            ? validationResult
+            ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")
+            ? HTMLWriter(): inputButton("location.href=&quot;Budynki.cxp&quot;", "Anuluj")
+         ENDIF
+      CASE ::Params: action=="delete"
+         dbHelper: SQLDelete("budynki", "kod_1="+::Params: kod_1)
+
+         ? "Budynek usuni"+HTMLWriter(): _e()+"ty<br />"
+         ? HTMLWriter(): a("Budynki.cxp", "Powr"+HTMLWriter(): _o()+"t")
+   ENDCASE
+
+   dbHelper: CloseConnection()
+%>

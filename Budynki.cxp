@@ -5,15 +5,18 @@
     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
 %>
 
-@SECTION Body
+@section Head
+<title>Budynki</title>
+
+@section Body
 <%
       dbHelper:=DbHelper(): new("localhost", "czynsze")
 
       dbHelper: SQLSelect({"kod_1", "adres", "adres_2"}, "budynki", ,"kod_1")
 
       ? HTMLWriter(): h1("Budynki")
-      ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."})
-      ? HTMLWriter(): a("DodajBudynek.cxp", "Dodaj")
+      ? HTMLWriter(): a("Budynek.cxp?action=add", "Dodaj")
+      ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."}, "Budynek.cxp?action=edit&kod_1=", "EdycjaBudynkow.cxp?action=delete&kod_1=")
 
       dbHelper: CloseConnection()
 %>

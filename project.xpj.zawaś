@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\EdytowanieBudynku.cxp" target=".\czynsze.web" />
+  <active file=".\EdycjaBudynkow.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\HTMLWriter.ch" column="27" line="94" />
-    <openfile path=".\DodajBudynek.cxp" column="0" line="0" />
-    <openfile path=".\Validation.ch" column="13" line="23" />
-    <openfile path=".\Budynki.cxp" column="0" line="0" />
-    <openfile path=".\EdytowanieBudynku.cxp" column="30" line="13" />
-    <openfile path=".\DodawanieBudynku.cxp" column="2" line="25" />
-    <openfile path=".\DbHelper.ch" column="11" line="103" />
-    <openfile path=".\EdytujBudynek.cxp" column="0" line="43" />
-    <openfile path=".\master.layout" column="8" line="20" />
+    <openfile path=".\HTMLWriter.ch" column="72" line="104" />
+    <openfile path=".\Budynki.cxp" column="108" line="18" />
+    <openfile path=".\Validation.ch" column="37" line="68" />
+    <openfile path=".\Lokale.cxp" column="172" line="18" />
+    <openfile path=".\DbHelper.ch" column="6" line="19" />
+    <openfile path=".\Lokal.cxp" column="2" line="64" />
+    <openfile path=".\Budynek.cxp" column="74" line="72" />
+    <openfile path=".\EdycjaBudynkow.cxp" column="78" line="50" />
   </openfiles>
 </session>

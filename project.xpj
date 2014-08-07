@@ -19,14 +19,15 @@
     SITE_URL      = http://localhost:80/
 // $START-AUTODEPEND
 // $STOP-AUTODEPEND
+    Budynek.cxp
     Budynki.cxp
     DbHelper.ch
-    DodajBudynek.cxp
-    DodawanieBudynku.cxp
-    EdytowanieBudynku.cxp
-    EdytujBudynek.cxp
+    EdycjaBudynkow.cxp
     HTMLWriter.ch
+    Lokal.cxp
+    Lokale.cxp
     master.layout
+    Scripts.js
     style.css
     Validation.ch
 

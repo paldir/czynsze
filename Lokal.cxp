@@ -1,0 +1,67 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+%>
+
+@section Head
+<title>Lokal</title>
+
+@section Body
+<%
+   DO CASE
+      CASE ::Params: action=="add"
+         ? HTMLWriter(): h1("Nowy lokal")
+
+         t_kod_lok:=""
+         t_nr_lok:=""
+         t_kod_typ:=""
+         t_adres:=""
+         t_adres_2:=""
+         t_pow_uzyt:=""
+         t_pow_miesz:=""
+         t_udzial:=""
+         t_dat_od:=""
+         t_dat_do:=""
+         t_p_1:=""
+         t_p_2:=""
+         t_p_3:=""
+         t_p_4:=""
+         t_p_5:=""
+         t_p_6:=""
+         t_kod_kuch:=""
+         t_uwagi:=""
+         submitText:="Dodaj"
+      CASE ::Params: action=="edit"
+         ? HTMLWriter(): h1("Edycja lokalu")
+
+         dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, l.kod_typ, l.adres, l.adres_2, l.pow_uzyt, l.pow_miesz, l.udzial, l.dat_od, l.dat_do, l.p_1, l.p_2, l.p_3, l.p_4, l.p_5, l.p_6, l.kod_kuch, l.uwagi_1, l.uwagi_2, l.uwagi_3, l.uwagi_4 FROM lokale l WHERE nr_system="+::Params: nr_system)
+
+         t_kod_lok:=FieldGet(1)
+         t_nr_lok:=FieldGet(2)
+         t_kod_typ:=FieldGet(3)
+         t_adres:=FieldGet(4)
+         t_adres_2:=FieldGet(5)
+         t_pow_uzyt:=FieldGet(6)
+         t_pow_miesz:=FieldGet(7)
+         t_udzial:=FieldGet(8)
+         t_dat_od:=FieldGet(9)
+         t_dat_do:=FieldGet(10)
+         t_p_1:=FieldGet(11)
+         t_p_2:=FieldGet(12)
+         t_p_3:=FieldGet(13)
+         t_p_4:=FieldGet(14)
+         t_p_5:=FieldGet(15)
+         t_p_6:=FieldGet(16)
+         t_kod_kuch:=FieldGet(17)
+         t_uwagi:=Var2Char(FieldGet(18))+Var2Char(FieldGet(19))+Var2Char(FieldGet(20))+Var2Char(FieldGet(21))
+         submitText:="Zapisz"
+   ENDCASE
+%>
+<%
+   dbHelper: CloseConnection()
+%>

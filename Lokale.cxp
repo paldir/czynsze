@@ -1,0 +1,22 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+    #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+    #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+
+@section Head
+<title>Lokale</title>
+
+@section Body
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.adres, l.adres_2 FROM lokale l JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY l.kod_lok")
+
+   ? HTMLWriter(): h1("Lokale")
+   ? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
+   ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Adres", "Adres cd.", }, "Lokal.cxp?action=edit&nr_system=", "Lokal.cxp?action=delete&nr_system=")
+
+   dbHelper: CloseConnection()
+%>

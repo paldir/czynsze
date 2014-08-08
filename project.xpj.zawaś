@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\EdycjaBudynkow.cxp" target=".\czynsze.web" />
+  <active file=".\Validation.ch" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\HTMLWriter.ch" column="72" line="104" />
+    <openfile path=".\HTMLWriter.ch" column="37" line="133" />
     <openfile path=".\Budynki.cxp" column="108" line="18" />
-    <openfile path=".\Validation.ch" column="37" line="68" />
-    <openfile path=".\Lokale.cxp" column="172" line="18" />
-    <openfile path=".\DbHelper.ch" column="6" line="19" />
-    <openfile path=".\Lokal.cxp" column="2" line="64" />
-    <openfile path=".\Budynek.cxp" column="74" line="72" />
-    <openfile path=".\EdycjaBudynkow.cxp" column="78" line="50" />
+    <openfile path=".\Validation.ch" column="11" line="89" />
+    <openfile path=".\Lokale.cxp" column="161" line="18" />
+    <openfile path=".\DbHelper.ch" column="36" line="82" />
+    <openfile path=".\Lokal.cxp" column="101" line="92" />
+    <openfile path=".\EdycjaBudynkow.cxp" column="69" line="42" />
+    <openfile path=".\EdycjaLokali.cxp" column="2" line="6" />
+    <openfile path=".\Budynek.cxp" column="0" line="70" />
+    <openfile path=".\Scripts.js" column="0" line="0" />
   </openfiles>
 </session>

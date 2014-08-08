@@ -20,6 +20,7 @@ CLASS HTMLWriter
       CLASS METHOD h1
       CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton
       CLASS METHOD textarea
+      CLASS METHOD selectHTML
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z
    HIDDEN:
       CLASS METHOD RemoveBlankChars
@@ -86,7 +87,7 @@ CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked)
    FOR i:=1 to Len(ids)
       result+="<input type='radio' name='"+name+"' id='"+ids[i]+"' value='"+values[i]+"'"
 
-      IF Var2Char(i-1)==checked
+      IF values[i]==checked
          result+="checked='checked'"
       ENDIF
 
@@ -112,6 +113,34 @@ CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text)
    text:=::RemoveBlankChars(text)
    result:="<label for='"+name+"'>"+label+"</label><br />"
    result+="<textarea name='"+name+"' rows='"+rows+"' maxlength='"+maxlength+"'>"+text+"</textarea>"
+RETURN result
+
+CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, columns, table)
+   dbHelper: SQLSelect(columns, table)
+
+   result:="<label for='"+name+"'>"+label+"</label><br />"
+   result+="<select name='"+name+"'>"
+
+   FOR i:=1 to LastRec()
+      result+="<option value='"+Var2Char(FieldGet(1))+"'"
+
+      IF Var2Char(FieldGet(1))==selected
+         result+=" selected "
+      ENDIF
+
+      result+=">"
+
+      FOR j:=2 to Len(columns)
+         result+=Var2Char(FieldGet(j))+", "
+      NEXT
+
+      result:=SubStr(result, 1, Len(result)-2)
+      result+="</option>"
+
+      DbSkip()
+   NEXT
+
+   result+="</select>"
 RETURN result
 
 CLASS METHOD HTMLWriter: _a()

@@ -40,12 +40,10 @@ METHOD DbHelper: CloseConnection()
 RETURN self
 
 METHOD DbHelper: ExecuteQuery(query)
-   ::oSession: ExecuteQuery(query)
-RETURN self
+RETURN ::oSession: ExecuteQuery(query)
 
 METHOD DbHelper: ExecuteStatement(statement)
-   ::oSession: ExecuteStatement(statement)
-RETURN self
+RETURN ::oSession: ExecuteStatement(statement)
 
 METHOD DbHelper: SQLSelect(columns, table, whereStatement, orderBy)
    query:="SELECT "
@@ -82,9 +80,7 @@ METHOD DbHelper: SQLInsert(table, columns, values)
    NEXT
 
    statement+="'"+values[Len(values)]+"')"
-
-   ::ExecuteStatement(statement)
-RETURN self
+RETURN ::ExecuteStatement(statement)
 
 METHOD SQLUpdate(table, columns, values, whereStatement)
    statement:="UPDATE "+table+" SET "
@@ -95,10 +91,7 @@ METHOD SQLUpdate(table, columns, values, whereStatement)
 
    statement+=columns[Len(columns)]+"='"+values[Len(columns)]+"'"
    statement+=" WHERE "+ whereStatement
-
-   ::ExecuteStatement(statement)
-RETURN self
+RETURN ::ExecuteStatement(statement)
 
 METHOD SQLDelete(table, where)
-   ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)
-RETURN self
+RETURN ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)

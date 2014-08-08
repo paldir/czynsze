@@ -16,7 +16,7 @@
 
    ? HTMLWriter(): h1("Lokale")
    ? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
-   ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Adres", "Adres cd.", }, "Lokal.cxp?action=edit&nr_system=", "Lokal.cxp?action=delete&nr_system=")
+   ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Adres", "Adres cd.", }, "Lokal.cxp?action=edit&nr_system=", "EdycjaLokali.cxp?action=delete&nr_system=")
 
    dbHelper: CloseConnection()
 %>

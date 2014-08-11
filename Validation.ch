@@ -61,8 +61,9 @@ CLASS METHOD Validation: Building(dbHelper, validate_kod_1, kod_1, il_miesz, udz
 
 RETURN result
 
-CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od, dat_do, p_1, p_2, p_3, p_4, p_5, p_6)
+CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od, dat_do, p_1, p_2, p_3, p_4, p_5, p_6, il_osob)
    result:=""
+
    nr_lok:=::ReplaceNull(nr_lok, "0")
 
    IF !::IsFloatValid(pow_uzyt, 999999.99)
@@ -83,19 +84,19 @@ CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od,
 
    udzial:=::ReplaceNull(udzial, "0")
 
+   SET DATE format TO "yyyy-mm-dd"
 
-
-   SET DATE format TO "yyyy.mm.dd"
-
-   dat_od:=::ReplaceNull(dat_od, Var2Char(Date()))
-   dat_do:=::ReplaceNull(dat_do, Var2Char(Date()))
+   dat_od:=::ReplaceNull(dat_od, Var2Char(DtoC(Date())))
+   dat_do:=::ReplaceNull(dat_do, Var2Char(DtoC(Date())))
 
    IF !::isDateValid(dat_od)
       result+=::WarningAboutDates("Pocz"+HTMLWriter(): _a()+"tek zakresu dat")
+      //result+="Od"+dat_od+"<br />"
    ENDIF
 
    IF !::isDateValid(dat_do)
       result+=::WarningAboutDates("Koniec zakresu dat")
+      //result+="Do"+dat_do+"<br />"
    ENDIF
 
    IF !::IsFloatValid(p_1, 999.99)
@@ -133,6 +134,8 @@ CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od,
    ENDIF
 
    p_6:=::ReplaceNull(p_6, "0")
+
+   il_osob:=::ReplaceNull(il_osob, "0")
 RETURN result
 
 CLASS METHOD ReplaceNull(chars, newChars)
@@ -182,11 +185,11 @@ CLASS METHOD Validation: IsDateValid(date)
       RETURN .F.
    ENDIF
 
-   /*IF !IsDigit(date[1]) .OR. !IsDigit(date[2]) .OR. !IsDigit(date[3]) .OR. !IsDigit(date[4]) .OR. date[5]!="-" .OR. !IsDigit(date[6]) .OR. !IsDigit(date[7]) .OR. date[8]!="-" .OR. !IsDigit(date[9]) .OR. !IsDigit(date[10])
+   IF !IsDigit(date[1]) .OR. !IsDigit(date[2]) .OR. !IsDigit(date[3]) .OR. !IsDigit(date[4]) .OR. date[5]!="-" .OR. !IsDigit(date[6]) .OR. !IsDigit(date[7]) .OR. date[8]!="-" .OR. !IsDigit(date[9]) .OR. !IsDigit(date[10])
       RETURN .F.
    ENDIF
 
-   IF Val(SubStr(date, 6, 1))>12 .OR. Val(SubStr(date, 9, 1))>31
+   IF Val(SubStr(date, 6, 2))>12 .OR. Val(SubStr(date, 9, 2))>31
       RETURN .F.
-   ENDIF*/
+   ENDIF
 RETURN .T.

@@ -8,7 +8,7 @@
    @Render Head
 </head>
 
-<body>
+<body onload="replaceBushes()">
  <%#Code locality="page-global"%>
  <%
     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"

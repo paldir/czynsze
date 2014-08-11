@@ -22,8 +22,8 @@ CLASS HTMLWriter
       CLASS METHOD textarea
       CLASS METHOD selectHTML
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z
-   HIDDEN:
-      CLASS METHOD RemoveBlankChars
+   //HIDDEN:
+      //CLASS METHOD RemoveBlankChars
 ENDCLASS
 
 CLASS METHOD HTMLWriter: table(headers, editUrl, deleteUrl)
@@ -31,9 +31,9 @@ CLASS METHOD HTMLWriter: table(headers, editUrl, deleteUrl)
    result+="<tr>"
 
    FOR i:=1 to FCount()
-      result+="<td><b>"
+      result+="<th>"
       result+=headers[i]
-      result+="</b></td>"
+      result+="</th>"
    NEXT
 
    FOR i:=1 to LastRec()
@@ -72,9 +72,9 @@ CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onke
       onkeypress:=""
    ENDIF
 
-   value:=::RemoveBlankChars(value)
+   value:=RTrim(value)
    result:="<label for='"+name+"'>"+label+"</label><br />"
-   result+="<input type='text' name='"+name+"' maxlength='"+maxlength+"' value='"+value+"' "+disabled+" onkeypress='"+onkeypress+"' />"
+   result+="<input type='text' name='"+name+"' size='"+maxlength+"' maxlength='"+maxlength+"' value='"+value+"' "+disabled+" onkeypress='"+onkeypress+"' />"
 RETURN result
 
 CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked)
@@ -110,13 +110,13 @@ CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text)
       text:=""
    ENDIF
 
-   text:=::RemoveBlankChars(text)
+   text:=RTrim(text)
    result:="<label for='"+name+"'>"+label+"</label><br />"
-   result+="<textarea name='"+name+"' rows='"+rows+"' maxlength='"+maxlength+"'>"+text+"</textarea>"
+   result+="<textarea name='"+name+"' cols='"+Var2Char(Val(maxlength)/Val(rows))+"' rows='"+rows+"' maxlength='"+maxlength+"'>"+text+"</textarea>"
 RETURN result
 
-CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, columns, table)
-   dbHelper: SQLSelect(columns, table)
+CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, columns, table, orderBy)
+   dbHelper: SQLSelect(columns, table, , orderBy)
 
    result:="<label for='"+name+"'>"+label+"</label><br />"
    result+="<select name='"+name+"'>"
@@ -131,7 +131,7 @@ CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, columns, ta
       result+=">"
 
       FOR j:=2 to Len(columns)
-         result+=Var2Char(FieldGet(j))+", "
+         result+=RTrim(Var2Char(FieldGet(j)))+", "
       NEXT
 
       result:=SubStr(result, 1, Len(result)-2)
@@ -170,7 +170,7 @@ RETURN "&#378;"
 CLASS METHOD HTMLWriter: _z()
 RETURN "&#380;"
 
-CLASS METHOD HTMLWriter: RemoveBlankChars(chars)
+/*CLASS METHOD HTMLWriter: RemoveBlankChars(chars)
    i:=Len(chars)
 
    IF i>0
@@ -180,4 +180,4 @@ CLASS METHOD HTMLWriter: RemoveBlankChars(chars)
 
       chars:=SubStr(chars, 1, i)
    ENDIF
-RETURN chars
+RETURN chars*/

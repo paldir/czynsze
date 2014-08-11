@@ -25,32 +25,39 @@
    t_p_4:=::Params: p_4
    t_p_5:=::Params: p_5
    t_p_6:=::Params: p_6
-   validationResult:=Validation(): LocalTable(@t_nr_lok, @t_pow_uzyt, @t_pow_miesz, @t_udzial, @t_dat_od, @t_dat_do, @t_p_1, @t_p_2, @t_p_3, @t_p_4, @t_p_5, @t_p_6)
+   t_il_osob:=::Params: il_osob
+   validationResult:=Validation(): LocalTable(@t_nr_lok, @t_pow_uzyt, @t_pow_miesz, @t_udzial, @t_dat_od, @t_dat_do, @t_p_1, @t_p_2, @t_p_3, @t_p_4, @t_p_5, @t_p_6, @t_il_osob)
 
    DO CASE
       CASE ::Params: action=="add"
-         IF validationResult=="" .AND. dbHelper: SQLInsert("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60)})
+         dbWriteResult:=dbHelper: SQLInsert("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_il_osob, ::Params: kod_praw})
+
+         IF validationResult=="" .AND. dbWriteResult
             ? "Lokal dodany <br />"
          ELSE
             ? validationResult
             ? "B"+HTMLWriter(): _l()+HTMLWriter(): _a()+"d. <br />"
-         ENDIF
+         ENDI
       CASE ::Params: action=="edit"
-         IF validationResult=="" .AND. dbHelper: SQLUpdate("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60)}, "nr_system="+::Params: nr_system)
+         dbWriteResult:=dbHelper: SQLUpdate("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_il_osob, ::Params: kod_praw}, "nr_system="+::Params: nr_system)
+
+         IF validationResult=="" .AND. dbWriteResult
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
          ELSE
             ? validationResult
             ? "B"+HTMLWriter(): _l()+HTMLWriter(): _a()+"d. <br />"
+            ? dbHelper: GetLastMessage()+"<br />"
          ENDIF
       CASE ::Params: action=="delete"
          validationResult:=""
+         dbWriteResult:=.T.
 
          dbHelper: SQLDelete("lokale", "nr_system="+::Params: nr_system)
 
          ? "Lokal usuni"+HTMLWriter(): _e()+"ty<br />"
    ENDCASE
 
-   IF validationResult==""
+   IF validationResult=="" .AND. dbWriteResult
       ? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Powrót")
    ELSE
       ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")

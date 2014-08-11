@@ -19,6 +19,7 @@ CLASS DbHelper
       METHOD CloseConnection
       METHOD ExecuteQuery
       METHOD SQLSelect, SQLInsert, SQLUpdate, SQLDelete
+      METHOD GetLastMessage
    HIDDEN:
       VAR oSession
       METHOD ExecuteStatement
@@ -95,3 +96,6 @@ RETURN ::ExecuteStatement(statement)
 
 METHOD SQLDelete(table, where)
 RETURN ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)
+
+METHOD GetLastMessage()
+RETURN ::oSession: getLastMessage()

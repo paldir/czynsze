@@ -38,11 +38,14 @@
          t_p_6:=""
          t_kod_kuch:=""
          t_uwagi:=""
+         t_nr_kontr:=""
+         t_il_osob:=""
+         t_kod_praw:=""
          submitText:="Dodaj"
       CASE ::Params: action=="edit"
          ? HTMLWriter(): h1("Edycja lokalu")
 
-         dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, l.kod_typ, l.adres, l.adres_2, l.pow_uzyt, l.pow_miesz, l.udzial, to_char(l.dat_od, 'YYYY-MM-DD'), to_char(l.dat_do, 'YYYY-MM-DD'), l.p_1, l.p_2, l.p_3, l.p_4, l.p_5, l.p_6, l.kod_kuch, l.uwagi_1, l.uwagi_2, l.uwagi_3, l.uwagi_4 FROM lokale l WHERE nr_system="+::Params: nr_system)
+         dbHelper: SQLSelect({"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "to_char(dat_od, 'YYYY-MM-DD')", "to_char(dat_do, 'YYYY-MM-DD')", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, "lokale", "nr_system="+::Params: nr_system)
 
          t_nr_system:=FieldGet(1)
          t_kod_lok:=FieldGet(2)
@@ -63,6 +66,9 @@
          t_p_6:=FieldGet(17)
          t_kod_kuch:=FieldGet(18)
          t_uwagi:=Var2Char(FieldGet(19))+Var2Char(FieldGet(20))+Var2Char(FieldGet(21))+Var2Char(FieldGet(22))
+         t_nr_kontr:=FieldGet(23)
+         t_il_osob:=FieldGet(24)
+         t_kod_praw:=FieldGet(25)
          submitText:="Zapisz"
    ENDCASE
 %>
@@ -80,7 +86,7 @@
             //? HTMLWriter(): inputText("kod_typ", "Typ: ", "3", Var2Char(t_kod_typ))+"<br /><br />"
             ? HTMLWriter(): selectHTML(dbHelper, "kod_typ", "Typ: ", Var2Char(t_kod_typ), {"kod_typ", "typ_lok"}, "typ_lok")+"<br /><br />"
             ? HTMLWriter(): inputText("adres", "Adres: ", "30", Var2Char(t_adres))+"<br /><br />"
-            ? HTMLWriter(): inputText("adres_2", "Adres cd.:", "30", Var2Char(t_adres_2))+"<br /><br />"
+            ? HTMLWriter(): inputText("adres_2", "Adres cd.:", "30", Var2Char(t_adres_2))
           %>
          </td>
          <td>
@@ -90,7 +96,7 @@
                ? HTMLWriter(): inputText("udzial", "Udzia"+HTMLWriter(): _l()+": ", "5", Var2Char(t_udzial), , "return isFloat(event)")+"<br /><br />"
                ? "Zakres dat (rrrr-mm-dd)<br />"
                ? HTMLWriter(): inputText("dat_od", "od: ", "10", Var2Char(t_dat_od), , "return isDate(event)")+"<br />"
-               ? HTMLWriter(): inputText("dat_do", "do: ", "10", Var2Char(t_dat_do), , "return isDate(event)")+"<br /><br />"
+               ? HTMLWriter(): inputText("dat_do", "do: ", "10", Var2Char(t_dat_do), , "return isDate(event)")
             %>
          </td>
          <td>
@@ -103,7 +109,14 @@
                ? HTMLWriter(): inputText("p_4", "IV: ", "5", Var2Char(t_p_4), , "return isFloat(event)")+"<br />"
                ? HTMLWriter(): inputText("p_5", "V: ", "5", Var2Char(t_p_5), , "return isFloat(event)")+"<br />"
                ? HTMLWriter(): inputText("p_6", "VI: ", "5", Var2Char(t_p_6), , "return isFloat(event)")+"<br /><br />"
-               ? HTMLWriter(): selectHTML(dbHelper, "kod_kuch", "Typ kuchni: ", Var2Char(t_kod_kuch), {"kod_kuch", "typ_kuch"}, "typ_kuch")+"<br /><br />"
+               ? HTMLWriter(): selectHTML(dbHelper, "kod_kuch", "Typ kuchni: ", Var2Char(t_kod_kuch), {"kod_kuch", "typ_kuch"}, "typ_kuch")
+            %>
+         </td>
+         <td>
+            <%
+               ? HTMLWriter(): selectHTML(dbHelper, "nr_kontr", "Najemca: ", Var2Char(t_nr_kontr), {"nr_kontr", "nazwisko", "imie", "adres_1", "adres_2"}, "najemcy", "nazwisko")+"<br /><br />"
+               ? HTMLWriter(): inputText("il_osob", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" os"+HTMLWriter(): _o()+"b: ", "3", Var2Char(t_il_osob), , "return isInteger(event)")+"<br /><br />"
+               ? HTMLWriter(): selectHTML(dbHelper, "kod_praw", "Tytu"+HTMLWriter(): _l()+" prawny do lokalu: ", Var2Char(t_kod_praw), {"kod_praw", "tyt_prawny"}, "tyt_praw")+"<br /><br />"
                ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "4", "240", Var2Char(t_uwagi))
             %>
          </td>

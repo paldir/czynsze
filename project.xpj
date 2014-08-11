@@ -24,10 +24,13 @@
     DbHelper.ch
     EdycjaBudynkow.cxp
     EdycjaLokali.cxp
+    EdycjaNajemcow.cxp
     HTMLWriter.ch
     Lokal.cxp
     Lokale.cxp
     master.layout
+    Najemca.cxp
+    Najemcy.cxp
     Scripts.js
     style.css
     Validation.ch

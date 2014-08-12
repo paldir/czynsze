@@ -20,30 +20,52 @@ function isDate(evt){
 }
 
 function replaceBushes(){
-   regExp=new RegExp(String.fromCharCode(185), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#261;')
+    if (localStorage.bushes!="bushesRemoved") {
+     //male
+     regExp=new RegExp(String.fromCharCode(185), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#261;')
 
-   regExp=new RegExp(String.fromCharCode(230), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#263;')
+     regExp=new RegExp(String.fromCharCode(230), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#263;')
 
-   regExp=new RegExp(String.fromCharCode(234), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#281;')
+     regExp=new RegExp(String.fromCharCode(234), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#281;')
 
-   regExp=new RegExp(String.fromCharCode(179), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#322;')
+     regExp=new RegExp(String.fromCharCode(179), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#322;')
 
-   regExp=new RegExp(String.fromCharCode(241), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#324;')
+     regExp=new RegExp(String.fromCharCode(241), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#324;')
 
-   regExp=new RegExp(String.fromCharCode(243), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#243;')
+     regExp=new RegExp(String.fromCharCode(243), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#243;')
 
-   regExp=new RegExp(String.fromCharCode(339), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#347;')
+     regExp=new RegExp(String.fromCharCode(339), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#347;')
 
-   regExp=new RegExp(String.fromCharCode(376), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#378;')
+     regExp=new RegExp(String.fromCharCode(376), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#378;')
 
-   regExp=new RegExp(String.fromCharCode(191), "g")
-   document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#380;')
+     regExp=new RegExp(String.fromCharCode(191), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#380;')
+
+     //duze
+     regExp=new RegExp(String.fromCharCode(198), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#262;')
+
+     regExp=new RegExp(String.fromCharCode(163), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#321;')
+
+     regExp=new RegExp(String.fromCharCode(209), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#323;')
+
+     regExp=new RegExp(String.fromCharCode(211), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#211;')
+
+     regExp=new RegExp(String.fromCharCode(338), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#346;')
+
+     regExp=new RegExp(String.fromCharCode(175), "g")
+     document.body.innerHTML=document.body.innerHTML.replace(regExp, '&#379;')
+   }
 }

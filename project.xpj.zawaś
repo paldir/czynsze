@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\EdycjaNajemcow.cxp" target=".\czynsze.web" />
+  <active file=".\EdycjaBudynkow.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\HTMLWriter.ch" column="54" line="114" />
-    <openfile path=".\Scripts.js" column="73" line="32" />
-    <openfile path=".\EdycjaNajemcow.cxp" column="2" line="54" />
-    <openfile path=".\DbHelper.ch" column="0" line="83" />
-    <openfile path=".\master.layout" column="29" line="10" />
+    <openfile path=".\EdycjaBudynkow.cxp" column="167" line="44" />
+    <openfile path=".\EdycjaLokali.cxp" column="32" line="46" />
+    <openfile path=".\EdycjaNajemcow.cxp" column="30" line="38" />
+    <openfile path=".\HTMLWriter.ch" column="27" line="211" />
+    <openfile path=".\DbHelper.ch" column="0" line="94" />
+    <openfile path=".\Lokal.cxp" column="169" line="94" />
+    <openfile path=".\Scripts.js" column="5" line="24" />
   </openfiles>
 </session>

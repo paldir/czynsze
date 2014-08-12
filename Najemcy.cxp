@@ -9,6 +9,9 @@
 <title>Najemcy</title>
 
 @section Body
+<script>
+   localStorage.bushes=""
+</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
@@ -16,7 +19,7 @@
 
    ? HTMLWriter(): h1("Najemcy")
    ? HTMLWriter(): a("Najemca.cxp?action=add", "Dodaj")
-   ? HTMLWriter(): table({"Numer kontrolny", "Nazwisko", "Imi"+HTMLWriter(): _e(), "Adres", "Adres cd."}, "Najemca.cxp?action=edit&nr_kontr=", "EdycjaNajemcow.cxp?action=delete&nr_kontr=")
+   ? HTMLWriter(): table({"Numer kontrolny", "Nazwisko", "Imi"+HTMLWriter(): _e(), "Adres", "Adres cd."}, "Najemca.cxp?action=edit&nr_kontr=", "Najemca.cxp?action=delete&nr_kontr=")
 
    dbHelper: CloseConnection()
 %>

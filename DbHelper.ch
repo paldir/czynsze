@@ -77,20 +77,20 @@ METHOD DbHelper: SQLInsert(table, columns, values)
    statement+=columns[Len(columns)]+") VALUES ("
 
    FOR i:=1 to Len(values)-1
-      statement+="'"+values[i]+"', "
+      statement+="'"+HTMLWriter(): ReplaceBushes(values[i])+"', "
    NEXT
 
-   statement+="'"+values[Len(values)]+"')"
+   statement+="'"+HTMLWriter(): ReplaceBushes(values[Len(values)])+"')"
 RETURN ::ExecuteStatement(statement)
 
 METHOD SQLUpdate(table, columns, values, whereStatement)
    statement:="UPDATE "+table+" SET "
 
    FOR i:=1 to Len(columns)-1
-      statement+=columns[i]+"='"+values[i]+"', "
+      statement+=columns[i]+"='"+HTMLWriter(): ReplaceBushes(values[i])+"', "
    NEXT
 
-   statement+=columns[Len(columns)]+"='"+values[Len(columns)]+"'"
+   statement+=columns[Len(columns)]+"='"+HTMLWriter(): ReplaceBushes(values[Len(columns)])+"'"
    statement+=" WHERE "+ whereStatement
 RETURN ::ExecuteStatement(statement)
 

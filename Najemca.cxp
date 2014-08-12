@@ -19,6 +19,7 @@
 
          dbHelper: SQLSelect({"MAX(nr_kontr)+1"}, "najemcy")
 
+         globalDisabled:=""
          t_nr_kontr:=Var2Char(FieldGet(1))
          t_kod_najem:=""
          t_nazwisko:=""
@@ -32,10 +33,20 @@
          t_l__has:=""
          t_uwagi:=""
          submitText:="Dodaj"
-      CASE ::Params: action=="edit"
-         ? HTMLWriter(): h1("Edycja najemcy")
-
+      CASE ::Params: action=="edit" .OR. ::Params: action="delete"
          dbHelper: SQLSelect({"nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
+
+         IF ::Params: action=="edit"
+            ? HTMLWriter(): h1("Edycja najemcy")
+
+            globalDisabled:=""
+            submitText:="Zapisz"
+         ELSE
+            ? HTMLWriter(): h1("Usuwanie najemcy")
+
+            globalDisabled:="disabled"
+            submitText:="Usu"+HTMLWriter(): _n()
+         ENDIF
 
          t_nr_kontr:=FieldGet(1)
          t_kod_najem:=FieldGet(2)
@@ -49,41 +60,40 @@
          t_e_mail:=FieldGet(10)
          t_l__has:=FieldGet(11)
          t_uwagi:=Var2Char(FieldGet(12))+Var2Char(FieldGet(13))
-         submitText:="Zapisz"
    ENDCASE
 %>
-<form id="formOfTenant" method="get" action="EdycjaNajemcow.cxp">
-   <table>
-      <tr valign="top">
-         <td>
-          <%
-             ? HTMLWriter(): inputHidden("action", ::Params: action)
-             ? HTMLWriter(): inputHidden("nr_kontr", Var2Char(t_nr_kontr))
-             ? HTMLWriter(): inputText("nr_kontr", "Nr kontrolny: ", "6", Var2Char(t_nr_kontr), "disabled")+"<br /><br />"
-             ? HTMLWriter(): selectHTML(dbHelper, "kod_najem", "Najemca: ", Var2Char(t_kod_najem), {"kod_najem", "r_najemcy"}, "typ_naje")+"<br /><br />"
-             ? HTMLWriter(): inputText("nazwisko", "Nazwisko: ", "25", Var2Char(t_nazwisko))+"<br /><br />"
-             ? HTMLWriter(): inputText("imie", "Imi"+HTMLWriter(): _e()+": ", "15", Var2Char(t_imie))+"<br /><br />"
-             ? HTMLWriter(): inputText("adres_1", "Adres: ", "30", Var2Char(t_adres_1))+"<br /><br />"
-             ? HTMLWriter(): inputText("adres_2", "Adres cd.: ", "30", Var2Char(t_adres_2))
-          %>
-         </td>
-         <td>
-          <%
-            ? HTMLWriter(): inputText("nr_dow", "Numer dowodu osobistego: ", "9", Var2Char(t_nr_dow))+"<br /><br />"
-            ? HTMLWriter(): inputText("pesel", "Pesel: ", "11", Var2Char(t_pesel), , "return isInteger(event)")+"<br /><br />"
-            ? HTMLWriter(): inputText("nazwa_z", "Zak"+HTMLWriter(): _l()+"ad pracy: ", "40", Var2Char(t_nazwa_z))+"<br /><br />"
-            ? HTMLWriter(): inputText("e_mail", "Login/e-mail: ", "40", Var2Char(t_e_mail))+"<br /><br />"
-            ? HTMLWriter(): inputText("l__has", "Has"+HTMLWriter(): _l()+"o: ", "15", Var2Char(t_l__has))+"<br /><br />"
-            ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "2", "120", Var2Char(t_uwagi))
-          %>
-         </td>
-      </tr>
-   </table>
-      <%
-       ? HTMLWriter(): inputSubmit("Submit", submitText)
-       ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
-      %>
-</form>
+ <form id="formOfTenant" method="get" action="EdycjaNajemcow.cxp">
+    <table>
+       <tr valign="top">
+          <td>
+           <%
+              ? HTMLWriter(): inputHidden("action", ::Params: action)
+              ? HTMLWriter(): inputHidden("nr_kontr", Var2Char(t_nr_kontr))
+              ? HTMLWriter(): inputText("nr_kontr", "Nr kontrolny: ", "6", Var2Char(t_nr_kontr), "disabled")+"<br /><br />"
+              ? HTMLWriter(): selectHTML(dbHelper, "kod_najem", "Najemca: ", Var2Char(t_kod_najem), globalDisabled, {"kod_najem", "r_najemcy"}, "typ_naje")+"<br /><br />"
+              ? HTMLWriter(): inputText("nazwisko", "Nazwisko: ", "25", Var2Char(t_nazwisko), globalDisabled)+"<br /><br />"
+              ? HTMLWriter(): inputText("imie", "Imi"+HTMLWriter(): _e()+": ", "15", Var2Char(t_imie), globalDisabled)+"<br /><br />"
+              ? HTMLWriter(): inputText("adres_1", "Adres: ", "30", Var2Char(t_adres_1), globalDisabled)+"<br /><br />"
+              ? HTMLWriter(): inputText("adres_2", "Adres cd.: ", "30", Var2Char(t_adres_2), globalDisabled)
+           %>
+          </td>
+          <td>
+           <%
+             ? HTMLWriter(): inputText("nr_dow", "Numer dowodu osobistego: ", "9", Var2Char(t_nr_dow), globalDisabled)+"<br /><br />"
+             ? HTMLWriter(): inputText("pesel", "Pesel: ", "11", Var2Char(t_pesel), globalDisabled, "return isInteger(event)")+"<br /><br />"
+             ? HTMLWriter(): inputText("nazwa_z", "Zak"+HTMLWriter(): _l()+"ad pracy: ", "40", Var2Char(t_nazwa_z), globalDisabled)+"<br /><br />"
+             ? HTMLWriter(): inputText("e_mail", "Login/e-mail: ", "40", Var2Char(t_e_mail), globalDisabled)+"<br /><br />"
+             ? HTMLWriter(): inputText("l__has", "Has"+HTMLWriter(): _l()+"o: ", "15", Var2Char(t_l__has), globalDisabled)+"<br /><br />"
+             ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "2", "120", Var2Char(t_uwagi), globalDisabled)
+           %>
+          </td>
+       </tr>
+    </table>
+       <%
+        ? HTMLWriter(): inputSubmit("Submit", submitText)
+        ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+       %>
+ </form>
 
 <%
    dbHelper: CloseConnection()

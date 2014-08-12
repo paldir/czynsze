@@ -10,6 +10,9 @@
 <title>Edycja lokali</title>
 
 @section Body
+<script>
+   localStorage.bushes="bushesRemoved"
+</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
@@ -30,23 +33,26 @@
 
    DO CASE
       CASE ::Params: action=="add"
-         dbWriteResult:=dbHelper: SQLInsert("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_il_osob, ::Params: kod_praw})
-
-         IF validationResult=="" .AND. dbWriteResult
+         IF validationResult=="" .AND. dbHelper: SQLInsert("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_il_osob, ::Params: kod_praw})
             ? "Lokal dodany <br />"
+
+            dbWriteResult:=.T.
          ELSE
             ? validationResult
-            ? "B"+HTMLWriter(): _l()+HTMLWriter(): _a()+"d. <br />"
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
          ENDI
       CASE ::Params: action=="edit"
-         dbWriteResult:=dbHelper: SQLUpdate("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_il_osob, ::Params: kod_praw}, "nr_system="+::Params: nr_system)
-
-         IF validationResult=="" .AND. dbWriteResult
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_il_osob, ::Params: kod_praw}, "nr_system="+::Params: nr_system)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
+
+            dbWriteResult:=.T.
          ELSE
             ? validationResult
-            ? "B"+HTMLWriter(): _l()+HTMLWriter(): _a()+"d. <br />"
             ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="delete"
          validationResult:=""

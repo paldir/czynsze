@@ -17,6 +17,7 @@
       CASE ::Params: action=="add"
          ? HTMLWriter(): h1("Nowy budynek")
 
+         globalDisabled:=""
          t_kod_1:=""
          t_il_miesz:=""
          t_sp_rozl:="0"
@@ -24,11 +25,26 @@
          t_adres_2:=""
          t_udzial_w_k:=""
          t_uwagi:=""
+         t_wsp:=""
+         t_k_syn_wn:=""
+         t_k_anal_wn:=""
+         t_k_syn_ma:=""
+         t_k_anal_ma:=""
          submitText:="Dodaj"
-      CASE ::Params: action=="edit"
-         ? HTMLWriter(): h1("Edycja budynku")
-
+      CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
          dbHelper: SQLSelect({"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, "budynki", "kod_1="+::Params: kod_1)
+
+         IF ::Params: action=="edit"
+            ? HTMLWriter(): h1("Edycja budynku")
+
+            globalDisabled:=""
+            submitText:="Zapisz"
+         ELSE
+            ? HTMLWriter(): h1("Usuwanie budynku")
+            
+            globalDisabled:="disabled"
+            submitText:="Usu"+HTMLWriter(): _n()
+         ENDIF
 
          t_kod_1:=FieldGet(1)
          t_il_miesz:=FieldGet(2)
@@ -37,43 +53,61 @@
          t_adres_2:=FieldGet(5)
          t_udzial_w_k:=FieldGet(6)
          t_uwagi:=Var2Char(FieldGet(7))+Var2Char(FieldGet(8))+Var2Char(FieldGet(9))+Var2Char(FieldGet(10))+Var2Char(FieldGet(11))+Var2Char(FieldGet(12))
-         submitText:="Zapisz"
+
+         dbHelper: SQLSelect({"wsp", "k_syn_wn", "k_anal_wn", "k_syn_ma", "k_anal_ma"}, "bud_pk", "kod_1="+::Params: kod_1)
+
+         IF LastRec()==0
+            dbHelper: SQLInsert("bud_pk", {"kod_1"}, {::Params: kod_1})
+            dbHelper: SQLSelect({"wsp", "k_syn_wn", "k_anal_wn", "k_syn_ma", "k_anal_ma"}, "bud_pk", "kod_1="+::Params: kod_1)
+         ENDIF
+
+         t_wsp:=FieldGet(1)
+         t_k_syn_wn:=FieldGet(2)
+         t_k_anal_wn:=FieldGet(3)
+         t_k_syn_ma:=FieldGet(4)
+         t_k_anal_ma:=FieldGet(5)
    ENDCASE
 %>
+ <form id="formOfBuilding" method="get" action="EdycjaBudynkow.cxp">
+    <table>
+       <tr valign="top">
+          <td>
+             <td>
+              <%
+                ? HTMLWriter(): inputHidden("action", ::Params: action)
 
-<form id="formOfBuilding" method="get" action="EdycjaBudynkow.cxp">
-   <table>
-      <tr valign="top">
-         <td>
-            <td>
-             <%
-               ? HTMLWriter(): inputHidden("action", ::Params: action)
+                IF ::Params: action!="add"
+                   ? HTMLWriter(): inputHidden("kod_1_old", Var2Char(t_kod_1))
+                ENDIF
 
-               IF ::Params: action=="edit"
-                  ? HTMLWriter(): inputHidden("kod_1_old", Var2Char(kod_1))
-               ENDIF
-
-               ? HTMLWriter(): inputText("kod_1", "Kod budynku:", "5", Var2Char(t_kod_1), ,"return isInteger(event)")+"<br /><br />"
-               ? HTMLWriter(): inputText("il_miesz", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" lokali:", "3", Var2Char(t_il_miesz), , "return isInteger(event)")+"<br /><br />"
-               ? HTMLWriter(): inputRadio("sp_rozl", "Sposób rozliczania:", {"0", "1"}, {"0", "1"}, {"budynek", "lokale"}, Var2Char(t_sp_rozl))+"<br />"
-               ? HTMLWriter(): inputText("adres", "Adres: ", "30", Var2Char(t_adres))+"<br />"
-               ? HTMLWriter(): inputText("adres_2", "Adres cd.:", "30", Var2Char(t_adres_2))+"<br /><br />"
-               ? HTMLWriter(): inputText("udzial_w_k", "Udzia"+HTMLWriter(): _l()+" w koszt.:", "6", Var2Char(t_udzial_w_k), ,"return isFloat(event)")
-             %>
-            </td>
-            <td>
-             <%
-                ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "6", "420", Var2Char(t_uwagi))
-             %>
-            </td>
-         </tr>
-      </table>
-      <%
-         ? HTMLWriter(): inputSubmit("Submit", submitText)
-         ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
-      %>
-</form>
-
+                ? HTMLWriter(): inputText("kod_1", "Kod budynku:", "5", Var2Char(t_kod_1), globalDisabled,"return isInteger(event)")+"<br /><br />"
+                ? HTMLWriter(): inputText("il_miesz", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" lokali:", "3", Var2Char(t_il_miesz), globalDisabled, "return isInteger(event)")+"<br /><br />"
+                ? HTMLWriter(): inputRadio("sp_rozl", "Sposób rozliczania:", {"0", "1"}, {"0", "1"}, {"budynek", "lokale"}, Var2Char(t_sp_rozl), globalDisabled)+"<br />"
+                ? HTMLWriter(): inputText("adres", "Adres: ", "30", Var2Char(t_adres), globalDisabled)+"<br />"
+                ? HTMLWriter(): inputText("adres_2", "Adres cd.:", "30", Var2Char(t_adres_2), globalDisabled)+"<br /><br />"
+                ? HTMLWriter(): inputText("udzial_w_k", "Udzia"+HTMLWriter(): _l()+" w koszt.:", "6", Var2Char(t_udzial_w_k), globalDisabled,"return isFloat(event)")
+              %>
+             </td>
+             <td>
+                <%
+                 ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "6", "420", Var2Char(t_uwagi), globalDisabled)
+                %>
+                <fieldset>
+                <legend>Ksi@(HTMLWriter(): _e())gowania</legend>
+                   <%
+                      ? HTMLWriter(): inputText("wsp", "Wsp"+HTMLWriter(): _o()+HTMLWriter(): _l()+"czynnik: ", "8", Var2Char(t_wsp), globalDisabled,"return isFloat(event)")+"<br /><br />"
+                      ? HTMLWriter(): inputText("k_syn_wn", "Konto WN:", "3", Var2Char(t_k_syn_wn), globalDisabled)+"-"+HTMLWriter(): inputText("k_anal_wn", , "16", Var2Char(t_k_anal_wn), globalDisabled)+"<br /><br />"
+                      ? HTMLWriter(): inputText("k_syn_ma", "Konto MA:", "3", Var2Char(t_k_syn_ma), globalDisabled)+"-"+HTMLWriter(): inputText("k_anal_ma", , "16", Var2Char(t_k_anal_ma), globalDisabled)
+                   %>
+                </fieldset>
+             </td>
+          </tr>
+       </table>
+       <%
+          ? HTMLWriter(): inputSubmit("Submit", submitText)
+          ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+       %>
+ </form>
 <%
    dbHelper: CloseConnection()
 %>

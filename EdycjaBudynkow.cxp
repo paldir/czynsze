@@ -10,6 +10,9 @@
 <title>Edycja budynk@(HTMLWriter(): _o())w</title>
 
 @section Body
+<script>
+   localStorage.bushes="bushesRemoved"
+</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
@@ -18,15 +21,17 @@
 
    DO CASE
       CASE ::Params: action=="add"
-
          validationResult:=Validation(): Building(dbHelper, .T., ::Params: kod_1, @t_il_miesz, @t_udzial_w_k)
-         dbWriteResult:=dbHelper: SQLInsert("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)})
 
-         IF validationResult=="" .AND. dbWriteResult
+         IF validationResult=="" .AND. dbHelper: SQLInsert("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)})
             ? "Budynek dodany <br />"
+
+            dbWriteResult:=.T.
          ELSE
             ? validationResult
-            ? "B"+HTMLWriter(): _l()+HTMLWriter(): _a()+"d. <br />"
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="edit"
          IF ::Params: kod_1!=::Params: kod_1_old
@@ -36,20 +41,22 @@
          ENDIF
 
          validationResult:=Validation(): Building(dbHelper, validate_kod_1, ::Params: kod_1, @t_il_miesz, @t_udzial_w_k)
-         dbWriteResult:=dbHelper: SQLUpdate("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)}, "kod_1="+::Params: kod_1_old)
 
-         IF validationResult=="" .AND. dbWriteResult
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)}, "kod_1="+::Params: kod_1_old)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
+
+            dbWriteResult:=.T.
          ELSE
             ? validationResult
-            ? "B"+HTMLWriter(): _l()+HTMLWriter(): _a()+"d. <br />"
             ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="delete"
          validationResult:=""
          dbWriteResult:=.T.
 
-         dbHelper: SQLDelete("budynki", "kod_1="+::Params: kod_1)
+         dbHelper: SQLDelete("budynki", "kod_1="+::Params: kod_1_old)
 
          ? "Budynek usuni"+HTMLWriter(): _e()+"ty<br />"
    ENDCASE

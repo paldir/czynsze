@@ -1,0 +1,75 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+    #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+    #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+    #include "C:\inetpub\wwwroot\czynsze\Validation.ch"
+%>
+
+@section Head
+<title>Edycja budynk@(HTMLWriter(): _o())w</title>
+
+@section Body
+<script>
+   localStorage.bushes="bushesRemoved"
+</script>
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   //t_nr_skl:=::Params: nr_skl
+   t_stawka:=::Params: stawka
+   t_stawka_inf:=::Params: stawka_inf
+   t_data_1:=::Params: data_1
+   t_data_2:=::Params: data_2
+
+   DO CASE
+      CASE ::Params: action=="add"
+         validationResult:=Validation(): RentComponent(dbHelper, .T., ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2)
+
+         IF validationResult=="" .AND. dbHelper: SQLInsert("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2})
+            ? "Sk"+HTMLWriter(): _l()+"adnik czynszu dodany<br />"
+
+            dbWriteResult:=.T.
+         ELSE
+            ? validationResult
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
+         ENDIF
+      CASE ::Params: action=="edit"
+         IF ::Params: nr_skl!=::Params: nr_skl_old
+            validate_nr_skl:=.T.
+         ELSE
+            validate_nr_skl:=.F.
+         ENDIF
+
+         validationResult:=Validation(): RentComponent(dbHelper, validate_nr_skl, ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2)
+
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2}, "nr_skl="+::Params: nr_skl_old)
+            ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
+
+            dbWriteResult:=.T.
+         ELSE
+            ? validationResult
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
+         ENDIF
+      CASE ::Params: action=="delete"
+         validationResult:=""
+         dbWriteResult:=.T.
+
+         dbHelper: SQLDelete("czynsz", "nr_skl="+::Params: nr_skl_old)
+
+         ? "Sk"+HTMLWriter(): _l()+"adnik czynszu usuni"+HTMLWriter(): _e()+"ty<br />"
+   ENDCASE
+
+   IF validationResult=="" .AND. dbWriteResult
+      ? HTMLWriter(): inputButton("location.href=&quot;SkladnikiCzynszu.cxp&quot;", "Powrót")
+   ELSE
+      ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")
+      ? HTMLWriter(): inputButton("location.href=&quot;SkladnikiCzynszu.cxp&quot;", "Anuluj")
+   ENDIF
+
+   dbHelper: CloseConnection()
+%>

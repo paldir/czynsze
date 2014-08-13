@@ -19,6 +19,7 @@
       ? HTMLWriter(): a("Budynki.cxp", "Budynki")
       ? HTMLWriter(): a("Lokale.cxp", "Lokale")
       ? HTMLWriter(): a("Najemcy.cxp", "Najemcy")
+      ? HTMLWriter(): a("SkladnikiCzynszu.cxp", "Sk"+HTMLWriter(): _l()+"adniki czynszu")
    %>
    <br />
 

@@ -41,7 +41,7 @@
             submitText:="Zapisz"
          ELSE
             ? HTMLWriter(): h1("Usuwanie budynku")
-            
+
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()
          ENDIF
@@ -93,7 +93,7 @@
                  ? HTMLWriter(): textarea("uwagi", "Uwagi: ", "6", "420", Var2Char(t_uwagi), globalDisabled)
                 %>
                 <fieldset>
-                <legend>Ksi@(HTMLWriter(): _e())gowania</legend>
+                  <legend>Ksi@(HTMLWriter(): _e())gowania</legend>
                    <%
                       ? HTMLWriter(): inputText("wsp", "Wsp"+HTMLWriter(): _o()+HTMLWriter(): _l()+"czynnik: ", "8", Var2Char(t_wsp), globalDisabled,"return isFloat(event)")+"<br /><br />"
                       ? HTMLWriter(): inputText("k_syn_wn", "Konto WN:", "3", Var2Char(t_k_syn_wn), globalDisabled)+"-"+HTMLWriter(): inputText("k_anal_wn", , "16", Var2Char(t_k_anal_wn), globalDisabled)+"<br /><br />"

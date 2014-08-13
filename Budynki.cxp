@@ -13,13 +13,31 @@
    localStorage.bushes=""
 </script>
 <%
-      dbHelper:=DbHelper(): new("localhost", "czynsze")
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
 
-      dbHelper: SQLSelect({"kod_1", "adres", "adres_2"}, "budynki", ,"kod_1")
+   IF Len(::Params: orderBy)==0
+         orderBy:="kod_1"
+   ELSE
+         orderBy:=::Params: orderBy
+   ENDIF
 
-      ? HTMLWriter(): h1("Budynki")
-      ? HTMLWriter(): a("Budynek.cxp?action=add", "Dodaj")
-      ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."}, "Budynek.cxp?action=edit&kod_1=", "Budynek.cxp?action=delete&kod_1=")
+   IF Len(::Params: sortOrder)==0
+         sortOrder:="ASC"
+   ELSE
+         sortOrder:=::Params: sortOrder
+   ENDIF
 
-      dbHelper: CloseConnection()
+   dbHelper: SQLSelect({"kod_1", "adres", "adres_2"}, "budynki", , orderBy+" "+sortOrder)
+
+   IF sortOrder=="ASC"
+            sortOrder:="DESC"
+   ELSE
+            sortOrder:="ASC"
+   ENDIF
+
+   ? HTMLWriter(): h1("Budynki")
+   ? HTMLWriter(): a("Budynek.cxp?action=add", "Dodaj")
+   ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."}, {"kod_1", "adres", "adres_2"}, "Budynki", sortOrder, "Budynek.cxp?action=edit&kod_1=", "Budynek.cxp?action=delete&kod_1=")
+
+   dbHelper: CloseConnection()
 %>

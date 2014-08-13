@@ -15,11 +15,29 @@
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
-   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.adres, l.adres_2 FROM lokale l JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY l.kod_lok")
+   IF Len(::Params: orderBy)==0
+         orderBy:="kod_lok"
+   ELSE
+         orderBy:=::Params: orderBy
+   ENDIF
+
+   IF Len(::Params: sortOrder)==0
+         sortOrder:="ASC"
+   ELSE
+         sortOrder:=::Params: sortOrder
+   ENDIF
+
+   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.pow_uzyt, l.nazwisko, l.imie FROM lokale l JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY "+orderBy+" "+sortOrder)
+
+   IF sortOrder=="ASC"
+         sortOrder:="DESC"
+   ELSE
+         sortOrder:="ASC"
+   ENDIF
 
    ? HTMLWriter(): h1("Lokale")
    ? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
-   ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Adres", "Adres cd.", }, "Lokal.cxp?action=edit&nr_system=", "Lokal.cxp?action=delete&nr_system=")
+   ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Powierzchnia u"+HTMLWriter(): _z()+"ytkowa", "Nazwisko", "Imi"+HTMLWriter(): _e()}, {"l.nr_system", "l.kod_lok", "l.nr_lok", "t.typ_lok", "l.pow_uzyt", "l.nazwisko", "l.imie"}, "Lokale", sortOrder, "Lokal.cxp?action=edit&nr_system=", "Lokal.cxp?action=delete&nr_system=")
 
    dbHelper: CloseConnection()
 %>

@@ -1,0 +1,101 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+%>
+
+@section Head
+<title>Sk@(HTMLWriter(): _l())adnik czynszu</title>
+
+@section Body
+<%
+   DO CASE
+      CASE ::Params: action=="add"
+         ? HTMLWriter(): h1("Nowy sk"+HTMLWriter(): _l()+"adnik czynszu")
+
+         globalDisabled:=""
+         t_nr_skl:=""
+         t_nazwa:=""
+         t_rodz_e:=""
+         t_s_zaplat:=""
+         t_stawka:=""
+         t_stawka_inf:=""
+         t_typ_skl:=""
+         t_data_1:=""
+         t_data_2:=""
+         submitText:="Dodaj"
+      CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
+         dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "SUBSTRING(stawka::TEXT FROM 1 FOR char_length(stawka::TEXT)-2)", "SUBSTRING(stawka_inf::TEXT FROM 1 FOR char_length(stawka_inf::TEXT)-2)", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')"}, "czynsz", "nr_skl="+::Params: nr_skl)
+
+         IF ::Params: action=="edit"
+            ? HTMLWriter(): h1("Edycja sk"+HTMLWriter(): _l()+"adnika czynszu")
+
+            globalDisabled:=""
+            submitText:="Zapisz"
+         ELSE
+            ? HTMLWriter(): h1("Usuwanie sk"+HTMLWriter(): _l()+"adnika czynszu")
+
+            globalDisabled:="disabled"
+            submitText:="Usu"+HTMLWriter(): _n()
+         ENDIF
+
+         t_nr_skl:=FieldGet(1)
+         t_nazwa:=FieldGet(2)
+         t_rodz_e:=FieldGet(3)
+         t_s_zaplat:=FieldGet(4)
+         t_stawka:=FieldGet(5)
+         t_stawka_inf:=FieldGet(6)
+         t_typ_skl:=FieldGet(7)
+         t_data_1:=FieldGet(8)
+         t_data_2:=FieldGet(9)
+   ENDCASE
+%>
+<form id="formOfRentComponent" method="get" action="EdycjaSkladnikowCzynszu.cxp">
+   <table>
+      <tr valign="top">
+         <td>
+          <%
+             ? HTMLWriter(): inputHidden("action", ::Params: action)
+
+             IF ::Params: action!="add"
+                ? HTMLWriter(): inputHidden("nr_skl_old", Var2Char(t_nr_skl))
+             ENDIF
+
+             ? HTMLWriter(): inputText("nr_skl", "Nr sk"+HTMLWriter(): _l()+"adnika: ", "3", Var2Char(t_nr_skl), globalDisabled, "return isInteger(event)")+"<br /><br />"
+             ? HTMLWriter(): inputText("nazwa", "Nazwa: ", "30", Var2Char(t_nazwa), globalDisabled)+"<br /><br />"
+
+             dbHelper: ExecuteQuery("SELECT 1, 'dziennik komornego' UNION ALL SELECT 2, 'wp"+HTMLWriter(): _l()+"aty' UNION ALL SELECT 3, 'zmniejszenia' UNION ALL SELECT 4, 'zwi"+HTMLWriter(): _e()+"kszenia'")
+
+             ? HTMLWriter(): selectHTML(dbHelper, "rodz_e", "Rodzaj ewidencji: ", Var2Char(t_rodz_e), globalDisabled, {"", ""}, "")+"<br /><br />"
+
+             dbHelper: ExecuteQuery("SELECT 1, 'za m<sup>2</sup> pow. u"+HTMLWriter(): _z()+"ytkowej' UNION ALL SELECT 2, 'za okre"+HTMLWriter(): _s()+"lon"+HTMLWriter(): _a()+" ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+"' UNION ALL SELECT 3, 'za osob"+HTMLWriter(): _e()+"' UNION ALL SELECT 4, 'za lokal' UNION ALL SELECT 5, 'za ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" dni w m-cu' UNION ALL SELECT 6, 'za osob"+HTMLWriter(): _e()+" - przedzia"+HTMLWriter(): _l()+"y'")
+
+             ? HTMLWriter(): selectHTML(dbHelper, "s_zaplat", "Spos"+HTMLWriter(): _o()+"b naliczania: ", Var2Char(t_s_zaplat), globalDisabled, {"", ""}, "")+"<br /><br >"
+             ? HTMLWriter(): inputText("stawka", "Stawka: ", "10", Var2Char(t_stawka), globalDisabled, "return isFloat(event)")+"<br /><br />"
+             ? HTMLWriter(): inputText("stawka_inf", "Stawka do korespondencji: ", "10", Var2Char(t_stawka_inf), globalDisabled, "return isFloat(event)")+"<br /><br />"
+          %>
+         </td>
+         <td>
+            <%
+               dbHelper: ExecuteQuery("SELECT 0, 'sta"+HTMLWriter(): _l()+"y' UNION ALL SELECT 1, 'zmienny'")
+
+               ? HTMLWriter(): selectHTML(dbHelper, "typ_skl", "Typ sk"+HTMLWriter(): _l()+"adnika", Var2Char(t_typ_skl), globalDisabled, {"", ""}, "")+"<br /><br />"
+               ? "Okres naliczania (rrrr-mm-dd):<br />"
+               ? HTMLWriter(): inputText("data_1", "od: ", "10", Var2Char(t_data_1), globalDisabled, "return isDate(event)")+"<br />"
+               ? HTMLWriter(): inputText("data_2", "do: ", "10", Var2Char(t_data_2), globalDisabled, "return isDate(event)")
+            %>
+         </td>
+      </tr>
+   </table>
+   <%
+      ? HTMLWriter(): inputSubmit("Submit", submitText)
+      ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+   %>
+</form>
+<%
+   dbHelper: CloseConnection()
+%>

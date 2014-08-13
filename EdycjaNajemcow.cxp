@@ -34,6 +34,8 @@
          IF validationResult=="" .AND. dbHelper: SQLUpdate("najemcy", {"nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, {::Params: nr_kontr, ::Params: kod_najem, Var2Char(::Params: nazwisko), Var2Char(::Params: imie), Var2Char(::Params: adres_1), Var2Char(::Params: adres_2), Var2Char(::Params: nr_dow), Var2Char(::Params: pesel), Var2Char(::Params: nazwa_z), Var2Char(::Params: e_mail), Var2Char(::Params: l__has), SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60)}, "nr_kontr="+::Params: nr_kontr)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 
+            dbHelper: SQLUpdate("lokale", {"nazwisko", "imie"}, {Var2Char(::Params: nazwisko), Var2Char(::Params: imie)}, "nr_kontr="+::Params: nr_kontr)
+
             dbWriteResult:=.T.
          ELSE
             ? validationResult

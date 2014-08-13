@@ -26,13 +26,13 @@ CLASS HTMLWriter
       //CLASS METHOD RemoveBlankChars
 ENDCLASS
 
-CLASS METHOD HTMLWriter: table(headers, editUrl, deleteUrl)
+CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, deleteUrl)
    result:="<table border='1'>"
    result+="<tr>"
 
    FOR i:=1 to FCount()
       result+="<th>"
-      result+=headers[i]
+      result+="<a href="+page+".cxp?orderBy="+columns[i]+Chr(38)+"sortOrder="+sortOrder+">"+headers[i]+"</a>"
       result+="</th>"
    NEXT
 
@@ -122,7 +122,9 @@ CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
 RETURN result
 
 CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, columns, table, orderBy)
-   dbHelper: SQLSelect(columns, table, , orderBy)
+   IF table!=""
+      dbHelper: SQLSelect(columns, table, , orderBy)
+   ENDIF
 
    result:="<label for='"+name+"'>"+label+"</label><br />"
    result+="<select name='"+name+"' "+disabled+">"
@@ -176,38 +178,26 @@ RETURN "&#378;"
 CLASS METHOD HTMLWriter: _z()
 RETURN "&#380;"
 
-/*CLASS METHOD HTMLWriter: RemoveBlankChars(chars)
-   i:=Len(chars)
-
-   IF i>0
-      DO WHILE chars[i]==" " .AND. i!=1
-         i--
-      ENDDO
-
-      chars:=SubStr(chars, 1, i)
-   ENDIF
-RETURN chars*/
-
 CLASS METHOD HTMLWriter: ReplaceBushes(chars)
-   _bushes:={Chr(185), Chr(230), Chr(234), Chr(179), Chr(241), Chr(243), Chr(339), Chr(376), Chr(191)}
-   bushes:={Chr(165), Chr(202), Chr(198), Chr(163), Chr(209), Chr(211), Chr(338), Chr(175)}
+   _bushes:={Chr(185)/*a*/, Chr(230)/*c*/, Chr(234)/*e*/, Chr(179)/*l*/, Chr(241)/*n*/, Chr(243)/*o*/, Chr(339)/*s*/, Chr(376)/*x*/, Chr(191)/*z*/}
+   bushes:={Chr(165)/*A*/, Chr(202)/*C*/, Chr(198)/*E*/, Chr(163)/*L*/, Chr(209)/*N*/, Chr(211)/*O*/, Chr(338)/*S*/, Chr(175)/*Z*/}
 
-   /*chars:=StrTran(chars, '&#261;', Chr(261)) //a
-   chars:=StrTran(chars, '&#263;', Chr(263)) //c
-   chars:=StrTran(chars, '&#281;', Chr(281)) //e
-   chars:=StrTran(chars, '&#322;', Chr(322)) //l
-   chars:=StrTran(chars, '&#324;', Chr(324)) //n
-   chars:=StrTran(chars, '&#243;', Chr(243)) //o
-   chars:=StrTran(chars, '&#347;', Chr(347)) //s
-   chars:=StrTran(chars, '&#378;', Chr(378)) //x
-   chars:=StrTran(chars, '&#380;', Chr(380)) //z*/
+   chars:=StrTran(chars, '&#261;', 'a') //a
+   chars:=StrTran(chars, '&#263;', 'c') //c
+   chars:=StrTran(chars, '&#281;', 'e') //e
+   chars:=StrTran(chars, '&#322;', 'l') //l
+   chars:=StrTran(chars, '&#324;', 'n') //n
+   chars:=StrTran(chars, '&#243;', 'o') //o
+   chars:=StrTran(chars, '&#347;', 's') //s
+   chars:=StrTran(chars, '&#378;', 'x') //x
+   chars:=StrTran(chars, '&#380;', 'z') //z
 
-   /*chars:=StrTran(chars, '&#262;') //A
-   chars:=StrTran(chars, '&#321;') //L
-   chars:=StrTran(chars, '&#323;') //N
-   chars:=StrTran(chars, '&#211;') //O
-   chars:=StrTran(chars, '&#346;') //S
-   chars:=StrTran(chars, '&#379;') //Z */
-   chars:=StrTran(chars, Chr(243), 'o') //o
-   chars:=StrTran(chars, Chr(211), 'O') //O
+   chars:=StrTran(chars, '&#260;', 'A') //A
+   chars:=StrTran(chars, '&#262;', 'C') //C
+   chars:=StrTran(chars, '&#280;', 'E') //E
+   chars:=StrTran(chars, '&#321;', 'L') //L
+   chars:=StrTran(chars, '&#323;', 'N') //N
+   chars:=StrTran(chars, '&#211;', 'O') //O
+   chars:=StrTran(chars, '&#346;', 'S') //S
+   chars:=StrTran(chars, '&#379;', 'Z') //Z
 RETURN chars

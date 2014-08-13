@@ -16,7 +16,7 @@
 
 CLASS Validation
    EXPORTED:
-      CLASS METHOD Building, LocalTable
+      CLASS METHOD Building, LocalTable, RentComponent
    HIDDEN:
       CLASS METHOD ReplaceNull
       CLASS METHOD IntegerWithoutChars
@@ -138,7 +138,56 @@ CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od,
    il_osob:=::ReplaceNull(il_osob, "0")
 RETURN result
 
-CLASS METHOD ReplaceNull(chars, newChars)
+CLASS METHOD Validation: RentComponent(dbHelper, validate_nr_skl, nr_skl, stawka, stawka_inf, data_1, data_2)
+   result:=""
+
+   IF validate_nr_skl
+      dbHelper: SQLSelect({"nr_skl"}, "czynsz", "nr_skl="+nr_skl)
+
+      IF LastRec()>0
+         result+="Numer sk"+HTMLWriter(): _l()+"adnika jest ju"+HTMLWriter(): _z()+" u"+HTMLWriter(): _z()+"ywany! <br />"
+      ENDIF
+
+      IF Len(nr_skl)==0
+            result+="Nale"+HTMLWriter(): _z()+"y poda"+HTMLWriter(): _c()+" numer sk"+HTMLWriter(): _l()+"adnika! <br />"
+      ENDIF
+
+      FOR i:=1 to Len(nr_skl)
+            IF !IsDigit(nr_skl[i])
+               result+="Numer sk"+HTMLWriter(): _l()+"adnika musi by"+HTMLWriter(): _c()+" liczb"+HTMLWriter(): _a()+"! <br />"
+               exit
+            ENDIF
+      NEXT
+   ENDIF
+
+   IF !::IsFloatValid(stawka, 9999999.99)
+      result+=::WarningAboutFloats("Stawka")
+   ENDIF
+
+   stawka:=::ReplaceNull(stawka, "0")
+
+   IF !::IsFloatValid(stawka_inf, 9999999.99)
+      result+=::WarningAboutFloats("Stawka do korespondencji")
+   ENDIF
+
+   stawka_inf:=::ReplaceNull(stawka_inf, "0")
+
+   SET DATE format TO "yyyy-mm-dd"
+
+   data_1:=::ReplaceNull(data_1, Var2Char(DtoC(Date())))
+   data_2:=::ReplaceNull(data_2, Var2Char(DtoC(Date())))
+
+   IF !::isDateValid(data_1)
+      result+=::WarningAboutDates("Pocz"+HTMLWriter(): _a()+"tek zakresu dat")
+   ENDIF
+
+   IF !::isDateValid(data_2)
+      result+=::WarningAboutDates("Koniec zakresu dat")
+   ENDIF
+RETURN result
+
+
+CLASS METHOD Validation: ReplaceNull(chars, newChars)
    IF Len(chars)==0
       chars:=newChars
    ENDIF

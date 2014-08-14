@@ -30,23 +30,32 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, delet
    result:="<table border='1'>"
    result+="<tr>"
 
-   FOR i:=1 to FCount()
+   FOR i:=2 to FCount()
       result+="<th>"
-      result+="<a href="+page+".cxp?orderBy="+columns[i]+Chr(38)+"sortOrder="+sortOrder+">"+headers[i]+"</a>"
+
+      IF columns==NIL
+         result+=headers[i]
+      ELSE
+         result+="<a href="+page+".cxp?orderBy="+columns[i]+Chr(38)+"sortOrder="+sortOrder+">"+headers[i]+"</a>"
+      ENDIF
+
       result+="</th>"
    NEXT
 
    FOR i:=1 to LastRec()
       result+="<tr>"
 
-      FOR j:=1 to FCount()
+      FOR j:=2 to FCount()
          result+="<td>"+Var2Char(FieldGet(j))+"</td>"
       NEXT
 
-      result+="<td>"+::a(editUrl+Var2Char(FieldGet(1)), "Edytuj")+"</td>"
-      result+="<td>"+::a(deleteUrl+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
+      IF editUrl!=NIL
+         result+="<td>"+::a(editUrl+Var2Char(FieldGet(1)), "Edytuj")+"</td>"
+      ENDIF
 
+      result+="<td>"+::a(deleteUrl+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
       result+="</tr>"
+
       DbSkip()
    NEXT
 
@@ -72,6 +81,8 @@ CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onke
 
    IF onkeypress==NIL
       onkeypress:=""
+   ELSEIF onkeypress=="return isFloat(event)"
+      value:=Var2Char(Round(Val(value), 2))
    ENDIF
 
    value:=RTrim(value)
@@ -122,11 +133,16 @@ CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
 RETURN result
 
 CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, columns, table, orderBy)
-   IF table!=""
+   result:=""
+
+   IF Len(table)>0
       dbHelper: SQLSelect(columns, table, , orderBy)
    ENDIF
 
-   result:="<label for='"+name+"'>"+label+"</label><br />"
+   IF label!=NIL
+      result+="<label for='"+name+"'>"+label+"</label><br />"
+   ENDIF
+
    result+="<select name='"+name+"' "+disabled+">"
 
    FOR i:=1 to LastRec()

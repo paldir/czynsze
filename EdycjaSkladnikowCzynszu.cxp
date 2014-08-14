@@ -21,12 +21,22 @@
    t_stawka_inf:=::Params: stawka_inf
    t_data_1:=::Params: data_1
    t_data_2:=::Params: data_2
+   t_stawka_00:=::Params: stawka_00
+   t_stawka_01:=::Params: stawka_01
+   t_stawka_02:=::Params: stawka_02
+   t_stawka_03:=::Params: stawka_03
+   t_stawka_04:=::Params: stawka_04
+   t_stawka_05:=::Params: stawka_05
+   t_stawka_06:=::Params: stawka_06
+   t_stawka_07:=::Params: stawka_07
+   t_stawka_08:=::Params: stawka_08
+   t_stawka_09:=::Params: stawka_09
 
    DO CASE
       CASE ::Params: action=="add"
-         validationResult:=Validation(): RentComponent(dbHelper, .T., ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2)
+         validationResult:=Validation(): RentComponent(dbHelper, .T., ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2, @t_stawka_00, @t_stawka_01, @t_stawka_02, @t_stawka_03, @t_stawka_04, @t_stawka_05, @t_stawka_06, @t_stawka_07, @t_stawka_08, @t_stawka_09)
 
-         IF validationResult=="" .AND. dbHelper: SQLInsert("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2})
+         IF validationResult=="" .AND. dbHelper: SQLInsert("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2, t_stawka_00, t_stawka_01, t_stawka_02, t_stawka_03, t_stawka_04, t_stawka_05, t_stawka_06, t_stawka_07, t_stawka_08, t_stawka_09})
             ? "Sk"+HTMLWriter(): _l()+"adnik czynszu dodany<br />"
 
             dbWriteResult:=.T.
@@ -43,10 +53,12 @@
             validate_nr_skl:=.F.
          ENDIF
 
-         validationResult:=Validation(): RentComponent(dbHelper, validate_nr_skl, ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2)
+         validationResult:=Validation(): RentComponent(dbHelper, validate_nr_skl, ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2, @t_stawka_00, @t_stawka_01, @t_stawka_02, @t_stawka_03, @t_stawka_04, @t_stawka_05, @t_stawka_06, @t_stawka_07, @t_stawka_08, @t_stawka_09)
 
-         IF validationResult=="" .AND. dbHelper: SQLUpdate("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2}, "nr_skl="+::Params: nr_skl_old)
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2, t_stawka_00, t_stawka_01, t_stawka_02, t_stawka_03, t_stawka_04, t_stawka_05, t_stawka_06, t_stawka_07, t_stawka_08, t_stawka_09}, "nr_skl="+::Params: nr_skl_old)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
+
+            dbHelper: SQLUpdate("skl_cz", {"nr_skl"}, {::Params: nr_skl}, "nr_skl="+::Params: nr_skl_old)
 
             dbWriteResult:=.T.
          ELSE

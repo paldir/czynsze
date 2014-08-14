@@ -1,0 +1,70 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   IF Len(::Params: nr_skl)>0
+      dbHelper: SQLSelect({"s_zaplat"}, "czynsz", "nr_skl="+::Params: nr_skl)
+
+      t_s_zaplat:=FieldGet(1)
+
+      DO CASE
+         CASE t_s_zaplat==1
+            dbHelper: SQLSelect({"pow_uzyt"}, "lokale", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok)
+         CASE t_s_zaplat==2
+            dbHelper: ExecuteQuery("SELECT 0")
+         CASE t_s_zaplat==3
+            dbHelper: SQLSelect({"il_osob"}, "lokale", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok)
+         CASE t_s_zaplat==4
+            dbHelper: ExecuteQuery("SELECT 1")
+         CASE t_s_zaplat==5
+            dbHelper: ExecuteQuery("SELECT 0")
+         CASE t_s_zaplat==6
+            dbHelper: ExecuteQuery("SELECT 1")
+      ENDCASE
+
+      t_dan_p:=Var2Char(FieldGet(1))
+
+      DO CASE
+         CASE ::Params: action=="add"
+            dbHelper: SQLInsert("skl_cz", {"kod_lok", "nr_lok", "nr_skl", "dan_p"}, {::Params: kod_lok, ::Params: nr_lok, ::Params: nr_skl, t_dan_p})
+         CASE ::Params: action=="delete"
+            dbHelper: SQLDelete("skl_cz", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok+" AND nr_skl="+::Params: nr_skl)
+            //? "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok+" AND nr_skl="+::Params: nr_skl
+      ENDCASE
+   ENDIF
+%>
+
+@section Head
+<title>Sk@(HTMLWriter(): _l())adniki czynszu lokalu</title>
+
+@section Body
+<%
+   ? HTMLWriter(): h1("Sk"+HTMLWriter(): _l()+"adniki czynszu lokalu")
+
+   dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, c.nazwa, c.stawka, sc.dan_p, SUBSTRING((c.stawka*sc.dan_p)::TEXT FROM 1 FOR char_length((c.stawka*sc.dan_p)::TEXT)-4) FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok)
+
+   ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , , "SkladnikiCzynszuLokalu.cxp?action=delete"+Chr(38)+"kod_lok="+::Params: kod_lok+Chr(38)+"nr_lok="+::Params: nr_lok+Chr(38)+"nr_skl=")
+
+   dbHelper: ExecuteQuery("SELECT SUBSTRING((SUM(c.stawka*sc.dan_p))::TEXT FROM 1 FOR char_length((SUM(c.stawka*sc.dan_p))::TEXT)-4) FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok)
+
+   ? "Razem: "+Var2Char(FieldGet(1))
+
+%>
+<form id="formOfRentComponentOfLocal" method="get" action="SkladnikiCzynszuLokalu.cxp">
+   <%
+      ? HTMLWriter(): inputHidden("action", "add")
+      ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
+      ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
+      ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl")
+      ? HTMLWriter(): inputSubmit("Submit", "Dodaj")
+   %>
+</form>
+
+<%
+   dbHelper: CloseConnection()
+%>

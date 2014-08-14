@@ -47,18 +47,6 @@
 
          dbHelper: SQLSelect({"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "to_char(dat_od, 'YYYY-MM-DD')", "to_char(dat_do, 'YYYY-MM-DD')", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, "lokale", "nr_system="+::Params: nr_system)
 
-         IF ::Params: action=="edit"
-            ? HTMLWriter(): h1("Edycja lokalu")
-
-            globalDisabled:=""
-            submitText:="Zapisz"
-         ELSE
-            ? HTMLWriter(): h1("Usuwanie lokalu")
-
-            globalDisabled:="disabled"
-            submitText:="Usu"+HTMLWriter(): _n()
-         ENDIF
-
          t_nr_system:=FieldGet(1)
          t_kod_lok:=FieldGet(2)
          t_nr_lok:=FieldGet(3)
@@ -81,6 +69,19 @@
          t_nr_kontr:=FieldGet(23)
          t_il_osob:=FieldGet(24)
          t_kod_praw:=FieldGet(25)
+
+         IF ::Params: action=="edit"
+            ? HTMLWriter(): h1("Edycja lokalu")
+            ? HTMLWriter(): a("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok), "Sk"+HTMLWriter(): _l()+"adniki czynszu tego lokalu")
+
+            globalDisabled:=""
+            submitText:="Zapisz"
+         ELSE
+            ? HTMLWriter(): h1("Usuwanie lokalu")
+
+            globalDisabled:="disabled"
+            submitText:="Usu"+HTMLWriter(): _n()
+         ENDIF
    ENDCASE
 %>
  <form id="formOfBuilding" method="get" action="EdycjaLokali.cxp">

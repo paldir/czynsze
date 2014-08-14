@@ -27,9 +27,19 @@
          t_typ_skl:=""
          t_data_1:=""
          t_data_2:=""
+         t_stawka_00:=""
+         t_stawka_01:=""
+         t_stawka_02:=""
+         t_stawka_03:=""
+         t_stawka_04:=""
+         t_stawka_05:=""
+         t_stawka_06:=""
+         t_stawka_07:=""
+         t_stawka_08:=""
+         t_stawka_09:=""
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
-         dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "SUBSTRING(stawka::TEXT FROM 1 FOR char_length(stawka::TEXT)-2)", "SUBSTRING(stawka_inf::TEXT FROM 1 FOR char_length(stawka_inf::TEXT)-2)", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')"}, "czynsz", "nr_skl="+::Params: nr_skl)
+         dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, "czynsz", "nr_skl="+::Params: nr_skl)
 
          IF ::Params: action=="edit"
             ? HTMLWriter(): h1("Edycja sk"+HTMLWriter(): _l()+"adnika czynszu")
@@ -52,6 +62,16 @@
          t_typ_skl:=FieldGet(7)
          t_data_1:=FieldGet(8)
          t_data_2:=FieldGet(9)
+         t_stawka_00:=FieldGet(10)
+         t_stawka_01:=FieldGet(11)
+         t_stawka_02:=FieldGet(12)
+         t_stawka_03:=FieldGet(13)
+         t_stawka_04:=FieldGet(14)
+         t_stawka_05:=FieldGet(15)
+         t_stawka_06:=FieldGet(16)
+         t_stawka_07:=FieldGet(17)
+         t_stawka_08:=FieldGet(18)
+         t_stawka_09:=FieldGet(19)
    ENDCASE
 %>
 <form id="formOfRentComponent" method="get" action="EdycjaSkladnikowCzynszu.cxp">
@@ -87,6 +107,24 @@
                ? "Okres naliczania (rrrr-mm-dd):<br />"
                ? HTMLWriter(): inputText("data_1", "od: ", "10", Var2Char(t_data_1), globalDisabled, "return isDate(event)")+"<br />"
                ? HTMLWriter(): inputText("data_2", "do: ", "10", Var2Char(t_data_2), globalDisabled, "return isDate(event)")
+            %>
+         </td>
+         <td>
+            <%
+               ? "Przedzia"+HTMLWriter(): _l()+"y za osob"+HTMLWriter(): _e()+" (dotyczy sposobu naliczania &quot;za osob"+HTMLWriter(): _e()+" - przedzia"+HTMLWriter(): _l()+"y&quot;): <br />"
+               ? "<table>"
+               ? "<tr><th>Os.</th><th>Cena</th></tr>"
+               ? "<tr><td>0</td><td>"+ HTMLWriter(): inputText("stawka_00", , "10", Var2Char(t_stawka_00), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>1</td><td>"+ HTMLWriter(): inputText("stawka_01", , "10", Var2Char(t_stawka_01), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>2</td><td>"+ HTMLWriter(): inputText("stawka_02", , "10", Var2Char(t_stawka_02), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>3</td><td>"+ HTMLWriter(): inputText("stawka_03", , "10", Var2Char(t_stawka_03), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>4</td><td>"+ HTMLWriter(): inputText("stawka_04", , "10", Var2Char(t_stawka_04), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>5</td><td>"+ HTMLWriter(): inputText("stawka_05", , "10", Var2Char(t_stawka_05), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>6</td><td>"+ HTMLWriter(): inputText("stawka_06", , "10", Var2Char(t_stawka_06), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>7</td><td>"+ HTMLWriter(): inputText("stawka_07", , "10", Var2Char(t_stawka_07), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>8</td><td>"+ HTMLWriter(): inputText("stawka_08", , "10", Var2Char(t_stawka_08), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "<tr><td>9+</td><td>"+ HTMLWriter(): inputText("stawka_09", , "10", Var2Char(t_stawka_09), globalDisabled, "return isFloat(event)")+"</td></tr>"
+               ? "</table>"
             %>
          </td>
       </tr>

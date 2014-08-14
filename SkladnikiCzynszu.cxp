@@ -27,7 +27,7 @@
          sortOrder:=::Params: sortOrder
    ENDIF
 
-   dbHelper: SQLSelect({"nr_skl", "nazwa", "CASE s_zaplat WHEN 1 THEN 'za m<sup>2</sup> pow. u"+HTMLWriter(): _z()+"ytkowej' WHEN 2 THEN 'za okre"+HTMLWriter(): _s()+"lon"+HTMLWriter(): _a()+" ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+"' WHEN 3 THEN 'za osob"+HTMLWriter(): _e()+"' WHEN 4 THEN 'za lokal' WHEN 5 THEN 'za ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" dni w m-cu' WHEN 6 THEN 'za osob"+HTMLWriter(): _e()+" - przedzia"+HTMLWriter(): _l()+"y' END AS s_zaplat", "CASE typ_skl WHEN 0 THEN 'sta"+HTMLWriter(): _l()+"y' WHEN 1 THEN 'zmienny' END AS typ_skl", "SUBSTRING(stawka::TEXT FROM 1 FOR char_length(stawka::TEXT)-2)"}, "czynsz", , orderBy+" "+sortOrder)
+   dbHelper: SQLSelect({"nr_skl", "nr_skl", "nazwa", "CASE s_zaplat WHEN 1 THEN 'za m<sup>2</sup> pow. u"+HTMLWriter(): _z()+"ytkowej' WHEN 2 THEN 'za okre"+HTMLWriter(): _s()+"lon"+HTMLWriter(): _a()+" ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+"' WHEN 3 THEN 'za osob"+HTMLWriter(): _e()+"' WHEN 4 THEN 'za lokal' WHEN 5 THEN 'za ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" dni w m-cu' WHEN 6 THEN 'za osob"+HTMLWriter(): _e()+" - przedzia"+HTMLWriter(): _l()+"y' END AS s_zaplat", "CASE typ_skl WHEN 0 THEN 'sta"+HTMLWriter(): _l()+"y' WHEN 1 THEN 'zmienny' END AS typ_skl", "stawka"}, "czynsz", , orderBy+" "+sortOrder)
 
    IF sortOrder=="ASC"
          sortOrder:="DESC"
@@ -36,8 +36,9 @@
    ENDIF
 
    ? HTMLWriter(): h1("Sk"+HTMLWriter(): _l()+"adniki czynszu")
-   ? HTMLWriter(): a("SkladnikCzynszu.cxp?action=add", "Dodaj")
-   ? HTMLWriter(): table({"Numer", "Nazwa", "Spos"+HTMLWriter(): _o()+"b naliczania", "Typ", "Stawka z"+HTMLWriter(): _l()}, {"nr_skl", "nazwa", "s_zaplat", "typ_skl", "stawka"}, "SkladnikiCzynszu", sortOrder, "SkladnikCzynszu.cxp?action=edit&nr_skl=", "SkladnikCzynszu.cxp?action=delete&nr_skl=")
+   //? HTMLWriter(): a("SkladnikCzynszu.cxp?action=add", "Dodaj")
+   ? HTMLWriter(): inputButton("location.href=&quot;SkladnikCzynszu.cxp?action=add&quot;", "Dodaj")
+   ? HTMLWriter(): table({"Numer", "Numer", "Nazwa", "Spos"+HTMLWriter(): _o()+"b naliczania", "Typ", "Stawka z"+HTMLWriter(): _l()}, {"nr_skl", "nr_skl", "nazwa", "s_zaplat", "typ_skl", "stawka"}, "SkladnikiCzynszu", sortOrder, "SkladnikCzynszu.cxp?action=edit&nr_skl=", "SkladnikCzynszu.cxp?action=delete&nr_skl=")
 
    dbHelper: CloseConnection()
 %>

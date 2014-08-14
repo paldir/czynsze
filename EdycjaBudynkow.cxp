@@ -44,6 +44,7 @@
 
          IF validationResult=="" .AND. dbHelper: SQLUpdate("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)}, "kod_1="+::Params: kod_1_old)
             dbHelper: SQLUpdate("lokale", {"kod_lok"}, {::Params: kod_1}, "kod_lok="+::Params: kod_1_old)
+            dbHelper: SQLUpdate("skl_cz", {"kod_lok"}, {::Params: kod_1}, "kod_lok="+::Params: kod_1_old)
 
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 

@@ -27,7 +27,7 @@
          sortOrder:=::Params: sortOrder
    ENDIF
 
-   dbHelper: SQLSelect({"kod_1", "adres", "adres_2"}, "budynki", , orderBy+" "+sortOrder)
+   dbHelper: SQLSelect({"kod_1", "kod_1", "adres", "adres_2"}, "budynki", , orderBy+" "+sortOrder)
 
    IF sortOrder=="ASC"
             sortOrder:="DESC"
@@ -36,8 +36,9 @@
    ENDIF
 
    ? HTMLWriter(): h1("Budynki")
-   ? HTMLWriter(): a("Budynek.cxp?action=add", "Dodaj")
-   ? HTMLWriter(): table({"Kod", "Adres", "Adres cd."}, {"kod_1", "adres", "adres_2"}, "Budynki", sortOrder, "Budynek.cxp?action=edit&kod_1=", "Budynek.cxp?action=delete&kod_1=")
+   //? HTMLWriter(): a("Budynek.cxp?action=add", "Dodaj")
+   ? HTMLWriter(): inputButton("location.href=&quot;Budynek.cxp?action=add&quot;", "Dodaj")
+   ? HTMLWriter(): table({"Kod", "Kod", "Adres", "Adres cd."}, {"kod_1", "kod_1", "adres", "adres_2"}, "Budynki", sortOrder, "Budynek.cxp?action=edit&kod_1=", "Budynek.cxp?action=delete&kod_1=")
 
    dbHelper: CloseConnection()
 %>

@@ -138,7 +138,7 @@ CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od,
    il_osob:=::ReplaceNull(il_osob, "0")
 RETURN result
 
-CLASS METHOD Validation: RentComponent(dbHelper, validate_nr_skl, nr_skl, stawka, stawka_inf, data_1, data_2)
+CLASS METHOD Validation: RentComponent(dbHelper, validate_nr_skl, nr_skl, stawka, stawka_inf, data_1, data_2, stawka_00, stawka_01, stawka_02, stawka_03, stawka_04, stawka_05, stawka_06, stawka_07, stawka_08, stawka_09)
    result:=""
 
    IF validate_nr_skl
@@ -165,12 +165,14 @@ CLASS METHOD Validation: RentComponent(dbHelper, validate_nr_skl, nr_skl, stawka
    ENDIF
 
    stawka:=::ReplaceNull(stawka, "0")
+   stawka:=Var2Char(Round(Val(stawka), 2))
 
    IF !::IsFloatValid(stawka_inf, 9999999.99)
       result+=::WarningAboutFloats("Stawka do korespondencji")
    ENDIF
 
    stawka_inf:=::ReplaceNull(stawka_inf, "0")
+   stawka_inf:=Var2Char(Round(Val(stawka_inf), 2))
 
    SET DATE format TO "yyyy-mm-dd"
 
@@ -184,6 +186,76 @@ CLASS METHOD Validation: RentComponent(dbHelper, validate_nr_skl, nr_skl, stawka
    IF !::isDateValid(data_2)
       result+=::WarningAboutDates("Koniec zakresu dat")
    ENDIF
+
+   IF !::IsFloatValid(stawka_00, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za zero os"+HTMLWriter(): _o()+"b")
+   ENDIF
+
+   stawka_00:=::ReplaceNull(stawka_00, "0")
+   stawka_00:=Var2Char(Round(Val(stawka_00), 2))
+
+   IF !::IsFloatValid(stawka_01, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za jedn"+HTMLWriter(): _a()+" osob"+HTMLWriter(): _e())
+   ENDIF
+
+   stawka_01:=::ReplaceNull(stawka_01, "0")
+   stawka_01:=Var2Char(Round(Val(stawka_01), 2))
+
+   IF !::IsFloatValid(stawka_02, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za dwie osoby")
+   ENDIF
+
+   stawka_02:=::ReplaceNull(stawka_02, "0")
+   stawka_02:=Var2Char(Round(Val(stawka_02), 2))
+
+   IF !::IsFloatValid(stawka_03, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za trzy osoby")
+   ENDIF
+
+   stawka_03:=::ReplaceNull(stawka_03, "0")
+   stawka_03:=Var2Char(Round(Val(stawka_03), 2))
+
+   IF !::IsFloatValid(stawka_04, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za cztery osoby")
+   ENDIF
+
+   stawka_04:=::ReplaceNull(stawka_04, "0")
+   stawka_04:=Var2Char(Round(Val(stawka_04), 2))
+
+   IF !::IsFloatValid(stawka_05, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za pi"+HTMLWriter(): _e()+"c os"+HTMLWriter(): _o()+"b")
+   ENDIF
+
+   stawka_05:=::ReplaceNull(stawka_05, "0")
+   stawka_05:=Var2Char(Round(Val(stawka_05), 2))
+
+   IF !::IsFloatValid(stawka_06, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za sze"+HTMLWriter(): _s()+HTMLWriter(): _c()+" os"+HTMLWriter(): _o()+"b")
+   ENDIF
+
+   stawka_06:=::ReplaceNull(stawka_06, "0")
+   stawka_06:=Var2Char(Round(Val(stawka_06), 2))
+
+   IF !::IsFloatValid(stawka_07, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za siedem os"+HTMLWriter(): _o()+"b")
+   ENDIF
+
+   stawka_07:=::ReplaceNull(stawka_07, "0")
+   stawka_07:=Var2Char(Round(Val(stawka_07), 2))
+
+   IF !::IsFloatValid(stawka_08, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za osiem os"+HTMLWriter(): _o()+"b")
+   ENDIF
+
+   stawka_08:=::ReplaceNull(stawka_08, "0")
+   stawka_08:=Var2Char(Round(Val(stawka_08), 2))
+
+   IF !::IsFloatValid(stawka_09, 9999999.99)
+      result+=::WarningAboutFloats("Stawka za dziewi"+HTMLWriter(): _e()+HTMLWriter(): _c()+" i wi"+HTMLWriter(): _e()+"cej os"+HTMLWriter(): _o()+"b")
+   ENDIF
+
+   stawka_09:=::ReplaceNull(stawka_09, "0")
+   stawka_09:=Var2Char(Round(Val(stawka_09), 2))
 RETURN result
 
 

@@ -16,7 +16,7 @@
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
    IF Len(::Params: orderBy)==0
-         orderBy:="kod_lok"
+         orderBy:="kod_lok, nr_lok"
    ELSE
          orderBy:=::Params: orderBy
    ENDIF
@@ -36,7 +36,8 @@
    ENDIF
 
    ? HTMLWriter(): h1("Lokale")
-   ? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
+   //? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
+   ? HTMLWriter(): inputButton("location.href=&quot;Lokal.cxp?action=add&quot;", "Dodaj")
    ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Powierzchnia u"+HTMLWriter(): _z()+"ytkowa", "Nazwisko", "Imi"+HTMLWriter(): _e()}, {"l.nr_system", "l.kod_lok", "l.nr_lok", "t.typ_lok", "l.pow_uzyt", "l.nazwisko", "l.imie"}, "Lokale", sortOrder, "Lokal.cxp?action=edit&nr_system=", "Lokal.cxp?action=delete&nr_system=")
 
    dbHelper: CloseConnection()

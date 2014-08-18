@@ -18,7 +18,7 @@ CLASS HTMLWriter
       CLASS METHOD table
       CLASS METHOD a
       CLASS METHOD h1
-      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton
+      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton, inputFile
       CLASS METHOD textarea
       CLASS METHOD selectHTML
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z, ReplaceBushes
@@ -122,6 +122,16 @@ RETURN "<input type='hidden' name='"+name+"' value='"+value+"' />"
 CLASS METHOD HTMLWriter: inputButton(onclick, value)
 RETURN "<input type='button' onclick='"+onclick+"' value='"+value+"' />"
 
+CLASS METHOD HTMLWriter: inputFile(name, label, value, disabled)
+   result:=""
+
+   IF label!=NIL
+      result+="<label for='"+name+"'>"+label+"</label><br />"
+   ENDIF
+
+   result+="<input type='file' name='"+name+"' value='"+value+"' "+disabled+"' />"
+RETURN result
+
 CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
    IF text==NIL
       text:=""
@@ -132,7 +142,7 @@ CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
    result+="<textarea name='"+name+"' cols='"+Var2Char(Val(maxlength)/Val(rows))+"' rows='"+rows+"' maxlength='"+maxlength+"' "+disabled+">"+text+"</textarea>"
 RETURN result
 
-CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, columns, table, orderBy)
+CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, columns, table, orderBy, onchange)
    result:=""
 
    IF Len(table)>0
@@ -143,7 +153,13 @@ CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, c
       result+="<label for='"+name+"'>"+label+"</label><br />"
    ENDIF
 
-   result+="<select name='"+name+"' "+disabled+">"
+   result+="<select name='"+name+"' "+disabled
+
+   IF onchange!=NIL
+      result+=" onchange='"+onchange+"' "
+   ENDIF
+
+   result+=">"
 
    FOR i:=1 to LastRec()
       result+="<option value='"+Var2Char(FieldGet(1))+"'"

@@ -1,0 +1,69 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+
+@section Head
+<title>Dokument dotycz@(HTMLWriter(): _a())cy najemcy</title>
+
+@section Body
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   DO CASE
+      CASE ::Params: action=="add"
+         ? HTMLWriter(): h1("Nowy dokument")
+
+         globalDisabled:=""
+         t_nazwa_pliku:=""
+         t_opis:=""
+         submitText:="Dodaj"
+      CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
+         dbHelper: SQLSelect({"nazwa_pliku", "opis"}, "pliki", "id="+::Params: id)
+
+         IF ::Params: action=="edit"
+            ? HTMLWriter(): h1("Edycja dokumentu")
+
+            globalDisabled:=""
+            submitText:="Zapisz"
+         ELSE
+            ? HTMLWriter(): h1("Usuwanie dokumentu")
+
+            globalDisabled:="disabled"
+            submitText:="Usu"+HTMLWriter(): _n()
+         ENDIF
+
+         t_nazwa_pliku:=FieldGet(1)
+         t_opis:=FieldGet(2)
+   ENDCASE
+%>
+
+<form id="formOfDocument" method="post" enctype="multipart/form-data" action="EdycjaPlikowNajemcy.cxp">
+<%
+   //? HTMLWriter(): inputText("nazwa_pliku", "Œcie"+HTMLWriter(): _z()+"ka pliku: ", "100", t_nazwa_pliku, globalDisabled)+"<br /><br />"
+
+   IF ::Params: action!="add"
+      ? HTMLWriter(): inputHidden("id", ::Params: id)
+   ENDIF
+
+   ? HTMLWriter(): inputHidden("action", ::Params: action)
+   ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
+
+   IF ::Params: action!="delete"
+      ? HTMLWriter(): inputFile("plik", "Plik: ", t_nazwa_pliku, globalDisabled)+"<br /><br />"
+   ELSE
+      ? HTMLWriter(): inputText("nazwa_pliku", "Nazwa pliku: ", "25", t_nazwa_pliku, globalDisabled)+"<br /><br />"
+   ENDIF
+
+   ? HTMLWriter(): textarea("opis", "Opis: ", "2", "100", t_opis, globalDisabled)+"<br />"
+
+   ? HTMLWriter(): inputSubmit("Submit", submitText)
+   ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+%>
+</form>
+
+<%
+   dbHelper: CloseConnection()
+%>

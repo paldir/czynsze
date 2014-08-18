@@ -25,6 +25,7 @@
     EdycjaBudynkow.cxp
     EdycjaLokali.cxp
     EdycjaNajemcow.cxp
+    EdycjaPlikowNajemcy.cxp
     EdycjaSkladnikowCzynszu.cxp
     HTMLWriter.ch
     Lokal.cxp
@@ -32,6 +33,8 @@
     master.layout
     Najemca.cxp
     Najemcy.cxp
+    PlikiNajemcy.cxp
+    PlikNajemcy.cxp
     Scripts.js
     SkladnikCzynszu.cxp
     SkladnikiCzynszu.cxp

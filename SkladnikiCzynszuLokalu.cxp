@@ -7,27 +7,16 @@
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
+   t_dan_p:=""
+
    IF Len(::Params: nr_skl)>0
       dbHelper: SQLSelect({"s_zaplat"}, "czynsz", "nr_skl="+::Params: nr_skl)
 
       t_s_zaplat:=FieldGet(1)
 
-      DO CASE
-         CASE t_s_zaplat==1
-            dbHelper: SQLSelect({"pow_uzyt"}, "lokale", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok)
-         CASE t_s_zaplat==2
-            dbHelper: ExecuteQuery("SELECT 0")
-         CASE t_s_zaplat==3
-            dbHelper: SQLSelect({"il_osob"}, "lokale", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok)
-         CASE t_s_zaplat==4
-            dbHelper: ExecuteQuery("SELECT 1")
-         CASE t_s_zaplat==5
-            dbHelper: ExecuteQuery("SELECT 0")
-         CASE t_s_zaplat==6
-            dbHelper: ExecuteQuery("SELECT 1")
-      ENDCASE
-
-      t_dan_p:=Var2Char(FieldGet(1))
+      IF t_s_zaplat==2
+         t_dan_p:=::Params: dan_p
+      ENDIF
 
       DO CASE
          CASE ::Params: action=="add"
@@ -41,16 +30,48 @@
 
 @section Head
 <title>Sk@(HTMLWriter(): _l())adniki czynszu lokalu</title>
+<script>
+   function nr_skl_onchange(value) {
+      <%
+         dbHelper: SQLSelect({"nr_skl"}, "czynsz", "s_zaplat=2")
+      %>
+      values=[
+      <%
+         FOR i:=1 to LastRec()
+            ? "'"+Var2Char(FieldGet(1))+"'"
+
+            IF i!=LastRec()
+               ? ", "
+            ENDIF
+
+            DbSkip()
+         NEXT
+      %>
+      ];
+
+      for (i=0; i<values.length; i++) {
+         if (values[i]==value)
+         {
+            document.getElementById("dan_p_span").hidden=false
+            return
+         }
+      }
+
+      document.getElementById("dan_p_span").hidden=true
+   }
+</script>
 
 @section Body
 <%
    ? HTMLWriter(): h1("Sk"+HTMLWriter(): _l()+"adniki czynszu lokalu")
 
-   dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, c.nazwa, c.stawka, sc.dan_p, SUBSTRING((c.stawka*sc.dan_p)::TEXT FROM 1 FOR char_length((c.stawka*sc.dan_p)::TEXT)-4) FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok)
+   //dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, c.nazwa, c.stawka, sc.dan_p, SUBSTRING((c.stawka*sc.dan_p)::TEXT FROM 1 FOR char_length((c.stawka*sc.dan_p)::TEXT)-4) FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok)
+   dbHelper: ExecuteStatement("CREATE FUNCTION pg_temp.ilosc(NUMERIC, NUMERIC, NUMERIC, NUMERIC) RETURNS NUMERIC AS $$ BEGIN CASE $1 WHEN 1 THEN RETURN (SELECT pow_uzyt FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); WHEN 2 THEN RETURN (SELECT dan_p FROM skl_cz WHERE kod_lok=$2 AND nr_lok=$3 AND nr_skl=$4); WHEN 3 THEN RETURN (SELECT il_osob FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); WHEN 4 THEN RETURN 1; WHEN 6 THEN RETURN (SELECT il_osob FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); END CASE; END; $$ LANGUAGE plpgsql;")
+   dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, c.nazwa, to_char(c.stawka, 'FM999999999.00'), to_char(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), 'FM999999999.00'), to_char(c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), 'FM999999999.0000')FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
    ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , , "SkladnikiCzynszuLokalu.cxp?action=delete"+Chr(38)+"kod_lok="+::Params: kod_lok+Chr(38)+"nr_lok="+::Params: nr_lok+Chr(38)+"nr_skl=")
 
-   dbHelper: ExecuteQuery("SELECT SUBSTRING((SUM(c.stawka*sc.dan_p))::TEXT FROM 1 FOR char_length((SUM(c.stawka*sc.dan_p))::TEXT)-4) FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok)
+   dbHelper: ExecuteQuery("SELECT to_char(SUM(c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl)), 'FM999999999.0000')FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
    ? "Razem: "+Var2Char(FieldGet(1))
 
@@ -60,10 +81,15 @@
       ? HTMLWriter(): inputHidden("action", "add")
       ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
       ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
-      ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl")
+      ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl", "nr_skl_onchange(this.value)")
+      ? "<span id='dan_p_span'>Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+": "+HTMLWriter(): inputText("dan_p", , "15", t_dan_p, "", "return isFloat(event)")+"</span>"
       ? HTMLWriter(): inputSubmit("Submit", "Dodaj")
    %>
 </form>
+
+<script>
+      document.getElementById("dan_p_span").hidden=true
+</script>
 
 <%
    dbHelper: CloseConnection()

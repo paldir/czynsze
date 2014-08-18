@@ -1,0 +1,27 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+%>
+
+@section Head
+<title>Dokumenty dotycz@(HTMLWriter(): _a())ce najemcy</title>
+
+@section Body
+<script>
+   localStorage.bushes=""
+</script>
+<%
+   ? HTMLWriter(): h1("Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
+
+   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki", "nr_system="+::Params: nr_system)
+
+   ? HTMLWriter(): inputButton("location.href=&quot;PlikNajemcy.cxp?action=add&nr_system="+::Params: nr_system+"&quot;", "Dodaj")
+   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "PlikNajemcy.cxp?action=edit&id=", "PlikNajemcy.cxp?action=delete&id=")
+
+   dbHelper: CloseConnection()
+%>

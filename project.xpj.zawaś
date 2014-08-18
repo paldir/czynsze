@@ -3,7 +3,11 @@
 <session>
   <active file=".\EdycjaNajemcow.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\EdycjaSkladnikowCzynszu.cxp" column="81" line="60" />
-    <openfile path=".\EdycjaNajemcow.cxp" column="0" line="0" />
+    <openfile path=".\HTMLWriter.ch" column="46" line="131" />
+    <openfile path=".\PlikNajemcy.cxp" column="2" line="5" />
+    <openfile path=".\PlikiNajemcy.cxp" column="42" line="23" />
+    <openfile path=".\EdycjaPlikowNajemcy.cxp" column="108" line="25" />
+    <openfile path=".\EdycjaNajemcow.cxp" column="3" line="58" />
+    <openfile path=".\Najemca.cxp" column="81" line="40" />
   </openfiles>
 </session>

@@ -1,0 +1,61 @@
+<%#PAGE layout="master.layout"%>
+<%#Code locality="page-global"%>
+<%
+    #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+    #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+    #include "C:\inetpub\wwwroot\czynsze\Validation.ch"
+%>
+
+@section Head
+<title>Edycja dokument@(HTMLWriter(): _o())w</title>
+
+@section Body
+<script>
+   localStorage.bushes="bushesRemoved"
+</script>
+
+<%
+   dbHelper:= DbHelper(): new("localhost", "czynsze")
+
+   DO CASE
+      CASE ::Params: action=="add"
+         dbHelper: SQLSelect({"MAX(id)+1"}, "pliki")
+
+         t_id=FieldGet(1)
+
+         IF dbHelper: SQLInsert("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), "", Var2Char(::HttpRequest: Files: plik: Name), Var2Char(::Params: opis), ::Params: nr_system})
+            ? "Dokument dodany<br />"
+
+            dbWriteResult:=.T.
+         ELSE
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
+         ENDIF
+      CASE ::Params: action=="edit"
+         IF dbHelper: SQLUpdate("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {t_id, "", ::HttpRequest: Files: plik: Name, ::Params: opis, ::Params: nr_system}, "id="+::Params: id)
+            ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
+
+            dbWriteResult:=.T.
+         ELSE
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
+         ENDIF
+      CASE ::Params: action=="delete"
+         dbWriteResult:=.T.
+
+         dbHelper: SQLDelete("pliki", "id="+::Params: id)
+
+         ? "Dokument usuni"+HTMLWriter(): _e()+"ty<br />"
+   ENDCASE
+
+   IF dbWriteResult
+         ? HTMLWriter(): inputButton("location.href=&quot;PlikiNajemcy.cxp?nr_system="+::Params: nr_system+"&quot;", "Powrót")
+   ELSE
+         ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")
+         ? HTMLWriter(): inputButton("location.href=&quot;Najemcy.cxp&quot;", "Anuluj")
+   ENDIF
+
+   dbHelper: CloseConnection()
+%>

@@ -10,6 +10,35 @@
 
 @section Head
 <title>Sk@(HTMLWriter(): _l())adnik czynszu</title>
+<script>
+function s_zaplat_onchange(value)
+{
+   if (value==6) {
+      document.getElementsByName("stawka_00")[0].disabled=false
+      document.getElementsByName("stawka_01")[0].disabled=false
+      document.getElementsByName("stawka_02")[0].disabled=false
+      document.getElementsByName("stawka_03")[0].disabled=false
+      document.getElementsByName("stawka_04")[0].disabled=false
+      document.getElementsByName("stawka_05")[0].disabled=false
+      document.getElementsByName("stawka_06")[0].disabled=false
+      document.getElementsByName("stawka_07")[0].disabled=false
+      document.getElementsByName("stawka_08")[0].disabled=false
+      document.getElementsByName("stawka_09")[0].disabled=false
+   }
+   else {
+      document.getElementsByName("stawka_00")[0].disabled=true
+      document.getElementsByName("stawka_01")[0].disabled=true
+      document.getElementsByName("stawka_02")[0].disabled=true
+      document.getElementsByName("stawka_03")[0].disabled=true
+      document.getElementsByName("stawka_04")[0].disabled=true
+      document.getElementsByName("stawka_05")[0].disabled=true
+      document.getElementsByName("stawka_06")[0].disabled=true
+      document.getElementsByName("stawka_07")[0].disabled=true
+      document.getElementsByName("stawka_08")[0].disabled=true
+      document.getElementsByName("stawka_09")[0].disabled=true
+   }
+}
+</script>
 
 @section Body
 <%
@@ -56,7 +85,7 @@
          t_nr_skl:=FieldGet(1)
          t_nazwa:=FieldGet(2)
          t_rodz_e:=FieldGet(3)
-         t_s_zaplat:=FieldGet(4)
+         t_s_zaplat:=Var2Char(FieldGet(4))
          t_stawka:=FieldGet(5)
          t_stawka_inf:=FieldGet(6)
          t_typ_skl:=FieldGet(7)
@@ -94,7 +123,7 @@
 
              dbHelper: ExecuteQuery("SELECT 1, 'za m<sup>2</sup> pow. u"+HTMLWriter(): _z()+"ytkowej' UNION ALL SELECT 2, 'za okre"+HTMLWriter(): _s()+"lon"+HTMLWriter(): _a()+" ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+"' UNION ALL SELECT 3, 'za osob"+HTMLWriter(): _e()+"' UNION ALL SELECT 4, 'za lokal' UNION ALL SELECT 5, 'za ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" dni w m-cu' UNION ALL SELECT 6, 'za osob"+HTMLWriter(): _e()+" - przedzia"+HTMLWriter(): _l()+"y'")
 
-             ? HTMLWriter(): selectHTML(dbHelper, "s_zaplat", "Spos"+HTMLWriter(): _o()+"b naliczania: ", Var2Char(t_s_zaplat), globalDisabled, {"", ""}, "")+"<br /><br >"
+             ? HTMLWriter(): selectHTML(dbHelper, "s_zaplat", "Spos"+HTMLWriter(): _o()+"b naliczania: ", Var2Char(t_s_zaplat), globalDisabled, {"", ""}, "", , "s_zaplat_onchange(this.value)")+"<br /><br >"
              ? HTMLWriter(): inputText("stawka", "Stawka: ", "10", Var2Char(t_stawka), globalDisabled, "return isFloat(event)")+"<br /><br />"
              ? HTMLWriter(): inputText("stawka_inf", "Stawka do korespondencji: ", "10", Var2Char(t_stawka_inf), globalDisabled, "return isFloat(event)")+"<br /><br />"
           %>
@@ -111,6 +140,12 @@
          </td>
          <td>
             <%
+               IF ::Params: action!="delete" .AND. t_s_zaplat=="6"
+                  globalDisabled:=""
+               ELSE
+                  globalDisabled:="disabled"
+               ENDIF
+
                ? "Przedzia"+HTMLWriter(): _l()+"y za osob"+HTMLWriter(): _e()+" (dotyczy sposobu naliczania &quot;za osob"+HTMLWriter(): _e()+" - przedzia"+HTMLWriter(): _l()+"y&quot;): <br />"
                ? "<table>"
                ? "<tr><th>Os.</th><th>Cena</th></tr>"

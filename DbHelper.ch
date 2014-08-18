@@ -17,12 +17,11 @@ CLASS DbHelper
    EXPORTED:
       METHOD init
       METHOD CloseConnection
-      METHOD ExecuteQuery
+      METHOD ExecuteQuery, ExecuteStatement
       METHOD SQLSelect, SQLInsert, SQLUpdate, SQLDelete
       METHOD GetLastMessage
    HIDDEN:
       VAR oSession
-      METHOD ExecuteStatement
 ENDCLASS
 
 METHOD DbHelper: init(server, db)

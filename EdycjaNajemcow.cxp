@@ -20,7 +20,11 @@
 
    DO CASE
       CASE ::Params: action=="add"
-         IF validationResult=="" .AND. dbHelper: SQLInsert("najemcy", {"nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, {::Params: nr_kontr, ::Params: kod_najem, Var2Char(::Params: nazwisko), Var2Char(::Params: imie), Var2Char(::Params: adres_1), Var2Char(::Params: adres_2), Var2Char(::Params: nr_dow), Var2Char(::Params: pesel), Var2Char(::Params: nazwa_z), Var2Char(::Params: e_mail), Var2Char(::Params: l__has), Substr(::Params: uwagi, 1, 60), Substr(::Params: uwagi, 61, 60)})
+         dbHelper: SQLSelect({"MAX(nr_system)+1"}, "najemcy")
+
+         t_nr_system:=FieldGet(1)
+
+         IF validationResult=="" .AND. dbHelper: SQLInsert("najemcy", {"nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2", "nr_system"}, {::Params: nr_kontr, ::Params: kod_najem, Var2Char(::Params: nazwisko), Var2Char(::Params: imie), Var2Char(::Params: adres_1), Var2Char(::Params: adres_2), Var2Char(::Params: nr_dow), Var2Char(::Params: pesel), Var2Char(::Params: nazwa_z), Var2Char(::Params: e_mail), Var2Char(::Params: l__has), Substr(::Params: uwagi, 1, 60), Substr(::Params: uwagi, 61, 60), Var2Char(t_nr_system)})
             ? "Najemca dodany <br />"
 
             dbWriteResult:=.T.

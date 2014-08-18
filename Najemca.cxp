@@ -34,10 +34,11 @@
          t_uwagi:=""
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action="delete"
-         dbHelper: SQLSelect({"nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
+         dbHelper: SQLSelect({"nr_system", "nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
 
          IF ::Params: action=="edit"
             ? HTMLWriter(): h1("Edycja najemcy")
+            ? HTMLWriter(): a("PlikiNajemcy.cxp?nr_system="+Var2Char(FieldGet(1)), "Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
 
             globalDisabled:=""
             submitText:="Zapisz"
@@ -48,18 +49,18 @@
             submitText:="Usu"+HTMLWriter(): _n()
          ENDIF
 
-         t_nr_kontr:=FieldGet(1)
-         t_kod_najem:=FieldGet(2)
-         t_nazwisko:=FieldGet(3)
-         t_imie:=FieldGet(4)
-         t_adres_1:=FieldGet(5)
-         t_adres_2:=FieldGet(6)
-         t_nr_dow:=FieldGet(7)
-         t_pesel:=FieldGet(8)
-         t_nazwa_z:=FieldGet(9)
-         t_e_mail:=FieldGet(10)
-         t_l__has:=FieldGet(11)
-         t_uwagi:=Var2Char(FieldGet(12))+Var2Char(FieldGet(13))
+         t_nr_kontr:=FieldGet(2)
+         t_kod_najem:=FieldGet(3)
+         t_nazwisko:=FieldGet(4)
+         t_imie:=FieldGet(5)
+         t_adres_1:=FieldGet(6)
+         t_adres_2:=FieldGet(7)
+         t_nr_dow:=FieldGet(8)
+         t_pesel:=FieldGet(9)
+         t_nazwa_z:=FieldGet(10)
+         t_e_mail:=FieldGet(11)
+         t_l__has:=FieldGet(12)
+         t_uwagi:=Var2Char(FieldGet(13))+Var2Char(FieldGet(14))
    ENDCASE
 %>
  <form id="formOfTenant" method="get" action="EdycjaNajemcow.cxp">

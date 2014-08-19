@@ -21,7 +21,7 @@
    dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki", "nr_system="+::Params: nr_system)
 
    ? HTMLWriter(): inputButton("location.href=&quot;PlikNajemcy.cxp?action=add&nr_system="+::Params: nr_system+"&quot;", "Dodaj")
-   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "PlikNajemcy.cxp?action=edit&id=", "PlikNajemcy.cxp?action=delete&id=")
+   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "PlikNajemcy.cxp?action=edit&nr_system="+::Params: nr_system+"&id=", "PlikNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", {"Plik.cxp?id="}, {"Zobacz plik"})
 
    dbHelper: CloseConnection()
 %>

@@ -26,7 +26,7 @@ CLASS HTMLWriter
       //CLASS METHOD RemoveBlankChars
 ENDCLASS
 
-CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, deleteUrl)
+CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, deleteUrl, extraUrls, extraUrlsTexts)
    result:="<table border='1'>"
    result+="<tr>"
 
@@ -54,6 +54,13 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, delet
       ENDIF
 
       result+="<td>"+::a(deleteUrl+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
+
+      IF extraUrls!=NIL
+       FOR j:=1 to Len(extraUrls)
+          result+="<td>"+::a(extraUrls[j]+Var2Char(FieldGet(1)), extraUrlsTexts[j])+"</td>"
+       NEXT
+      ENDIF
+
       result+="</tr>"
 
       DbSkip()

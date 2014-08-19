@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<%#Page trace="no"%>
+
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+   <title>Plik</title>
+</head>
+
+<body>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+   dbHelper: SQLSelect({"length(plik)"}, "pliki", "id="+::Params: id)
+
+   ? "Dlugosc: "
+   ? length:=FieldGet(1)
+   ? "<br />"
+   file:=""
+   pointer:=1
+   segment:=100000
+
+   DO WHILE pointer<length
+      dbHelper: SQLSelect({"substring(plik FROM "+Str(pointer)+" FOR "+Str(segment)+")"}, "pliki", "id="+::Params: id)
+
+      file+=Base642Bin(FieldGet(1))
+      pointer+=segment
+   ENDDO
+
+   ? file
+   dbHelper: CloseConnection()
+%>
+
+</body>
+
+</html>

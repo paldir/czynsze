@@ -21,9 +21,10 @@
       CASE ::Params: action=="add"
          dbHelper: SQLSelect({"MAX(id)+1"}, "pliki")
 
-         t_id=FieldGet(1)
+         t_id:=FieldGet(1)
+         t_plik:=Bin2Base64(::HttpRequest: Files: plik: Data)
 
-         IF dbHelper: SQLInsert("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), "", Var2Char(::HttpRequest: Files: plik: Name), Var2Char(::Params: opis), ::Params: nr_system})
+         IF dbHelper: SQLInsert("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), t_plik, Var2Char(::HttpRequest: Files: plik: Name), Var2Char(::Params: opis), ::Params: nr_system})
             ? "Dokument dodany<br />"
 
             dbWriteResult:=.T.
@@ -33,7 +34,15 @@
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="edit"
-         IF dbHelper: SQLUpdate("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {t_id, "", ::HttpRequest: Files: plik: Name, ::Params: opis, ::Params: nr_system}, "id="+::Params: id)
+         IF ::HttpRequest: Files: NumItems>0
+            columns:={"plik", "nazwa_pliku", "opis"}
+            values:={::HttpRequest: Files: plik: Data, ::HttpRequest: Files: plik: Name, ::Params: opis}
+         ELSE
+            columns:={"opis"}
+            values:={::Params: opis}
+         ENDIF
+
+         IF dbHelper: SQLUpdate("pliki", columns, values, "id="+::Params: id)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 
             dbWriteResult:=.T.

@@ -34,17 +34,11 @@
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="edit"
-         IF ::Params: kod_1!=::Params: kod_1_old
-            validate_kod_1:=.T.
-         ELSE
-            validate_kod_1:=.F.
-         ENDIF
+         validationResult:=Validation(): Building(dbHelper, .F., ::Params: kod_1, @t_il_miesz, @t_udzial_w_k)
 
-         validationResult:=Validation(): Building(dbHelper, validate_kod_1, ::Params: kod_1, @t_il_miesz, @t_udzial_w_k)
-
-         IF validationResult=="" .AND. dbHelper: SQLUpdate("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)}, "kod_1="+::Params: kod_1_old)
-            dbHelper: SQLUpdate("lokale", {"kod_lok"}, {::Params: kod_1}, "kod_lok="+::Params: kod_1_old)
-            dbHelper: SQLUpdate("skl_cz", {"kod_lok"}, {::Params: kod_1}, "kod_lok="+::Params: kod_1_old)
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("budynki", {"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, {::Params: kod_1, t_il_miesz, ::Params: sp_rozl, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_udzial_w_k, SubStr(::Params: uwagi, 1, 70), SubStr(::Params: uwagi, 71, 70), SubStr(::Params: uwagi, 141, 70), SubStr(::Params: uwagi, 211, 70), SubStr(::Params: uwagi, 281, 70), SubStr(::Params: uwagi, 351, 70)}, "kod_1="+::Params: kod_1)
+            //dbHelper: SQLUpdate("lokale", {"kod_lok"}, {::Params: kod_1}, "kod_lok="+::Params: kod_1_old)
+            //dbHelper: SQLUpdate("skl_cz", {"kod_lok"}, {::Params: kod_1}, "kod_lok="+::Params: kod_1_old)
 
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 
@@ -56,12 +50,24 @@
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="delete"
-         validationResult:=""
-         dbWriteResult:=.T.
+         dbHelper: SQLSelect({"nr_lok"}, "lokale", "kod_lok="+::Params: kod_1)
 
-         dbHelper: SQLDelete("budynki", "kod_1="+::Params: kod_1_old)
+         IF LastRec()==0
+            validationResult:=""
+         ELSE
+            validationResult:="Nie mo"+HTMLWriter(): _z()+"na usun"+HTMLWriter(): _a()+HTMLWriter(): _c()+" budynku, do kt"+HTMLWriter(): _o()+"rego przypisane s"+HTMLWriter(): _a()+" lokale! <br />"
+         ENDIF
 
-         ? "Budynek usuni"+HTMLWriter(): _e()+"ty<br />"
+         IF validationResult=="" .AND. dbHelper: SQLDelete("budynki", "kod_1="+::Params: kod_1)
+            ? "Budynek usuni"+HTMLWriter(): _e()+"ty<br />"
+
+            dbWriteResult:=.T.
+         ELSE
+            ? validationResult
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
+         ENDIF
    ENDCASE
 
    IF validationResult=="" .AND. dbWriteResult

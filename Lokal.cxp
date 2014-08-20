@@ -90,6 +90,12 @@
           <td>
            <%
              ? HTMLWriter(): inputHidden("action", ::Params: action)
+
+             IF ::Params: action!="add"
+               ? HTMLWriter(): inputHidden("kod_lok_old", Var2Char(t_kod_lok))
+               ? HTMLWriter(): inputHidden("nr_lok_old", Var2Char(t_nr_lok))
+             ENDIF
+
              ? HTMLWriter(): inputHidden("nr_system", Var2Char(t_nr_system))
              ? HTMLWriter(): inputText("nr_system", "Nr systemowy: ", "14", Var2Char(t_nr_system), "disabled")+"<br /><br />"
              //? HTMLWriter(): inputText("kod_lok", "Kod budynku: ", "5", Var2Char(t_kod_lok))+"<br /><br />"

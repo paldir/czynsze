@@ -17,41 +17,56 @@
 <%
    dbHelper:= DbHelper(): new("localhost", "czynsze")
 
+   IF ::HttpRequest: Files: NumItems>0
+      t_nazwa_pliku:=::HttpRequest: Files: plik: Name
+      t_plik:=Bin2Base64(::HttpRequest: Files: plik: Data)
+      columns:={"plik", "nazwa_pliku", "opis"}
+      values:={t_plik, t_nazwa_pliku, ::Params: opis}
+   ELSE
+      t_nazwa_pliku:=""
+      t_plik:=""
+      columns:={"opis"}
+      values:={::Params: opis}
+   ENDIF
+
    DO CASE
       CASE ::Params: action=="add"
          dbHelper: SQLSelect({"MAX(id)+1"}, "pliki")
 
          t_id:=FieldGet(1)
-         t_plik:=Bin2Base64(::HttpRequest: Files: plik: Data)
+         validationResult:=""//Validation(): TenantFiles(.T., t_nazwa_pliku)
 
-         IF dbHelper: SQLInsert("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), t_plik, Var2Char(::HttpRequest: Files: plik: Name), Var2Char(::Params: opis), ::Params: nr_system})
+         IF validationResult=="" .AND. dbHelper: SQLInsert("pliki", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), t_plik, t_nazwa_pliku, Var2Char(::Params: opis), ::Params: nr_system})
             ? "Dokument dodany<br />"
 
             dbWriteResult:=.T.
          ELSE
+            ? validationResult
             ? dbHelper: GetLastMessage()+"<br />"
 
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="edit"
          IF ::HttpRequest: Files: NumItems>0
-            columns:={"plik", "nazwa_pliku", "opis"}
-            values:={::HttpRequest: Files: plik: Data, ::HttpRequest: Files: plik: Name, ::Params: opis}
+            validate_plik:=.T.
          ELSE
-            columns:={"opis"}
-            values:={::Params: opis}
+            validate_plik:=.F.
          ENDIF
 
-         IF dbHelper: SQLUpdate("pliki", columns, values, "id="+::Params: id)
+         validationResult:=Validation(): TenantFiles(validate_plik, t_nazwa_pliku)
+
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("pliki", columns, values, "id="+::Params: id)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 
             dbWriteResult:=.T.
          ELSE
+            ? validationResult
             ? dbHelper: GetLastMessage()+"<br />"
 
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="delete"
+         validationResult:=""
          dbWriteResult:=.T.
 
          dbHelper: SQLDelete("pliki", "id="+::Params: id)
@@ -59,7 +74,7 @@
          ? "Dokument usuni"+HTMLWriter(): _e()+"ty<br />"
    ENDCASE
 
-   IF dbWriteResult
+   IF validationResult=="" .AND. dbWriteResult
          ? HTMLWriter(): inputButton("location.href=&quot;PlikiNajemcy.cxp?nr_system="+::Params: nr_system+"&quot;", "Powrót")
    ELSE
          ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")

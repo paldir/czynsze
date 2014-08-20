@@ -82,7 +82,7 @@ METHOD DbHelper: SQLInsert(table, columns, values)
    statement+="'"+HTMLWriter(): ReplaceBushes(values[Len(values)])+"')"
 RETURN ::ExecuteStatement(statement)
 
-METHOD SQLUpdate(table, columns, values, whereStatement)
+METHOD DbHelper: SQLUpdate(table, columns, values, whereStatement)
    statement:="UPDATE "+table+" SET "
 
    FOR i:=1 to Len(columns)-1
@@ -93,8 +93,8 @@ METHOD SQLUpdate(table, columns, values, whereStatement)
    statement+=" WHERE "+ whereStatement
 RETURN ::ExecuteStatement(statement)
 
-METHOD SQLDelete(table, where)
+METHOD DbHelper: SQLDelete(table, where)
 RETURN ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)
 
-METHOD GetLastMessage()
+METHOD DbHelper: GetLastMessage()
 RETURN ::oSession: getLastMessage()

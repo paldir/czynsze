@@ -18,9 +18,7 @@
    dbHelper:=DbHelper(): new("localhost", "czynsze")
    dbHelper: SQLSelect({"length(plik)"}, "pliki", "id="+::Params: id)
 
-   ? "Dlugosc: "
-   ? length:=FieldGet(1)
-   ? "<br />"
+   length:=FieldGet(1)
    file:=""
    pointer:=1
    segment:=100000
@@ -28,12 +26,15 @@
    DO WHILE pointer<length
       dbHelper: SQLSelect({"substring(plik FROM "+Str(pointer)+" FOR "+Str(segment)+")"}, "pliki", "id="+::Params: id)
 
-      file+=Base642Bin(FieldGet(1))
+      file+=FieldGet(1)
       pointer+=segment
    ENDDO
 
-   ? file
+   file:=Base642Bin(file)
    dbHelper: CloseConnection()
+
+   ::HttpResponse: ContentType:="application/pdf"
+   ::HttpResponse: WriteBinary(file)
 %>
 
 </body>

@@ -228,7 +228,7 @@ CLASS METHOD HTMLWriter: ReplaceBushes(chars)
    chars:=StrTran(chars, '&#324;', 'n') //n
    chars:=StrTran(chars, '&#243;', 'o') //o
    chars:=StrTran(chars, '&#347;', 's') //s
-   chars:=StrTran(chars, '&#378;', 'x') //x
+   chars:=StrTran(chars, '&#378;', 'z') //x
    chars:=StrTran(chars, '&#380;', 'z') //z
 
    chars:=StrTran(chars, '&#260;', 'A') //A

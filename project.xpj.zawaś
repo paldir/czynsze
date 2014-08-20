@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\PlikiNajemcy.cxp" target=".\czynsze.web" />
+  <active file=".\HTMLWriter.ch" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\EdycjaPlikowNajemcy.cxp" column="53" line="17" />
-    <openfile path=".\PlikNajemcy.cxp" column="0" line="1" />
-    <openfile path=".\PlikiNajemcy.cxp" column="94" line="22" />
-    <openfile path=".\HTMLWriter.ch" column="61" line="59" />
-    <openfile path=".\Plik.cxp" column="13" line="22" />
+    <openfile path=".\PlikiNajemcy.cxp" column="25" line="22" />
+    <openfile path=".\HTMLWriter.ch" column="37" line="230" />
+    <openfile path=".\PlikNajemcy.cxp" column="29" line="15" />
+    <openfile path=".\Plik.cxp" column="48" line="35" />
+    <openfile path=".\EdycjaPlikowNajemcy.cxp" column="143" line="38" />
   </openfiles>
 </session>

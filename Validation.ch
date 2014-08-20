@@ -16,7 +16,7 @@
 
 CLASS Validation
    EXPORTED:
-      CLASS METHOD Building, LocalTable, RentComponent
+      CLASS METHOD Building, LocalTable, RentComponent, TenantFiles
    HIDDEN:
       CLASS METHOD ReplaceNull
       CLASS METHOD IntegerWithoutChars
@@ -61,13 +61,21 @@ CLASS METHOD Validation: Building(dbHelper, validate_kod_1, kod_1, il_miesz, udz
 
 RETURN result
 
-CLASS METHOD Validation: LocalTable(nr_lok, pow_uzyt, pow_miesz, udzial, dat_od, dat_do, p_1, p_2, p_3, p_4, p_5, p_6, il_osob)
+CLASS METHOD Validation: LocalTable(dbHelper, validate_nr_lok, kod_lok, nr_lok, pow_uzyt, pow_miesz, udzial, dat_od, dat_do, p_1, p_2, p_3, p_4, p_5, p_6, il_osob)
    result:=""
 
-   nr_lok:=::ReplaceNull(nr_lok, "0")
+   IF validate_nr_lok
+      nr_lok:=::ReplaceNull(nr_lok, "0")
 
-   IF !::IsFloatValid(pow_uzyt, 999999.99)
-      result+=::WarningAboutFloats("Powierzchnia u"+HTMLWriter(): _z()+"ytkowa")
+      IF !::IsFloatValid(pow_uzyt, 999999.99)
+         result+=::WarningAboutFloats("Powierzchnia u"+HTMLWriter(): _z()+"ytkowa")
+      ENDIF
+
+      dbHelper: SQLSelect({"kod_lok"}, "lokale", "kod_lok="+kod_lok+" AND nr_lok="+nr_lok)
+
+      IF LastRec()>0
+         result+="W wybranym budynku istnieje ju"+HTMLWriter(): _z()+" lokal o podanym numerze! "
+      ENDIF
    ENDIF
 
    pow_uzyt:=::ReplaceNull(pow_uzyt, "0")
@@ -256,6 +264,27 @@ CLASS METHOD Validation: RentComponent(dbHelper, validate_nr_skl, nr_skl, stawka
 
    stawka_09:=::ReplaceNull(stawka_09, "0")
    stawka_09:=Var2Char(Round(Val(stawka_09), 2))
+RETURN result
+
+CLASS METHOD Validation: TenantFiles(validate_plik, nazwa_pliku)
+   result:=""
+
+   IF validate_plik
+      i:=Len(nazwa_pliku)
+
+      IF i==0
+         result+="Nie wybrano "+HTMLWriter(): _z()+"adnego pliku! "
+      ELSE
+         DO WHILE i>0 .AND. nazwa_pliku[i]!='.'
+            i--
+         END DO
+
+         IF Lower(SubStr(nazwa_pliku, i+1))!="pdf"
+            result+="Plik nie jest w formacie pdf! <br />"
+            //result+=Lower(SubStr(nazwa_pliku, i+1))
+         ENDIF
+      ENDIF
+   ENDIF
 RETURN result
 
 

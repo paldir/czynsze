@@ -47,6 +47,7 @@ function s_zaplat_onchange(value)
          ? HTMLWriter(): h1("Nowy sk"+HTMLWriter(): _l()+"adnik czynszu")
 
          globalDisabled:=""
+         nr_skl_disabled:=""
          t_nr_skl:=""
          t_nazwa:=""
          t_rodz_e:=""
@@ -69,6 +70,8 @@ function s_zaplat_onchange(value)
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
          dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, "czynsz", "nr_skl="+::Params: nr_skl)
+
+         nr_skl_disabled:="disabled"
 
          IF ::Params: action=="edit"
             ? HTMLWriter(): h1("Edycja sk"+HTMLWriter(): _l()+"adnika czynszu")
@@ -114,7 +117,7 @@ function s_zaplat_onchange(value)
                 ? HTMLWriter(): inputHidden("nr_skl_old", Var2Char(t_nr_skl))
              ENDIF
 
-             ? HTMLWriter(): inputText("nr_skl", "Nr sk"+HTMLWriter(): _l()+"adnika: ", "3", Var2Char(t_nr_skl), globalDisabled, "return isInteger(event)")+"<br /><br />"
+             ? HTMLWriter(): inputText("nr_skl", "Nr sk"+HTMLWriter(): _l()+"adnika: ", "3", Var2Char(t_nr_skl), nr_skl_disabled, "return isInteger(event)")+"<br /><br />"
              ? HTMLWriter(): inputText("nazwa", "Nazwa: ", "30", Var2Char(t_nazwa), globalDisabled)+"<br /><br />"
 
              dbHelper: ExecuteQuery("SELECT 1, 'dziennik komornego' UNION ALL SELECT 2, 'wp"+HTMLWriter(): _l()+"aty' UNION ALL SELECT 3, 'zmniejszenia' UNION ALL SELECT 4, 'zwi"+HTMLWriter(): _e()+"kszenia'")

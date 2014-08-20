@@ -35,13 +35,13 @@
    t_nazwisko:=Var2Char(FieldGet(1))
    t_imie:=Var2Char(FieldGet(2))
 
-   validationResult:=Validation(): LocalTable(@t_nr_lok, @t_pow_uzyt, @t_pow_miesz, @t_udzial, @t_dat_od, @t_dat_do, @t_p_1, @t_p_2, @t_p_3, @t_p_4, @t_p_5, @t_p_6, @t_il_osob)
-
    DO CASE
       CASE ::Params: action=="add"
          dbHelper: SQLSelect({"nazwisko", "imie"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
          t_nazwisko:=Var2Char(FieldGet(1))
          t_imie:=Var2Char(FieldGet(2))
+
+         validationResult:=Validation(): LocalTable(dbHelper, .T., ::Params: kod_lok, @t_nr_lok, @t_pow_uzyt, @t_pow_miesz, @t_udzial, @t_dat_od, @t_dat_do, @t_p_1, @t_p_2, @t_p_3, @t_p_4, @t_p_5, @t_p_6, @t_il_osob)
 
          IF validationResult=="" .AND. dbHelper: SQLInsert("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "nazwisko", "imie", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_nazwisko, t_imie, t_il_osob, ::Params: kod_praw})
             ? "Lokal dodany <br />"
@@ -54,12 +54,21 @@
             ? dbHelper: GetLastMessage()+"<br />"
 
             dbWriteResult:=.F.
-         ENDI
+         ENDIF
       CASE ::Params: action=="edit"
+         IF ::Params: kod_lok!=::Params: kod_lok_old .OR. ::Params: nr_lok!=::Params: nr_lok_old
+            validate_nr_lok:=.T.
+         ELSE
+            validate_nr_lok:=.F.
+         ENDIF
+
+         validationResult:=Validation(): LocalTable(dbHelper, validate_nr_lok, ::Params: kod_lok, @t_nr_lok, @t_pow_uzyt, @t_pow_miesz, @t_udzial, @t_dat_od, @t_dat_do, @t_p_1, @t_p_2, @t_p_3, @t_p_4, @t_p_5, @t_p_6, @t_il_osob)
+
          IF validationResult=="" .AND. dbHelper: SQLUpdate("lokale", {"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "dat_od", "dat_do", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "nazwisko", "imie", "il_osob", "kod_praw"}, {::Params: nr_system, ::Params: kod_lok, t_nr_lok, ::Params: kod_typ, Var2Char(::Params: adres), Var2Char(::Params: adres_2), t_pow_uzyt, t_pow_miesz, t_udzial, t_dat_od, t_dat_do, t_p_1, t_p_2, t_p_3, t_p_4, t_p_5, t_p_6, ::Params: kod_kuch, SubStr(::Params: uwagi, 1, 60), SubStr(::Params: uwagi, 61, 60), SubStr(::Params: uwagi, 121, 60), SubStr(::Params: uwagi, 181, 60), ::Params: nr_kontr, t_nazwisko, t_imie, t_il_osob, ::Params: kod_praw}, "nr_system="+::Params: nr_system)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 
             dbHelper: SQLUpdate("najemcy", {"kod_lok", "nr_lok"}, {::Params: kod_lok, t_nr_lok}, "nr_kontr="+::Params: nr_kontr)
+            dbHelper: SQLUpdate("skl_cz", {"kod_lok", "nr_lok"}, {::Params: kod_lok, t_nr_lok}, "kod_lok="+::Params: kod_lok_old+" AND nr_lok="+::Params: nr_lok_old)
 
             dbWriteResult:=.T.
          ELSE
@@ -73,6 +82,7 @@
          dbWriteResult:=.T.
 
          dbHelper: SQLDelete("lokale", "nr_system="+::Params: nr_system)
+         dbHelper: SQLDelete("skl_cz", "kod_lok="+::Params: kod_lok_old+" AND nr_lok="+::Params: nr_lok_old)
 
          ? "Lokal usuni"+HTMLWriter(): _e()+"ty<br />"
    ENDCASE

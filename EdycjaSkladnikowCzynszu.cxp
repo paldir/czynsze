@@ -47,15 +47,9 @@
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="edit"
-         IF ::Params: nr_skl!=::Params: nr_skl_old
-            validate_nr_skl:=.T.
-         ELSE
-            validate_nr_skl:=.F.
-         ENDIF
+         validationResult:=Validation(): RentComponent(dbHelper, .F., ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2, @t_stawka_00, @t_stawka_01, @t_stawka_02, @t_stawka_03, @t_stawka_04, @t_stawka_05, @t_stawka_06, @t_stawka_07, @t_stawka_08, @t_stawka_09)
 
-         validationResult:=Validation(): RentComponent(dbHelper, validate_nr_skl, ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2, @t_stawka_00, @t_stawka_01, @t_stawka_02, @t_stawka_03, @t_stawka_04, @t_stawka_05, @t_stawka_06, @t_stawka_07, @t_stawka_08, @t_stawka_09)
-
-         IF validationResult=="" .AND. dbHelper: SQLUpdate("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, {::Params: nr_skl, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2, t_stawka_00, t_stawka_01, t_stawka_02, t_stawka_03, t_stawka_04, t_stawka_05, t_stawka_06, t_stawka_07, t_stawka_08, t_stawka_09}, "nr_skl="+::Params: nr_skl_old)
+         IF validationResult=="" .AND. dbHelper: SQLUpdate("czynsz", {"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "data_1", "data_2", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, {::Params: nr_skl_old, ::Params: nazwa, ::Params: rodz_e, ::Params: s_zaplat, t_stawka, t_stawka_inf, ::Params: typ_skl, t_data_1, t_data_2, t_stawka_00, t_stawka_01, t_stawka_02, t_stawka_03, t_stawka_04, t_stawka_05, t_stawka_06, t_stawka_07, t_stawka_08, t_stawka_09}, "nr_skl="+::Params: nr_skl_old)
             ? "Edycja zako"+HTMLWriter(): _n()+"czona <br />"
 
             dbHelper: SQLUpdate("skl_cz", {"nr_skl"}, {::Params: nr_skl}, "nr_skl="+::Params: nr_skl_old)
@@ -68,12 +62,24 @@
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="delete"
-         validationResult:=""
-         dbWriteResult:=.T.
+         dbHelper: SQLSelect({"nr_skl"}, "skl_cz", "nr_skl="+::Params: nr_skl_old)
 
-         dbHelper: SQLDelete("czynsz", "nr_skl="+::Params: nr_skl_old)
+         IF LastRec()==0
+            validationResult:=""
+         ELSE
+            validationResult:="Nie mo"+HTMLWriter(): _z()+"na usuna"+HTMLWriter(): _c()+" sk"+HTMLWriter(): _l()+"adnika czynszu, kt"+HTMLWriter(): _o()+"ry jest przypisany do lokali! "
+         ENDIF
 
-         ? "Sk"+HTMLWriter(): _l()+"adnik czynszu usuni"+HTMLWriter(): _e()+"ty<br />"
+         IF validationResult=="" .AND. dbHelper: SQLDelete("czynsz", "nr_skl="+::Params: nr_skl_old)
+            ? "Sk"+HTMLWriter(): _l()+"adnik czynszu usuni"+HTMLWriter(): _e()+"ty<br />"
+
+            dbWriteResult:=.T.
+         ELSE
+            ? validationResult
+            ? dbHelper: GetLastMessage()+"<br />"
+
+            dbWriteResult:=.F.
+         ENDIF
    ENDCASE
 
    IF validationResult=="" .AND. dbWriteResult

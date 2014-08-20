@@ -17,6 +17,7 @@
       CASE ::Params: action=="add"
          ? HTMLWriter(): h1("Nowy budynek")
 
+         kod_1_disabled:=""
          globalDisabled:=""
          t_kod_1:=""
          t_il_miesz:=""
@@ -33,6 +34,8 @@
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
          dbHelper: SQLSelect({"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, "budynki", "kod_1="+::Params: kod_1)
+
+         kod_1_disabled:="disabled"
 
          IF ::Params: action=="edit"
             ? HTMLWriter(): h1("Edycja budynku")
@@ -75,12 +78,8 @@
              <td>
               <%
                 ? HTMLWriter(): inputHidden("action", ::Params: action)
-
-                IF ::Params: action!="add"
-                   ? HTMLWriter(): inputHidden("kod_1_old", Var2Char(t_kod_1))
-                ENDIF
-
-                ? HTMLWriter(): inputText("kod_1", "Kod budynku:", "5", Var2Char(t_kod_1), globalDisabled,"return isInteger(event)")+"<br /><br />"
+                ? HTMLWriter(): inputHidden("kod_1", Var2Char(t_kod_1))
+                ? HTMLWriter(): inputText("kod_1", "Kod budynku:", "5", Var2Char(t_kod_1), kod_1_disabled,"return isInteger(event)")+"<br /><br />"
                 ? HTMLWriter(): inputText("il_miesz", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+" lokali:", "3", Var2Char(t_il_miesz), globalDisabled, "return isInteger(event)")+"<br /><br />"
                 ? HTMLWriter(): inputRadio("sp_rozl", "Sposób rozliczania:", {"0", "1"}, {"0", "1"}, {"budynek", "lokale"}, Var2Char(t_sp_rozl), globalDisabled)+"<br />"
                 ? HTMLWriter(): inputText("adres", "Adres: ", "30", Var2Char(t_adres), globalDisabled)+"<br />"

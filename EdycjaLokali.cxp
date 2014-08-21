@@ -10,9 +10,6 @@
 <title>Edycja lokali</title>
 
 @section Body
-<script>
-   localStorage.bushes="bushesRemoved"
-</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 

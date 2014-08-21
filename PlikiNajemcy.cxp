@@ -12,9 +12,6 @@
 <title>Dokumenty dotycz@(HTMLWriter(): _a())ce najemcy</title>
 
 @section Body
-<script>
-   localStorage.bushes=""
-</script>
 <%
    ? HTMLWriter(): h1("Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
 

@@ -9,9 +9,6 @@
 <title>Budynki</title>
 
 @section Body
-<script>
-   localStorage.bushes=""
-</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
@@ -27,7 +24,7 @@
          sortOrder:=::Params: sortOrder
    ENDIF
 
-   dbHelper: SQLSelect({"kod_1", "kod_1", "adres", "adres_2"}, "budynki", , orderBy+" "+sortOrder)
+   ? dbHelper: SQLSelect({"kod_1", "kod_1", "adres", "adres_2"}, "budynki", , orderBy+" "+sortOrder)
 
    IF sortOrder=="ASC"
             sortOrder:="DESC"

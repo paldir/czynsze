@@ -9,9 +9,6 @@
 <title>Sk@(HTMLWriter(): _l())adniki czynszu</title>
 
 @section Body
-<script>
-   localStorage.bushes=""
-</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 

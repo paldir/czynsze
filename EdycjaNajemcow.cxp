@@ -10,9 +10,6 @@
 <title>Edycja najemc@(HTMLWriter(): _o())w</title>
 
 @section Body
-<script>
-   localStorage.bushes="bushesRemoved"
-</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 

@@ -9,9 +9,6 @@
 <title>Lokale</title>
 
 @section Body
-<script>
-   localStorage.bushes=""
-</script>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 

@@ -48,11 +48,24 @@ RETURN ::oSession: ExecuteStatement(statement)
 METHOD DbHelper: SQLSelect(columns, table, whereStatement, orderBy)
    query:="SELECT "
 
-   FOR i:=1 to Len(columns)-1
-      query+=columns[i]+", "
-   NEXT
+   FOR i:=1 to Len(columns)
+      query+="CASE pg_typeof("+columns[i]+") WHEN 'character'::regtype THEN ReplacePolishSymbols("+columns[i]+")"
 
-   query+=columns[Len(columns)]
+      ::ExecuteQuery("SELECT character_maximum_length FROM information_schema.columns WHERE table_name='"+table+"' AND column_name='"+columns[i]+"'")
+
+      IF FCount()>0 .AND. FieldGet(1)>0
+         query+="::CHARACTER("+Var2Char(FieldGet(1))+")"
+      ENDIF
+
+      query+=" ELSE "+columns[i]+" END"
+
+      IF i<Len(columns)
+         query+=","
+      ENDIF
+
+      query+=" "
+   NEXT
+   
    query+=" FROM "+table
 
    IF whereStatement!=NIL
@@ -64,10 +77,11 @@ METHOD DbHelper: SQLSelect(columns, table, whereStatement, orderBy)
    ENDIF
 
    ::ExecuteQuery(query)
-RETURN self
+RETURN query
 
 METHOD DbHelper: SQLInsert(table, columns, values)
    statement:="INSERT INTO "+table+" ("
+
 
    FOR i:=1 to Len(columns)-1
       statement+=columns[i]+", "

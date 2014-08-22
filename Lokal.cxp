@@ -15,7 +15,7 @@
 <%
    DO CASE
       CASE ::Params: action=="add"
-         ? HTMLWriter(): h1("Nowy lokal")
+         ? HTMLWriter(): h2("Nowy lokal")
 
          dbHelper: SQLSelect({"MAX(nr_system)+1"}, "lokale")
 
@@ -45,7 +45,7 @@
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
 
-         dbHelper: SQLSelect({"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "pow_uzyt", "pow_miesz", "udzial", "to_char(dat_od, 'YYYY-MM-DD')", "to_char(dat_do, 'YYYY-MM-DD')", "p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, "lokale", "nr_system="+::Params: nr_system)
+         dbHelper: SQLSelect({"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "to_char(pow_uzyt, 'FM999999999.00')", "to_char(pow_miesz, 'FM999999999.00')", "to_char(udzial, 'FM999999999.00')", "to_char(dat_od, 'YYYY-MM-DD')", "to_char(dat_do, 'YYYY-MM-DD')", "to_char(p_1, 'FM999999999.00')", "to_char(p_2, 'FM999999999.00')", "to_char(p_3, 'FM999999999.00')", "to_char(p_4, 'FM999999999.00')", "to_char(p_5, 'FM999999999.00')", "to_char(p_6, 'FM999999999.00')", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, "lokale", "nr_system="+::Params: nr_system)
 
          t_nr_system:=FieldGet(1)
          t_kod_lok:=FieldGet(2)
@@ -71,13 +71,13 @@
          t_kod_praw:=FieldGet(25)
 
          IF ::Params: action=="edit"
-            ? HTMLWriter(): h1("Edycja lokalu")
+            ? HTMLWriter(): h2("Edycja lokalu")
             ? HTMLWriter(): a("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok), "Sk"+HTMLWriter(): _l()+"adniki czynszu tego lokalu")
 
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h1("Usuwanie lokalu")
+            ? HTMLWriter(): h2("Usuwanie lokalu")
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()

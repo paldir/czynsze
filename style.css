@@ -1,0 +1,47 @@
+h2 {
+   color: darkgreen;
+}
+
+table {
+   border-collapse: collapse;
+}
+
+th {
+   background-color: lightgreen;
+   font-size: large;
+}
+
+th, td {
+   padding: 3px;
+}
+
+hr {
+   border: solid 1px darkgreen;
+}
+
+a {
+   color: green;
+   text-decoration: none;
+}
+
+a:hover {
+   color: saddlebrown;
+}
+
+.menu {
+   font-size: large;
+   padding: 10px;
+}
+
+input[type="submit"], input[type="button"] {
+   border: solid 1px darkgreen;
+   background-color: lightgreen;
+   color: green;
+   font-size: large;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover {
+   border: solid 1px saddlebrown;
+   background-color: sandybrown;
+   color: saddlebrown;
+}

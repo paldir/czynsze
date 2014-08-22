@@ -13,7 +13,7 @@
 
 @section Body
 <%
-   ? HTMLWriter(): h1("Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
+   ? HTMLWriter(): h2("Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
 
    dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki", "nr_system="+::Params: nr_system)
 

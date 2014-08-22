@@ -14,7 +14,7 @@
 
    DO CASE
       CASE ::Params: action=="add"
-         ? HTMLWriter(): h1("Nowy dokument")
+         ? HTMLWriter(): h2("Nowy dokument")
 
          globalDisabled:=""
          t_nazwa_pliku:=""
@@ -24,12 +24,12 @@
          dbHelper: SQLSelect({"nazwa_pliku", "opis"}, "pliki", "id="+::Params: id)
 
          IF ::Params: action=="edit"
-            ? HTMLWriter(): h1("Edycja dokumentu")
+            ? HTMLWriter(): h2("Edycja dokumentu")
 
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h1("Usuwanie dokumentu")
+            ? HTMLWriter(): h2("Usuwanie dokumentu")
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()

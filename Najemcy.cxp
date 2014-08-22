@@ -32,7 +32,7 @@
          sortOrder:="ASC"
    ENDIF
 
-   ? HTMLWriter(): h1("Najemcy")
+   ? HTMLWriter(): h2("Najemcy")
    //? HTMLWriter(): a("Najemca.cxp?action=add", "Dodaj")
    ? HTMLWriter(): inputButton("location.href=&quot;Najemca.cxp?action=add&quot;", "Dodaj")
    ? HTMLWriter(): table({"Numer kontrolny", "Numer kontrolny", "Nazwisko", "Imi"+HTMLWriter(): _e(), "Adres", "Adres cd."}, {"nr_kontr", "nr_kontr", "nazwisko", "imie", "adres_1", "adres_2"}, "Najemcy", sortOrder, "Najemca.cxp?action=edit&nr_kontr=", "Najemca.cxp?action=delete&nr_kontr=")

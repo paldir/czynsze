@@ -5,6 +5,7 @@
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
    <script type="text/javascript" src="scripts.js"></script>
+   <link rel="stylesheet" type="text/css" href="style.css">
    @Render Head
 </head>
 
@@ -16,12 +17,12 @@
 
   <!--- Page content goes here --->
    <%
-      ? HTMLWriter(): a("Budynki.cxp", "Budynki")
-      ? HTMLWriter(): a("Lokale.cxp", "Lokale")
-      ? HTMLWriter(): a("Najemcy.cxp", "Najemcy")
-      ? HTMLWriter(): a("SkladnikiCzynszu.cxp", "Sk"+HTMLWriter(): _l()+"adniki czynszu")
+      ? HTMLWriter(): a("Budynki.cxp", "Budynki", "menu")
+      ? HTMLWriter(): a("Lokale.cxp", "Lokale", "menu")
+      ? HTMLWriter(): a("Najemcy.cxp", "Najemcy", "menu")
+      ? HTMLWriter(): a("SkladnikiCzynszu.cxp", "Sk"+HTMLWriter(): _l()+"adniki czynszu", "menu")
    %>
-   <br />
+   <hr>
 
    @Render Body
 

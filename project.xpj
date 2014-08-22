@@ -28,6 +28,7 @@
     EdycjaPlikowNajemcy.cxp
     EdycjaSkladnikowCzynszu.cxp
     HTMLWriter.ch
+    Login.cxp
     Lokal.cxp
     Lokale.cxp
     master.layout
@@ -41,5 +42,6 @@
     SkladnikiCzynszu.cxp
     SkladnikiCzynszuLokalu.cxp
     style.css
+    UserValidation.cxp
     Validation.ch
 

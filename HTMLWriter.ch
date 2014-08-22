@@ -17,11 +17,11 @@ CLASS HTMLWriter
    EXPORTED:
       CLASS METHOD table
       CLASS METHOD a
-      CLASS METHOD h1
-      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton, inputFile
+      CLASS METHOD h2
+      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton, inputFile, inputPassword
       CLASS METHOD textarea
       CLASS METHOD selectHTML
-      CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z, ReplaceBushes
+      CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z, ReplacePolishSymbols
    HIDDEN:
       CLASS METHOD RepairPolishSymbols
 ENDCLASS
@@ -46,7 +46,7 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, delet
       result+="<tr>"
 
       FOR j:=2 to FCount()
-         result+="<td>"+Var2Char(FieldGet(j))+"</td>"
+         result+="<td>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</td>"
       NEXT
 
       IF editUrl!=NIL
@@ -69,11 +69,18 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, delet
    result+="</table>"
 RETURN result
 
-CLASS METHOD HTMLWriter: a(href, text)
-RETURN "<a href='"+href+"'>"+text+"</a>"
+CLASS METHOD HTMLWriter: a(href, text, className)
+   aResult:="<a href='"+href+"'"
 
-CLASS METHOD HTMLWriter: h1(text)
-RETURN "<h1>"+text+"</h1>"
+   IF className!=NIL
+      aResult+=" class='"+className+"'"
+   ENDIF
+
+   aResult+=">"+text+"</a>"
+RETURN aResult
+
+CLASS METHOD HTMLWriter: h2(text)
+RETURN "<h2>"+text+"</h2>"
 
 CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onkeypress)
    result:=""
@@ -98,7 +105,7 @@ CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onke
       result+="<label for='"+name+"'>"+label+"</label><br />"
    ENDIF
 
-   result+="<input type='text' name='"+name+"' size='"+maxlength+"' maxlength='"+maxlength+"' value='"+value+"' "+disabled+" onkeypress='"+onkeypress+"' />"
+   result+="<input type='text' name='"+name+"' size='"+maxlength+"' maxlength='"+maxlength+"' value='"+::RepairPolishSymbols(value)+"' "+disabled+" onkeypress='"+onkeypress+"' />"
 RETURN result
 
 CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked, disabled)
@@ -139,6 +146,9 @@ CLASS METHOD HTMLWriter: inputFile(name, label, value, disabled)
    result+="<input type='file' name='"+name+"' value='"+value+"' "+disabled+"' />"
 RETURN result
 
+CLASS METHOD HTMLWriter: inputPassword(name)
+RETURN "<input type='password' name='"+name+"' />"
+
 CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
    IF text==NIL
       text:=""
@@ -146,7 +156,7 @@ CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
 
    text:=RTrim(text)
    result:="<label for='"+name+"'>"+label+"</label><br />"
-   result+="<textarea name='"+name+"' cols='"+Var2Char(Val(maxlength)/Val(rows))+"' rows='"+rows+"' maxlength='"+maxlength+"' "+disabled+">"+text+"</textarea>"
+   result+="<textarea name='"+name+"' cols='"+Var2Char(Val(maxlength)/Val(rows))+"' rows='"+rows+"' maxlength='"+maxlength+"' "+disabled+">"+::RepairPolishSymbols(text)+"</textarea>"
 RETURN result
 
 CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, columns, table, orderBy, onchange)
@@ -178,7 +188,7 @@ CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, c
       result+=">"
 
       FOR j:=2 to Len(columns)
-         result+=RTrim(Var2Char(FieldGet(j)))+", "
+         result+=RTrim(::RepairPolishSymbols(Var2Char(FieldGet(j))))+", "
       NEXT
 
       result:=SubStr(result, 1, Len(result)-2)
@@ -217,7 +227,7 @@ RETURN "&#378;"
 CLASS METHOD HTMLWriter: _z()
 RETURN "&#380;"
 
-CLASS METHOD HTMLWriter: ReplaceBushes(chars)
+CLASS METHOD HTMLWriter: ReplacePolishSymbols(chars)
    _bushes:={Chr(185)/*a*/, Chr(230)/*c*/, Chr(234)/*e*/, Chr(179)/*l*/, Chr(241)/*n*/, Chr(243)/*o*/, Chr(339)/*s*/, Chr(376)/*x*/, Chr(191)/*z*/}
    bushes:={Chr(165)/*A*/, Chr(202)/*C*/, Chr(198)/*E*/, Chr(163)/*L*/, Chr(209)/*N*/, Chr(211)/*O*/, Chr(338)/*S*/, Chr(175)/*Z*/}
 
@@ -262,23 +272,23 @@ CLASS METHOD HTMLWriter: ReplaceBushes(chars)
 RETURN chars
 
 CLASS METHOD HTMLWriter: RepairPolishSymbols(chars)
-   chars:=StrTran(chars, Chr(185), '&#261;') //a
-   chars:=StrTran(chars, Chr(230), '&#263;') //c
-   chars:=StrTran(chars, Chr(234), '&#281;') //e
-   chars:=StrTran(chars, Chr(179), '&#322;') //l
-   chars:=StrTran(chars, Chr(241), '&#324;') //n
-   chars:=StrTran(chars, Chr(243), '&#243;') //o
-   chars:=StrTran(chars, 'o', '&#347;') //s
-   chars:=StrTran(chars, 'Y', '&#378;') //x
-   chars:=StrTran(chars, Chr(191), '&#380;') //z
+   chars:=StrTran(chars, Chr(1), '&#261;') //a
+   chars:=StrTran(chars, Chr(2), '&#263;') //c
+   chars:=StrTran(chars, Chr(3), '&#281;') //e
+   chars:=StrTran(chars, Chr(4), '&#322;') //l
+   chars:=StrTran(chars, Chr(5), '&#324;') //n
+   chars:=StrTran(chars, Chr(6), '&#243;') //o
+   chars:=StrTran(chars, Chr(7), '&#347;') //s
+   chars:=StrTran(chars, Chr(8), '&#378;') //x
+   chars:=StrTran(chars, Chr(9), '&#380;') //z
 
-   chars:=StrTran(chars, Chr(165), '&#260;') //A
-   chars:=StrTran(chars, Chr(198), '&#262;') //C
-   chars:=StrTran(chars, Chr(202), '&#280;') //E
-   chars:=StrTran(chars, Chr(163), '&#321;') //L
-   chars:=StrTran(chars, Chr(209), '&#323;') //N
-   chars:=StrTran(chars, Chr(211), '&#211;') //O WTF
-   chars:=StrTran(chars, Chr(338), '&#346;') //S
-   //chars:=StrTran(chars, Chr(), '&#377;') //X WTF
-   chars:=StrTran(chars, Chr(175), '&#379;') //Z
+   chars:=StrTran(chars, Chr(10), '&#260;') //A
+   chars:=StrTran(chars, Chr(11), '&#262;') //C
+   chars:=StrTran(chars, Chr(12), '&#280;') //E
+   chars:=StrTran(chars, Chr(13), '&#321;') //L
+   chars:=StrTran(chars, Chr(14), '&#323;') //N
+   chars:=StrTran(chars, Chr(15), '&#211;') //O WTF
+   chars:=StrTran(chars, Chr(16), '&#346;') //S
+   chars:=StrTran(chars, Chr(17), '&#377;') //X WTF
+   chars:=StrTran(chars, Chr(18), '&#379;') //Z
 RETURN chars

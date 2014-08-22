@@ -15,7 +15,7 @@
 <%
    DO CASE
       CASE ::Params: action=="add"
-         ? HTMLWriter(): h1("Nowy najemca")
+         ? HTMLWriter(): h2("Nowy najemca")
 
          dbHelper: SQLSelect({"MAX(nr_kontr)+1"}, "najemcy")
 
@@ -37,13 +37,13 @@
          dbHelper: SQLSelect({"nr_system", "nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
 
          IF ::Params: action=="edit"
-            ? HTMLWriter(): h1("Edycja najemcy")
+            ? HTMLWriter(): h2("Edycja najemcy")
             ? HTMLWriter(): a("PlikiNajemcy.cxp?nr_system="+Var2Char(FieldGet(1)), "Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
 
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h1("Usuwanie najemcy")
+            ? HTMLWriter(): h2("Usuwanie najemcy")
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()

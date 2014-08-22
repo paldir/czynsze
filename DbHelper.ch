@@ -57,7 +57,7 @@ METHOD DbHelper: SQLSelect(columns, table, whereStatement, orderBy)
          query+="::CHARACTER("+Var2Char(FieldGet(1))+")"
       ENDIF
 
-      query+=" ELSE "+columns[i]+" END"
+      query+=" ELSE "+columns[i]+" END  AS t"
 
       IF i<Len(columns)
          query+=","
@@ -65,7 +65,7 @@ METHOD DbHelper: SQLSelect(columns, table, whereStatement, orderBy)
 
       query+=" "
    NEXT
-   
+
    query+=" FROM "+table
 
    IF whereStatement!=NIL
@@ -90,22 +90,23 @@ METHOD DbHelper: SQLInsert(table, columns, values)
    statement+=columns[Len(columns)]+") VALUES ("
 
    FOR i:=1 to Len(values)-1
-      statement+="'"+HTMLWriter(): ReplaceBushes(values[i])+"', "
+      statement+="'"+HTMLWriter(): ReplacePolishSymbols(values[i])+"', "
    NEXT
 
-   statement+="'"+HTMLWriter(): ReplaceBushes(values[Len(values)])+"')"
+   statement+="'"+HTMLWriter(): ReplacePolishSymbols(values[Len(values)])+"')"
 RETURN ::ExecuteStatement(statement)
 
 METHOD DbHelper: SQLUpdate(table, columns, values, whereStatement)
    statement:="UPDATE "+table+" SET "
 
    FOR i:=1 to Len(columns)-1
-      statement+=columns[i]+"='"+HTMLWriter(): ReplaceBushes(values[i])+"', "
+      statement+=columns[i]+"='"+HTMLWriter(): ReplacePolishSymbols(values[i])+"', "
    NEXT
 
-   statement+=columns[Len(columns)]+"='"+HTMLWriter(): ReplaceBushes(values[Len(columns)])+"'"
+   statement+=columns[Len(columns)]+"='"+HTMLWriter(): ReplacePolishSymbols(values[Len(columns)])+"'"
    statement+=" WHERE "+ whereStatement
-RETURN ::ExecuteStatement(statement)
+/*RETURN */::ExecuteStatement(statement)
+RETURN statement
 
 METHOD DbHelper: SQLDelete(table, where)
 RETURN ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)

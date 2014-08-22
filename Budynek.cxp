@@ -15,7 +15,7 @@
 <%
    DO CASE
       CASE ::Params: action=="add"
-         ? HTMLWriter(): h1("Nowy budynek")
+         ? HTMLWriter(): h2("Nowy budynek")
 
          kod_1_disabled:=""
          globalDisabled:=""
@@ -33,17 +33,17 @@
          t_k_anal_ma:=""
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
-         dbHelper: SQLSelect({"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "udzial_w_k", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, "budynki", "kod_1="+::Params: kod_1)
+         dbHelper: SQLSelect({"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "to_char(udzial_w_k, 'FM999999999.00')", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, "budynki", "kod_1="+::Params: kod_1)
 
          kod_1_disabled:="disabled"
 
          IF ::Params: action=="edit"
-            ? HTMLWriter(): h1("Edycja budynku")
+            ? HTMLWriter(): h2("Edycja budynku")
 
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h1("Usuwanie budynku")
+            ? HTMLWriter(): h2("Usuwanie budynku")
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()

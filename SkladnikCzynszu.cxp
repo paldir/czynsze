@@ -44,7 +44,7 @@ function s_zaplat_onchange(value)
 <%
    DO CASE
       CASE ::Params: action=="add"
-         ? HTMLWriter(): h1("Nowy sk"+HTMLWriter(): _l()+"adnik czynszu")
+         ? HTMLWriter(): h2("Nowy sk"+HTMLWriter(): _l()+"adnik czynszu")
 
          globalDisabled:=""
          nr_skl_disabled:=""
@@ -69,17 +69,17 @@ function s_zaplat_onchange(value)
          t_stawka_09:=""
          submitText:="Dodaj"
       CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
-         dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "stawka", "stawka_inf", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')", "stawka_00", "stawka_01", "stawka_02", "stawka_03", "stawka_04", "stawka_05", "stawka_06", "stawka_07", "stawka_08", "stawka_09"}, "czynsz", "nr_skl="+::Params: nr_skl)
+         dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "to_char(stawka, 'FM999999999.00')", "to_char(stawka_inf, 'FM999999999.00')", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')", "to_char(stawka_00, 'FM999999999.00')", "to_char(stawka_01, 'FM999999999.00')", "to_char(stawka_02, 'FM999999999.00')", "to_char(stawka_03, 'FM999999999.00')", "to_char(stawka_04, 'FM999999999.00')", "to_char(stawka_05, 'FM999999999.00')", "to_char(stawka_06, 'FM999999999.00')", "to_char(stawka_07, 'FM999999999.00')", "to_char(stawka_08, 'FM999999999.00')", "to_char(stawka_09, 'FM999999999.00')"}, "czynsz", "nr_skl="+::Params: nr_skl)
 
          nr_skl_disabled:="disabled"
 
          IF ::Params: action=="edit"
-            ? HTMLWriter(): h1("Edycja sk"+HTMLWriter(): _l()+"adnika czynszu")
+            ? HTMLWriter(): h2("Edycja sk"+HTMLWriter(): _l()+"adnika czynszu")
 
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h1("Usuwanie sk"+HTMLWriter(): _l()+"adnika czynszu")
+            ? HTMLWriter(): h2("Usuwanie sk"+HTMLWriter(): _l()+"adnika czynszu")
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()

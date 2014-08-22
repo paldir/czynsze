@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\Budynki.cxp" target=".\czynsze.web" />
+  <active file=".\UserValidation.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\DbHelper.ch" column="3" line="67" />
-    <openfile path=".\Lokal.cxp" column="9" line="19" />
-    <openfile path=".\Budynki.cxp" column="5" line="26" />
+    <openfile path=".\DbHelper.ch" column="16" line="108" />
+    <openfile path=".\Login.cxp" column="0" line="10" />
+    <openfile path=".\HTMLWriter.ch" column="43" line="148" />
+    <openfile path=".\UserValidation.cxp" column="0" line="30" />
   </openfiles>
 </session>

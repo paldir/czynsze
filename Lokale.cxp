@@ -24,7 +24,7 @@
          sortOrder:=::Params: sortOrder
    ENDIF
 
-   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.pow_uzyt, l.nazwisko, l.imie FROM lokale l JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY "+orderBy+" "+sortOrder)
+   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY "+orderBy+" "+sortOrder)
 
    IF sortOrder=="ASC"
          sortOrder:="DESC"
@@ -32,7 +32,7 @@
          sortOrder:="ASC"
    ENDIF
 
-   ? HTMLWriter(): h1("Lokale")
+   ? HTMLWriter(): h2("Lokale")
    //? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
    ? HTMLWriter(): inputButton("location.href=&quot;Lokal.cxp?action=add&quot;", "Dodaj")
    ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Powierzchnia u"+HTMLWriter(): _z()+"ytkowa", "Nazwisko", "Imi"+HTMLWriter(): _e()}, {"l.nr_system", "l.kod_lok", "l.nr_lok", "t.typ_lok", "l.pow_uzyt", "l.nazwisko", "l.imie"}, "Lokale", sortOrder, "Lokal.cxp?action=edit&nr_system=", "Lokal.cxp?action=delete&nr_system=")

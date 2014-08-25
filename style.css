@@ -1,13 +1,9 @@
-h2 {
-   color: darkgreen;
-}
-
 table {
    border-collapse: collapse;
 }
 
 th {
-   background-color: lightgreen;
+   background-color: #FFFF99;
    font-size: large;
 }
 
@@ -16,16 +12,17 @@ th, td {
 }
 
 hr {
-   border: solid 1px darkgreen;
+   border: solid 1px #FF6600;
 }
 
 a {
-   color: green;
+   color: #FF6600;
    text-decoration: none;
 }
 
 a:hover {
-   color: saddlebrown;
+   color: #FF0000;
+   text-decoration: underline;
 }
 
 .menu {
@@ -34,14 +31,22 @@ a:hover {
 }
 
 input[type="submit"], input[type="button"] {
-   border: solid 1px darkgreen;
-   background-color: lightgreen;
-   color: green;
+   background-color: #FFFF99;
+   color: #FF6600;
    font-size: large;
 }
 
 input[type="submit"]:hover, input[type="button"]:hover {
-   border: solid 1px saddlebrown;
-   background-color: sandybrown;
-   color: saddlebrown;
+   border: solid 1px #FF0000;
+   background-color: #FFCC33;
+   color: #FF0000;
+}
+
+input, select, textarea {
+   border: solid 1px #FF6600;
+}
+
+input:focus, select:focus, textarea:focus {
+   border: solid 1px #FF0000;
+   background-color: #FFFFCC;
 }

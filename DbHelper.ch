@@ -105,8 +105,7 @@ METHOD DbHelper: SQLUpdate(table, columns, values, whereStatement)
 
    statement+=columns[Len(columns)]+"='"+HTMLWriter(): ReplacePolishSymbols(values[Len(columns)])+"'"
    statement+=" WHERE "+ whereStatement
-/*RETURN */::ExecuteStatement(statement)
-RETURN statement
+RETURN ::ExecuteStatement(statement)
 
 METHOD DbHelper: SQLDelete(table, where)
 RETURN ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)

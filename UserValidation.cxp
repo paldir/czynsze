@@ -17,18 +17,17 @@
   <!--- Page content goes here --->
   <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
+   t_haslo:=DllCall(Dllload('xbtBase1.dll'), ,"Crypt", ::Params: haslo, "JANKO")
+   ::Session: uzytkownik:=nil
 
-   //dbHelper: SQLSelect({"uzytkownik", "haslo"}, "fk_tuz", "uzytkownik='"+::Params: uzytkownik+"'")
    dbHelper: ExecuteQuery("SELECT haslo FROM fk_tuz WHERE uzytkownik='"+::Params: uzytkownik+"'")
 
-   t_haslo:=RTrim(FieldGet(1))
-
-   ? t_haslo
-
-
-   nload:=Dllload('xbtBase1.dll')
-   ? cme:=DllCall(nload,,"Crypt",t_haslo,"JANKO")
-
+   IF LastRec()==1 .AND. RTrim(FieldGet(1))==t_haslo
+      ::Session: uzytkownik:=::Params: uzytkownik
+      ::HttpResponse: Redirect("Budynki.cxp")
+   ELSE
+      ::HttpResponse: Redirect("Login.cxp")
+   ENDIF
 
    dbHelper: CloseConnection()
   %>

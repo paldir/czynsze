@@ -11,6 +11,26 @@
 @section Head
 <title>Lokal</title>
 
+<script>
+   function SwitchTabs(value) {
+      var dane=document.getElementById("dane_tab");
+      var skladnikiCzynszu=document.getElementById("skladnikiCzynszu_tab");
+
+      if (value=="dane") {
+         dane.hidden=false;
+         skladnikiCzynszu.hidden=true;
+      }
+      else {
+         dane.hidden=true;
+         skladnikiCzynszu.hidden=false;
+      }
+   }
+
+   function resizeIFrame(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+   }
+</script>
+
 @section Body
 <%
    DO CASE
@@ -37,7 +57,7 @@
          t_p_4:=""
          t_p_5:=""
          t_p_6:=""
-         t_kod_kuch:=""
+         t_kod_kuch:=-1
          t_uwagi:=""
          t_nr_kontr:=""
          t_il_osob:=""
@@ -72,8 +92,12 @@
 
          IF ::Params: action=="edit"
             ? HTMLWriter(): h2("Edycja lokalu")
-            ? HTMLWriter(): a("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok), "Sk"+HTMLWriter(): _l()+"adniki czynszu tego lokalu")
+            //? HTMLWriter(): a("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok), "Sk"+HTMLWriter(): _l()+"adniki czynszu tego lokalu")
 
+         %>
+         <input type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="dane" value="dane" checked="checked"><label for="dane">Dane</label>
+         <input type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="skladnikiCzynszu" value="skladnikiCzynszu"><label for="skladnikiCzynszu">Skladniki czynszu</label>
+         <%
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
@@ -85,7 +109,7 @@
    ENDCASE
 %>
  <form id="formOfBuilding" method="get" action="EdycjaLokali.cxp">
-    <table>
+    <table id="dane_tab">
        <tr valign="top">
           <td>
            <%
@@ -140,9 +164,10 @@
           </td>
        </tr>
     </table>
+    <iframe id="skladnikiCzynszu_tab" width="100%" hidden onload="resizeIFrame(this);" src="@("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
     <%
        ? HTMLWriter(): inputSubmit("Submit", submitText)
-       ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+       ? HTMLWriter(): inputButton("location.href=&quot;CancelLocalEdition.cxp&quot;", "Anuluj")
     %>
  </form>
 <%

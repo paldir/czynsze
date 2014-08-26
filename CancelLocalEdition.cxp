@@ -1,0 +1,18 @@
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   dbHelper: ExecuteStatement("DELETE FROM skl_cz WHERE (kod_lok, nr_lok, nr_skl) IN (SELECT kod_lok, nr_lok, nr_skl FROM rent_components_added)")
+   dbHelper: ExecuteStatement("INSERT INTO skl_cz SELECT * FROM rent_components_deleted")
+   dbHelper: ExecuteStatement("DROP TABLE rent_components_added")
+   dbHelper: ExecuteStatement("DROP TABLE rent_components_deleted")
+
+   dbHelper: CloseConnection()
+
+   ::HttpResponse: Redirect("Lokale.cxp")
+%>

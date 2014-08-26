@@ -113,7 +113,9 @@ CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked, d
       checked:="-1"
    ENDIF
 
-   result:="<label for='"+name+"'>"+label+"</label><br />"
+   IF label!=NIL
+      result:="<label for='"+name+"'>"+label+"</label><br />"
+   ENDIF
 
    FOR i:=1 to Len(ids)
       result+="<input type='radio' "+disabled+" name='"+name+"' id='"+ids[i]+"' value='"+values[i]+"'"
@@ -177,6 +179,7 @@ CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, c
    ENDIF
 
    result+=">"
+   result+="<option value='-1' selected hidden></option>"
 
    FOR i:=1 to LastRec()
       result+="<option value='"+Var2Char(FieldGet(1))+"'"

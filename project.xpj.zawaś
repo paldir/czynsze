@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active target=".\czynsze.web" />
+  <active file=".\SkladnikiCzynszuLokalu.cxp" target=".\czynsze.web" />
+  <openfiles>
+    <openfile path=".\SkladnikiCzynszuLokalu.cxp" column="0" line="79" />
+    <openfile path=".\Lokale.cxp" column="103" line="17" />
+    <openfile path=".\Lokal.cxp" column="0" line="0" />
+  </openfiles>
 </session>

@@ -12,6 +12,10 @@
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
+   dbHelper: ExecuteStatement("DROP TABLE rent_components_added")
+   dbHelper: ExecuteStatement("DROP TABLE rent_components_deleted")
+   dbHelper: ExecuteStatement("CREATE TABLE rent_components_added AS SELECT * FROM skl_cz WHERE 1=2")
+   dbHelper: ExecuteStatement("CREATE TABLE rent_components_deleted AS SELECT * FROM skl_cz WHERE 1=2")
    IF Len(::Params: orderBy)==0
          orderBy:="kod_lok, nr_lok"
    ELSE
@@ -24,7 +28,7 @@
          sortOrder:=::Params: sortOrder
    ENDIF
 
-   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY "+orderBy+" "+sortOrder)
+   dbHelper: ExecuteQuery("SELECT l.nr_system, l.kod_lok, l.nr_lok, t.typ_lok, l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l LEFT OUTER JOIN typ_lok t ON l.kod_typ=t.kod_typ ORDER BY "+orderBy+" "+sortOrder)
 
    IF sortOrder=="ASC"
          sortOrder:="DESC"

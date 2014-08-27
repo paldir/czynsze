@@ -1,14 +1,16 @@
-<%#PAGE layout="master.layout"%>
+<!DOCTYPE html>
+<%#Page trace="no"%>
 <%#Code locality="page-global"%>
 <%
      #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
      #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
 %>
+<head>
+   <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
 
-@section Head
-<title>Dokument dotycz@(HTMLWriter(): _a())cy najemcy</title>
 
-@section Body
+<body>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
@@ -67,3 +69,5 @@
 <%
    dbHelper: CloseConnection()
 %>
+</body>
+</html>

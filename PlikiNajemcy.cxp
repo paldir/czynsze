@@ -1,4 +1,5 @@
-<%#PAGE layout="master.layout"%>
+<!DOCTYPE html>
+<%#Page trace="no"%>
 <%#Code locality="page-global"%>
 <%
      #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
@@ -6,20 +7,45 @@
 %>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   DO CASE
+      CASE ::Params: action=="add"
+         IF ::HttpRequest: Files: NumItems>0
+            t_nazwa_pliku:=::HttpRequest: Files: plik: Name
+            t_plik:=Bin2Base64(::HttpRequest: Files: plik: Data)
+            columns:={"plik", "nazwa_pliku", "opis"}
+            values:={t_plik, t_nazwa_pliku, ::Params: opis}
+
+            dbHelper: SQLSelect({"MAX(id)+1"}, "pliki")
+
+            t_id:=FieldGet(1)
+
+            dbHelper: SQLInsert("pliki_tmp", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), t_plik, t_nazwa_pliku, Var2Char(::Params: opis), ::Params: nr_system})
+         ENDIF
+      CASE ::Params: action=="delete"
+         dbHelper: SQLDelete("pliki_tmp", "id="+::Params: id)
+   ENDCASE
+
 %>
-
-@section Head
-<title>Dokumenty dotycz@(HTMLWriter(): _a())ce najemcy</title>
-
-@section Body
+<html>
+<head>
+   <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<form id="formOfDocument" method="post" enctype="multipart/form-data" action="PlikiNajemcy.cxp">
 <%
-   ? HTMLWriter(): h2("Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
+   ? ::Params: collection
+   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki_tmp", "nr_system="+::Params: nr_system)
 
-   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki", "nr_system="+::Params: nr_system)
-
-   ? HTMLWriter(): inputButton("location.href=&quot;PlikNajemcy.cxp?action=add&nr_system="+::Params: nr_system+"&quot;", "Dodaj")
-   ? HTMLWriter(): inputButton("location.href=&quot;Najemcy.cxp&quot;", "Powrót")
-   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "PlikNajemcy.cxp?action=edit&nr_system="+::Params: nr_system+"&id=", "PlikNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", {"Plik.cxp?id="}, {"Zobacz plik"})
+   ? HTMLWriter(): inputHidden("action", "add")
+   ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
+   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , , "PlikiNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", {"Plik.cxp?id="}, {"Zobacz plik"})
+   ? "<br />Nowy dokument: <br />"
+   ? HTMLWriter(): inputFile("plik", , "", "")+"<br />"
+   ? HTMLWriter(): textarea("opis", "Opis: ", "2", "100", "", "")+"<br />"
+   ? HTMLWriter(): inputSubmit("Submit", "Dodaj")
 
    dbHelper: CloseConnection()
 %>
+</body>
+</html>

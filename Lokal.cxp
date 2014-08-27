@@ -13,16 +13,16 @@
 
 <script>
    function SwitchTabs(value) {
-      var dane=document.getElementById("dane_tab");
-      var skladnikiCzynszu=document.getElementById("skladnikiCzynszu_tab");
+      var tabNames=["dane", "skladnikiCzynszu", "dokumenty"];
+      var tab;
 
-      if (value=="dane") {
-         dane.hidden=false;
-         skladnikiCzynszu.hidden=true;
-      }
-      else {
-         dane.hidden=true;
-         skladnikiCzynszu.hidden=false;
+      for (var i=0; i<tabNames.length; i++) {
+         tab=document.getElementById(tabNames[i]+"_tab");
+
+         if (value==tabNames[i])
+            tab.hidden=false;
+         else
+            tab.hidden=true;
       }
    }
 
@@ -37,12 +37,14 @@
       CASE ::Params: action=="add"
          ? HTMLWriter(): h2("Nowy lokal")
 
+         dbHelper: ExecuteStatement("CREATE TABLE skl_cz_tmp AS SELECT * FROM skl_cz WHERE 1=2")
+         dbHelper: ExecuteStatement("CREATE TABLE pliki_tmp AS SELECT * FROM pliki WHERE 1=2")
          dbHelper: SQLSelect({"MAX(nr_system)+1"}, "lokale")
 
          globalDisabled:=""
          t_nr_system:=Var2Char(FieldGet(1))
-         t_kod_lok:=""
-         t_nr_lok:=""
+         t_kod_lok:="0"
+         t_nr_lok:="0"
          t_kod_typ:=""
          t_adres:=""
          t_adres_2:=""
@@ -90,14 +92,15 @@
          t_il_osob:=FieldGet(24)
          t_kod_praw:=FieldGet(25)
 
+         dbHelper: SQLSelect({"nr_system"}, "najemcy", "nr_kontr="+Var2Char(t_nr_kontr))
+         dbHelper: ExecuteStatement("CREATE TABLE skl_cz_tmp AS SELECT * FROM skl_cz WHERE kod_lok="+Var2Char(t_kod_lok)+" AND nr_lok="+Var2Char(t_nr_lok))
+         dbHelper: ExecuteStatement("CREATE TABLE pliki_tmp AS SELECT * FROM pliki WHERE nr_system="+Var2Char(t_nr_system))
+
          IF ::Params: action=="edit"
             ? HTMLWriter(): h2("Edycja lokalu")
+
             //? HTMLWriter(): a("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok), "Sk"+HTMLWriter(): _l()+"adniki czynszu tego lokalu")
 
-         %>
-         <input type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="dane" value="dane" checked="checked"><label for="dane">Dane</label>
-         <input type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="skladnikiCzynszu" value="skladnikiCzynszu"><label for="skladnikiCzynszu">Skladniki czynszu</label>
-         <%
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
@@ -108,8 +111,11 @@
          ENDIF
    ENDCASE
 %>
+<input class="tabRadio" type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="dane" value="dane" checked="checked"><label class="tabLabel" for="dane">Dane</label>
+<input class="tabRadio" type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="skladnikiCzynszu" value="skladnikiCzynszu"><label class="tabLabel" for="skladnikiCzynszu">Sk@(HTMLWriter(): _l())adniki czynszu</label>
+<input class="tabRadio" type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="dokumenty" value="dokumenty"><label class="tabLabel" for="dokumenty">Dokumenty</label>
  <form id="formOfBuilding" method="get" action="EdycjaLokali.cxp">
-    <table id="dane_tab">
+    <table id="dane_tab" class="tab">
        <tr valign="top">
           <td>
            <%
@@ -164,10 +170,12 @@
           </td>
        </tr>
     </table>
-    <iframe id="skladnikiCzynszu_tab" width="100%" hidden onload="resizeIFrame(this);" src="@("SkladnikiCzynszuLokalu.cxp?kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
+    <iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="@("SkladnikiCzynszuLokalu.cxp?action="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
+    <iframe id="dokumenty_tab" hidden onload="resizeIFrame(this);" src="@("PlikiNajemcy.cxp?action="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
+    <!--<iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="SkladnikiCzynszuLokalu.cxp?kod_lok=-1&nr_lok=-1")></iframe>-->
     <%
        ? HTMLWriter(): inputSubmit("Submit", submitText)
-       ? HTMLWriter(): inputButton("location.href=&quot;CancelLocalEdition.cxp&quot;", "Anuluj")
+       ? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Anuluj")
     %>
  </form>
 <%

@@ -1,3 +1,40 @@
+.tab, iframe {
+   border-top: solid 3px #FF6600;
+   border-left: none;
+   width: 100%;
+}
+
+.tabRadio {
+   display: none;
+}
+
+.tabLabel {
+   border-top: solid 1px #FF6600;
+   border-left: solid 1px #FF6600;
+   border-right: solid 1px #FF6600;
+   background-color: #FFFF99;
+   color: #FF6600;
+   font-size: large;
+   padding: 1px;
+   cursor: pointer;
+}
+
+.tabRadio:checked+label {
+   border-top: solid 1px #FF6600;
+   border-left: solid 1px #FF6600;
+   border-right: solid 1px #FF6600;
+   background-color: #FF6600;
+   color: #FFFF99;
+}
+
+.tabLabel:hover {
+   border-top: solid 1px #FF0000;
+   border-left: solid 1px #FF0000;
+   border-right: solid 1px #FF0000;
+   background-color: #FFCC33;
+   color: #FF0000;
+}
+
 table {
    border-collapse: collapse;
 }

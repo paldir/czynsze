@@ -152,12 +152,18 @@ CLASS METHOD HTMLWriter: inputPassword(name)
 RETURN "<input type='password' name='"+name+"' />"
 
 CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
+   result:=""
+
    IF text==NIL
       text:=""
    ENDIF
 
    text:=RTrim(text)
-   result:="<label for='"+name+"'>"+label+"</label><br />"
+
+   IF label!=NIL
+      result+="<label for='"+name+"'>"+label+"</label><br />"
+   ENDIF
+
    result+="<textarea name='"+name+"' cols='"+Var2Char(Val(maxlength)/Val(rows))+"' rows='"+rows+"' maxlength='"+maxlength+"' "+disabled+">"+::RepairPolishSymbols(text)+"</textarea>"
 RETURN result
 

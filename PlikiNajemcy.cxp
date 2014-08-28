@@ -32,18 +32,24 @@
    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
+<%
+   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki_tmp", "nr_system="+::Params: nr_system)
+   //? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , , "PlikiNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", , {"Plik.cxp?id="}, {"Zobacz plik"})
+
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
+      ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , , "PlikiNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", , {"Plik.cxp?id="}, {"Zobacz plik"})
+%>
 <form id="formOfDocument" method="post" enctype="multipart/form-data" action="PlikiNajemcy.cxp">
 <%
-   ? ::Params: collection
-   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki_tmp", "nr_system="+::Params: nr_system)
-
-   ? HTMLWriter(): inputHidden("action", "add")
-   ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
-   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , , "PlikiNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", {"Plik.cxp?id="}, {"Zobacz plik"})
-   ? "<br />Nowy dokument: <br />"
-   ? HTMLWriter(): inputFile("plik", , "", "")+"<br />"
-   ? HTMLWriter(): textarea("opis", "Opis: ", "2", "100", "", "")+"<br />"
-   ? HTMLWriter(): inputSubmit("Submit", "Dodaj")
+      ? HTMLWriter(): inputHidden("action", "add")
+      ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
+      ? "<br />Nowy dokument: <br />"
+      ? HTMLWriter(): inputFile("plik", , "", "")+"<br />"
+      ? HTMLWriter(): textarea("opis", "Opis: ", "2", "100", "", "")+"<br />"
+      ? HTMLWriter(): inputSubmit("Submit", "Dodaj")
+   ELSE
+      ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"})
+   ENDIF
 
    dbHelper: CloseConnection()
 %>

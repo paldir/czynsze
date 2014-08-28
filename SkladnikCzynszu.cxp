@@ -68,7 +68,7 @@ function s_zaplat_onchange(value)
          t_stawka_08:=""
          t_stawka_09:=""
          submitText:="Dodaj"
-      CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
+      CASE ::Params: action=="edit" .OR. ::Params: action=="delete" .OR. ::Params: action=="browse"
          dbHelper: SQLSelect({"nr_skl", "nazwa", "rodz_e", "s_zaplat", "to_char(stawka, 'FM999999999.00')", "to_char(stawka_inf, 'FM999999999.00')", "typ_skl", "to_char(data_1, 'YYYY-MM-DD')", "to_char(data_2, 'YYYY-MM-DD')", "to_char(stawka_00, 'FM999999999.00')", "to_char(stawka_01, 'FM999999999.00')", "to_char(stawka_02, 'FM999999999.00')", "to_char(stawka_03, 'FM999999999.00')", "to_char(stawka_04, 'FM999999999.00')", "to_char(stawka_05, 'FM999999999.00')", "to_char(stawka_06, 'FM999999999.00')", "to_char(stawka_07, 'FM999999999.00')", "to_char(stawka_08, 'FM999999999.00')", "to_char(stawka_09, 'FM999999999.00')"}, "czynsz", "nr_skl="+::Params: nr_skl)
 
          nr_skl_disabled:="disabled"
@@ -79,7 +79,11 @@ function s_zaplat_onchange(value)
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h2("Usuwanie sk"+HTMLWriter(): _l()+"adnika czynszu")
+            IF ::Params: action=="delete"
+               ? HTMLWriter(): h2("Usuwanie sk"+HTMLWriter(): _l()+"adnika czynszu")
+            ELSE
+               ? HTMLWriter(): h2("Przegl"+HTMLWriter(): _a()+"danie sk"+HTMLWriter(): _l()+"adnika czynszu")
+            ENDIF
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()
@@ -143,7 +147,7 @@ function s_zaplat_onchange(value)
          </td>
          <td>
             <%
-               IF ::Params: action!="delete" .AND. t_s_zaplat=="6"
+               IF ::Params: action!="delete" .AND. ::Params: action!="browse" .AND. t_s_zaplat=="6"
                   globalDisabled:=""
                ELSE
                   globalDisabled:="disabled"
@@ -168,8 +172,12 @@ function s_zaplat_onchange(value)
       </tr>
    </table>
    <%
-      ? HTMLWriter(): inputSubmit("Submit", submitText)
-      ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+      IF ::Params: action!="browse"
+         ? HTMLWriter(): inputSubmit("Submit", submitText)
+         ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+      ELSE
+         ? HTMLWriter(): inputButton("javascript: history.back()", "Powr"+HTMLWriter(): _o()+"t")
+      ENDIF
    %>
 </form>
 <%

@@ -64,7 +64,7 @@
          IF LastRec()==0
             validationResult:=""
          ELSE
-            validationResult:="Nie mo"+HTMLWriter(): _z()+"na usuna"+HTMLWriter(): _c()+" sk"+HTMLWriter(): _l()+"adnika czynszu, kt"+HTMLWriter(): _o()+"ry jest przypisany do lokali! "
+            validationResult:="Nie mo"+HTMLWriter(): _z()+"na usun"+HTMLWriter(): _a()+HTMLWriter(): _c()+" sk"+HTMLWriter(): _l()+"adnika czynszu, kt"+HTMLWriter(): _o()+"ry jest przypisany do lokali! "
          ENDIF
 
          IF validationResult=="" .AND. dbHelper: SQLDelete("czynsz", "nr_skl="+::Params: nr_skl_old)

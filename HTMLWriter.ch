@@ -21,14 +21,15 @@ CLASS HTMLWriter
       CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton, inputFile, inputPassword
       CLASS METHOD textarea
       CLASS METHOD selectHTML
+      CLASS METHOD buttonSubmit
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z, ReplacePolishSymbols
    HIDDEN:
       CLASS METHOD RepairPolishSymbols
 ENDCLASS
 
-CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, deleteUrl, extraUrls, extraUrlsTexts)
+CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
    result:="<table border='1'>"
-   result+="<tr>"
+   result+="<tr class='headingRow'>"
 
    FOR i:=2 to FCount()
       result+="<th>"
@@ -43,23 +44,31 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, editUrl, delet
    NEXT
 
    FOR i:=1 to LastRec()
-      result+="<tr>"
+      result+="<tr class='row' id='"+Var2Char(FieldGet(1))+"_row'>"
 
-      FOR j:=2 to FCount()
-         result+="<td>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</td>"
+      result+="<td><input class='rowRadio' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
+
+      FOR j:=3 to FCount()
+         result+="<td><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</label></td>"
       NEXT
 
-      IF editUrl!=NIL
+      /*IF editUrl!=NIL
          result+="<td>"+::a(editUrl+Var2Char(FieldGet(1)), "Edytuj")+"</td>"
       ENDIF
 
-      result+="<td>"+::a(deleteUrl+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
+      IF deleteUrl!=NIL
+         result+="<td>"+::a(deleteUrl+Var2Char(FieldGet(1)), "Usu"+::_n())+"</td>"
+      ENDIF
+
+      IF browseUrl!=NIL
+         result+="<td>"+::a(browseUrl+Var2Char(FieldGet(1)), "Przegl"+::_a()+"daj")+"</td>"
+      ENDIF
 
       IF extraUrls!=NIL
        FOR j:=1 to Len(extraUrls)
           result+="<td>"+::a(extraUrls[j]+Var2Char(FieldGet(1)), extraUrlsTexts[j])+"</td>"
        NEXT
-      ENDIF
+      ENDIF*/
 
       result+="</tr>"
 
@@ -208,6 +217,9 @@ CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, c
 
    result+="</select>"
 RETURN result
+
+CLASS METHOD HTMLWriter: buttonSubmit(name, value, text)
+RETURN "<button type='submit' name='"+name+"' value='"+value+"'>"+text+"</button>"
 
 CLASS METHOD HTMLWriter: _a()
 RETURN "&#261;"

@@ -32,7 +32,7 @@
          t_k_syn_ma:=""
          t_k_anal_ma:=""
          submitText:="Dodaj"
-      CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
+      CASE ::Params: action=="edit" .OR. ::Params: action=="delete" .OR. ::Params: action=="browse"
          dbHelper: SQLSelect({"kod_1", "il_miesz", "sp_rozl", "adres", "adres_2", "to_char(udzial_w_k, 'FM999999999.00')", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "uwagi_5", "uwagi_6"}, "budynki", "kod_1="+::Params: kod_1)
 
          kod_1_disabled:="disabled"
@@ -43,7 +43,11 @@
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h2("Usuwanie budynku")
+            IF ::Params: action=="delete"
+               ? HTMLWriter(): h2("Usuwanie budynku")
+            ELSE
+               ? HTMLWriter(): h2("Przegl"+HTMLWriter(): _a()+"danie budynku")
+            ENDIF               
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()
@@ -103,8 +107,12 @@
           </tr>
        </table>
        <%
-          ? HTMLWriter(): inputSubmit("Submit", submitText)
-          ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+         IF ::Params: action!="browse"
+            ? HTMLWriter(): inputSubmit("Submit", submitText)
+            ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+         ELSE
+            ? HTMLWriter(): inputButton("javascript: history.back()", "Powr"+HTMLWriter(): _o()+"t")
+         ENDIF
        %>
  </form>
 <%

@@ -21,7 +21,6 @@
 // $STOP-AUTODEPEND
     Budynek.cxp
     Budynki.cxp
-    CancelLocalEdition.cxp
     DbHelper.ch
     EdycjaBudynkow.cxp
     EdycjaLokali.cxp

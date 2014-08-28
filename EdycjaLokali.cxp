@@ -86,6 +86,7 @@
 
          dbHelper: SQLDelete("lokale", "nr_system="+::Params: nr_system)
          dbHelper: SQLDelete("skl_cz", "kod_lok="+::Params: kod_lok_old+" AND nr_lok="+::Params: nr_lok_old)
+         dbHelper: SQLDelete("pliki", "nr_system="+::Params: nr_system)
 
          ? "Lokal usuni"+HTMLWriter(): _e()+"ty<br />"
    ENDCASE

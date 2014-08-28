@@ -65,7 +65,7 @@
          t_il_osob:=""
          t_kod_praw:=""
          submitText:="Dodaj"
-      CASE ::Params: action=="edit" .OR. ::Params: action=="delete"
+      CASE ::Params: action=="edit" .OR. ::Params: action=="delete" .OR. ::Params: action=="browse"
 
          dbHelper: SQLSelect({"nr_system", "kod_lok", "nr_lok", "kod_typ", "adres", "adres_2", "to_char(pow_uzyt, 'FM999999999.00')", "to_char(pow_miesz, 'FM999999999.00')", "to_char(udzial, 'FM999999999.00')", "to_char(dat_od, 'YYYY-MM-DD')", "to_char(dat_do, 'YYYY-MM-DD')", "to_char(p_1, 'FM999999999.00')", "to_char(p_2, 'FM999999999.00')", "to_char(p_3, 'FM999999999.00')", "to_char(p_4, 'FM999999999.00')", "to_char(p_5, 'FM999999999.00')", "to_char(p_6, 'FM999999999.00')", "kod_kuch", "uwagi_1", "uwagi_2", "uwagi_3", "uwagi_4", "nr_kontr", "il_osob", "kod_praw"}, "lokale", "nr_system="+::Params: nr_system)
 
@@ -104,7 +104,11 @@
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h2("Usuwanie lokalu")
+            IF ::Params: action=="delete"
+               ? HTMLWriter(): h2("Usuwanie lokalu")
+            ELSE
+               ? HTMLWriter(): h2("Przegl"+HTMLWriter(): _a()+"danie lokalu")
+            ENDIF
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()
@@ -170,12 +174,16 @@
           </td>
        </tr>
     </table>
-    <iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="@("SkladnikiCzynszuLokalu.cxp?action="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
-    <iframe id="dokumenty_tab" hidden onload="resizeIFrame(this);" src="@("PlikiNajemcy.cxp?action="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
+    <iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="@("SkladnikiCzynszuLokalu.cxp?parentAction="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
+    <iframe id="dokumenty_tab" hidden onload="resizeIFrame(this);" src="@("PlikiNajemcy.cxp?parentAction="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
     <!--<iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="SkladnikiCzynszuLokalu.cxp?kod_lok=-1&nr_lok=-1")></iframe>-->
     <%
-       ? HTMLWriter(): inputSubmit("Submit", submitText)
-       ? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Anuluj")
+      IF ::Params: action!="browse"
+         ? HTMLWriter(): inputSubmit("Submit", submitText)
+         ? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Anuluj")
+      ELSE
+         ? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Powr"+HTMLWriter(): _o()+"t")
+      ENDIF
     %>
  </form>
 <%

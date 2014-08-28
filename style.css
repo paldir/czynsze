@@ -1,3 +1,25 @@
+input[type="radio"] {
+   display: none;
+}
+
+td {
+padding: none;
+}
+
+.rowLabel {
+   display: block;
+   padding: 1px;
+   cursor: pointer;
+}
+
+.row:hover {
+   background: lightgray;
+}
+
+.rowRadio:checked+.rowLabel {
+   background-color: #FF6600;
+}
+
 .tab, iframe {
    border-top: solid 3px #FF6600;
    border-left: none;
@@ -45,7 +67,7 @@ th {
 }
 
 th, td {
-   padding: 3px;
+
 }
 
 hr {
@@ -67,16 +89,18 @@ a:hover {
    padding: 10px;
 }
 
-input[type="submit"], input[type="button"] {
+button, input[type="submit"], input[type="button"] {
    background-color: #FFFF99;
    color: #FF6600;
    font-size: large;
+   border: solid 1px #FF6600;
 }
 
-input[type="submit"]:hover, input[type="button"]:hover {
+button:hover, input[type="submit"]:hover, input[type="button"]:hover {
    border: solid 1px #FF0000;
    background-color: #FFCC33;
    color: #FF0000;
+   cursor: pointer;
 }
 
 input, select, textarea {

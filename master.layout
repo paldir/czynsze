@@ -17,7 +17,7 @@
 
   <!--- Page content goes here --->
    <%
-      //IF ::Session: uzytkownik!=nil
+      IF ::Session: uzytkownik!=nil
          ? HTMLWriter(): a("Budynki.cxp", "Budynki", "menu")
          ? HTMLWriter(): a("Lokale.cxp", "Lokale", "menu")
          ? HTMLWriter(): a("Najemcy.cxp", "Najemcy", "menu")
@@ -25,7 +25,7 @@
    %>
    <div style="text-align: right; position: absolute; top: 10px; right: 10px;">
    <%
-      //? "U"+HTMLWriter(): _z()+"ytkownik: "+::Session: uzytkownik+" "+HTMLWriter(): a("UserValidation.cxp", "Wyloguj")
+      ? "U"+HTMLWriter(): _z()+"ytkownik: "+::Session: uzytkownik+" "+HTMLWriter(): a("UserValidation.cxp", "Wyloguj")
    %>
    </div>
    <hr>
@@ -33,9 +33,9 @@
    @Render Body
 
    <%
-      /*ELSE
+      ELSE
          ::HttpResponse: Redirect("Login.cxp")
-      ENDIF*/
+      ENDIF
    %>
 </body>
 

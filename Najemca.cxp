@@ -33,17 +33,21 @@
          t_l__has:=""
          t_uwagi:=""
          submitText:="Dodaj"
-      CASE ::Params: action=="edit" .OR. ::Params: action="delete"
+      CASE ::Params: action=="edit" .OR. ::Params: action="delete" .OR. ::Params: action="browse"
          dbHelper: SQLSelect({"nr_system", "nr_kontr", "kod_najem", "nazwisko", "imie", "adres_1", "adres_2", "nr_dow", "pesel", "nazwa_z", "e_mail", "l__has", "uwagi_1", "uwagi_2"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
 
          IF ::Params: action=="edit"
             ? HTMLWriter(): h2("Edycja najemcy")
-            ? HTMLWriter(): a("PlikiNajemcy.cxp?nr_system="+Var2Char(FieldGet(1)), "Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
+            //? HTMLWriter(): a("PlikiNajemcy.cxp?nr_system="+Var2Char(FieldGet(1)), "Dokumenty dotycz"+HTMLWriter(): _a()+"ce najemcy")
 
             globalDisabled:=""
             submitText:="Zapisz"
          ELSE
-            ? HTMLWriter(): h2("Usuwanie najemcy")
+            IF ::Params: action=="delete"
+               ? HTMLWriter(): h2("Usuwanie najemcy")
+            ELSE
+               ? HTMLWriter(): h2("Przegl"+HTMLWriter(): _a()+"danie najemcy")
+            ENDIF
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()
@@ -91,8 +95,12 @@
        </tr>
     </table>
        <%
-        ? HTMLWriter(): inputSubmit("Submit", submitText)
-        ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+         IF ::Params: action!="browse"
+            ? HTMLWriter(): inputSubmit("Submit", submitText)
+            ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+         ELSE
+            ? HTMLWriter(): inputButton("javascript: history.back()", "Powr"+HTMLWriter(): _o()+"t")
+         ENDIF            
        %>
  </form>
 

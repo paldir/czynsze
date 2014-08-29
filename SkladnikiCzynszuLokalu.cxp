@@ -40,6 +40,7 @@
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
    <link rel="stylesheet" type="text/css" href="style.css" />
+   <script type="text/javascript" src="scripts.js"></script>
    <title>Logowanie</title>
    <script>
    function nr_skl_onchange(value) {
@@ -83,11 +84,20 @@
    dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, ReplacePolishSymbols(c.nazwa), to_char(c.stawka, 'FM999999999.00'), to_char(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), 'FM999999999.00'), to_char(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END, 'FM999999999.0000') FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl")// WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
    //? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Powrót")
+%>
+<form id="formOfRentComponentOfLocalRemoval" method="get" action="SkladnikiCzynszuLokalu.cxp">
+<%
    IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
-      ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl")
-   ELSE
-      ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl")
+      ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
    ENDIF
+
+   ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
+   ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
+
+   ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl")
+%>
+</form>
+<%
 
    dbHelper: ExecuteQuery("SELECT to_char(SUM(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END), 'FM999999999.0000')FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
@@ -95,16 +105,14 @@
 
    IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
 %>
-<form id="formOfRentComponentOfLocal" method="get" action="SkladnikiCzynszuLokalu.cxp">
+<form id="formOfRentComponentOfLocalAdding" method="get" action="SkladnikiCzynszuLokalu.cxp">
    <%
-      ? HTMLWriter(): inputHidden("action", "add")
       ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
       ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
       ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl", "nr_skl_onchange(this.value)")
       ? "<span id='dan_p_span'>Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+": "+HTMLWriter(): inputText("dan_p", , "15", t_dan_p, "", "return isFloat(event)")+"</span>"
-      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj")
+      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
       //? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj")
-      ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n())
       //? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj")
    %>
 </form>

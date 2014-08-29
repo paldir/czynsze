@@ -38,10 +38,10 @@
 %>
 <form id="buildings" method="get" action="Budynek.cxp">
 <%
-   ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj")
-   ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj")
-   ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n())
-   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj")
+   ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
+   ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj", "editingButton", "disabled")
+   ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
+   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj", "browsingButton", "disabled")
    ? HTMLWriter(): table({"Kod", "Kod", "Adres", "Adres cd."}, {"kod_1", "kod_1", "adres", "adres_2"}, "Budynki", sortOrder, "kod_1")
 %>
 </form>

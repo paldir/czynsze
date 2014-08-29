@@ -1,4 +1,4 @@
-input[type="radio"] {
+.rowRadio {
    display: none;
 }
 
@@ -13,11 +13,13 @@ padding: none;
 }
 
 .row:hover {
-   background: lightgray;
+   background-color: #FFFF99;
 }
 
-.rowRadio:checked+.rowLabel {
-   background-color: #FF6600;
+.selectedRow {
+   //background-color: #FF6600;
+   //color: #FFFF99;
+   border: 3px solid #FF0000;
 }
 
 .tab, iframe {
@@ -102,6 +104,13 @@ button:hover, input[type="submit"]:hover, input[type="button"]:hover {
    color: #FF0000;
    cursor: pointer;
 }
+
+button:disabled {
+   background-color: lightgray;
+   color: gray;
+   border: solid 1px gray;
+}
+
 
 input, select, textarea {
    border: solid 1px #FF6600;

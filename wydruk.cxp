@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<%#Page trace="no"%>
+
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+</head>
+
+<body>
+<%#Code locality="page-global"%>
+<%
+     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+%>
+
+  <!--- Page content goes here --->
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   headers:={"Numer lokalu", "Typ lokalu", "Powierzchnia u"+HTMLWriter(): _z()+"ytkowa", "Nazwisko", "Imi"+HTMLWriter(): _e()}
+
+   FOR i:=Val(::Params: kod_1_start) to Val(::Params: kod_1_end)
+      dbHelper: ExecuteQuery("SELECT l.nr_lok, ReplacePolishSymbols(t.typ_lok), l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l LEFT OUTER JOIN typ_lok t ON l.kod_typ=t.kod_typ WHERE l.kod_lok="+str(i)+" ORDER BY nr_lok")
+
+      ? "<table>"
+
+      FOR j:=1 to LastRec()
+
+         ? "<tr>"
+
+         IF j==1
+            FOR k:=1 to Len(headers)
+               ? "<th>"+headers[k]+"</th>"
+            NEXT
+         ELSE
+            FOR k:=1 to FCount()
+               ? "<td>"+HTMLWriter(): RepairPolishSymbols(Var2Char(FieldGet(k)))+"</td>"
+            NEXT
+         ENDIF
+
+         ? "</tr>"
+
+         DbSkip()
+      NEXT
+
+      ? "</table>"
+
+      ? "<br /><br />"
+   NEXT
+
+   dbHelper: CloseConnection()
+%>
+
+</body>
+
+</html>

@@ -5,6 +5,12 @@
      #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
      #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
 %>
+<html>
+<head>
+   <link rel="stylesheet" type="text/css" href="style.css" />
+   <script type="text/javascript" src="scripts.js"></script>
+</head>
+<body>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
@@ -20,38 +26,71 @@
 
             t_id:=FieldGet(1)
 
+            dbHelper: SQLSelect({"MAX(id)+1"}, "pliki_tmp")
+
+            t_id_tmp:=FieldGet(1)
+
+            IF t_id_tmp>t_id
+               t_id:=t_id_tmp
+            ENDIF
+
             dbHelper: SQLInsert("pliki_tmp", {"id", "plik", "nazwa_pliku", "opis", "nr_system"}, {Var2Char(t_id), t_plik, t_nazwa_pliku, Var2Char(::Params: opis), ::Params: nr_system})
          ENDIF
       CASE ::Params: action=="delete"
          dbHelper: SQLDelete("pliki_tmp", "id="+::Params: id)
+      CASE ::Params: action=="browse"
+         ::HttpResponse: Redirect("Plik.cxp?id="+::Params: id)
    ENDCASE
 
-%>
-<html>
-<head>
-   <link rel="stylesheet" type="text/css" href="style.css" />
-</head>
-<body>
-<%
-   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki_tmp", "nr_system="+::Params: nr_system)
+   dbHelper: SQLSelect({"id", "nazwa_pliku", "opis"}, "pliki_tmp")
    //? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , , "PlikiNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", , {"Plik.cxp?id="}, {"Zobacz plik"})
-
-   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
-      ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , , "PlikiNajemcy.cxp?action=delete&nr_system="+::Params: nr_system+"&id=", , {"Plik.cxp?id="}, {"Zobacz plik"})
 %>
-<form id="formOfDocument" method="post" enctype="multipart/form-data" action="PlikiNajemcy.cxp">
+<form id="formOfDocumentRemoval" method="get" action="PlikiNajemcy.cxp">
 <%
-      ? HTMLWriter(): inputHidden("action", "add")
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
+      ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
+   ENDIF
+
+   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj", "browsingButton", "disabled")
+   ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
+   ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
+   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "id")
+%>
+</form>
+<form id="formOfDocumentAdding" method="post" enctype="multipart/form-data" action="PlikiNajemcy.cxp">
+<%
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
       ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
       ? "<br />Nowy dokument: <br />"
       ? HTMLWriter(): inputFile("plik", , "", "")+"<br />"
       ? HTMLWriter(): textarea("opis", "Opis: ", "2", "100", "", "")+"<br />"
-      ? HTMLWriter(): inputSubmit("Submit", "Dodaj")
-   ELSE
-      ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"})
+      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
    ENDIF
-
+%>
+</form>
+<%
    dbHelper: CloseConnection()
 %>
+<script>
+   var browsingButton=document.getElementById("browsingButton");
+
+   if(browsingButton!=null) {
+      browsingButton.onclick=function() {
+         var form=document.getElementById("formOfDocumentRemoval");
+         form.action="Plik.cxp";
+         form.target="_blank";
+      };
+   }
+
+   var deletingButton=document.getElementById("deletingButton");
+
+   if(deletingButton!=null) {
+      deletingButton.onclick=function() {
+         var form=document.getElementById("formOfDocumentRemoval");
+         form.action="PlikiNajemcy.cxp";
+         form.target="_self";
+      };
+   }      
+</script>
 </body>
 </html>

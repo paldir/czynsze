@@ -37,10 +37,10 @@
 %>
 <form id="rentComponents" method="get" action="SkladnikCzynszu.cxp">
 <%
-   ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj")
-   ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj")
-   ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n())
-   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj")
+   ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
+   ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj", "editingButton", "disabled")
+   ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
+   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj", "browsingButton", "disabled")
    ? HTMLWriter(): table({"Numer", "Numer", "Nazwa", "Spos"+HTMLWriter(): _o()+"b naliczania", "Typ", "Stawka z"+HTMLWriter(): _l()}, {"nr_skl", "nr_skl", "nazwa", "s_zaplat", "typ_skl", "stawka"}, "SkladnikiCzynszu", sortOrder, "nr_skl")
 
 %>

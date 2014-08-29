@@ -23,7 +23,6 @@ CLASS HTMLWriter
       CLASS METHOD selectHTML
       CLASS METHOD buttonSubmit
       CLASS METHOD _a, _c, _e, _l, _n, _o, _s, _x, _z, ReplacePolishSymbols
-   HIDDEN:
       CLASS METHOD RepairPolishSymbols
 ENDCLASS
 
@@ -46,7 +45,7 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
    FOR i:=1 to LastRec()
       result+="<tr class='row' id='"+Var2Char(FieldGet(1))+"_row'>"
 
-      result+="<td><input class='rowRadio' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
+      result+="<td><input class='rowRadio' onchange='ChangeRow(this.id)' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
 
       FOR j:=3 to FCount()
          result+="<td><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</label></td>"
@@ -218,8 +217,15 @@ CLASS METHOD HTMLWriter: selectHTML(dbHelper, name, label, selected, disabled, c
    result+="</select>"
 RETURN result
 
-CLASS METHOD HTMLWriter: buttonSubmit(name, value, text)
-RETURN "<button type='submit' name='"+name+"' value='"+value+"'>"+text+"</button>"
+CLASS METHOD HTMLWriter: buttonSubmit(name, value, text, id, disabled)
+   result:="<button type='submit' "+disabled+" name='"+name+"' value='"+value+"'"
+
+   IF id!=NIL
+      result+=" id='"+id+"'"
+   ENDIF
+
+   result+=">"+text+"</button>"
+RETURN result
 
 CLASS METHOD HTMLWriter: _a()
 RETURN "&#261;"

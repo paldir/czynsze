@@ -43,10 +43,10 @@
 <form id="locals" method="get" action="Lokal.cxp">
 <%
    //? HTMLWriter(): a("Lokal.cxp?action=add", "Dodaj")
-   ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj")
-   ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj")
-   ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n())
-   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj")
+   ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
+   ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj", "editingButton", "disabled")
+   ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
+   ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj", "browsingButton", "disabled")
    ? HTMLWriter(): table({"Nr systemowy", "Kod budynku", "Numer lokalu", "Typ lokalu", "Powierzchnia u"+HTMLWriter(): _z()+"ytkowa", "Nazwisko", "Imi"+HTMLWriter(): _e()}, {"l.nr_system", "l.kod_lok", "l.nr_lok", "t.typ_lok", "l.pow_uzyt", "l.nazwisko", "l.imie"}, "Lokale", sortOrder, "nr_system")
 %>
 </form>

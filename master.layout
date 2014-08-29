@@ -9,7 +9,7 @@
    @Render Head
 </head>
 
-<body>
+<body onload="ClearSelectionOfRow();">
  <%#Code locality="page-global"%>
  <%
     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"

@@ -46,4 +46,18 @@ function ChangeRow(rowId) {
 
    if (row!=null)
       row.className="selectedRow";
+
+   var editingButtonSpecial=document.getElementById("editingButtonSpecial");
+
+   if (rentComponentsWithAmount!=null && editingButtonSpecial!=null) {
+      editingButtonSpecial.disabled=true;
+
+      for (var i=0; i<rentComponentsWithAmount.length; i++) {
+         if (rentComponentsWithAmount[i]==rowId) {
+            editingButtonSpecial.disabled=false;
+
+            break;
+         }
+      }
+   }
 }

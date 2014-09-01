@@ -18,7 +18,7 @@ CLASS HTMLWriter
       CLASS METHOD table
       CLASS METHOD a
       CLASS METHOD h2
-      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton, inputFile, inputPassword
+      CLASS METHOD inputText, inputRadio, inputSubmit, inputHidden, inputButton, inputFile, inputPassword, inputCheckBox
       CLASS METHOD textarea
       CLASS METHOD selectHTML
       CLASS METHOD buttonSubmit
@@ -27,7 +27,7 @@ CLASS HTMLWriter
 ENDCLASS
 
 CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
-   result:="<table border='1'>"
+   result:="<table border='1' class='rows'>"
    result+="<tr class='headingRow'>"
 
    FOR i:=2 to FCount()
@@ -45,7 +45,7 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
    FOR i:=1 to LastRec()
       result+="<tr class='row' id='"+Var2Char(FieldGet(1))+"_row'>"
 
-      result+="<td><input class='rowRadio' onchange='ChangeRow(this.id)' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
+      result+="<td><input class='rowRadio' onchange='ChangeRow(this.id);' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
 
       FOR j:=3 to FCount()
          result+="<td><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</label></td>"
@@ -158,6 +158,9 @@ RETURN result
 
 CLASS METHOD HTMLWriter: inputPassword(name)
 RETURN "<input type='password' name='"+name+"' />"
+
+CLASS METHOD HTMLWriter: inputCheckBox(name, id, value, label)
+RETURN "<input type='checkbox' name='"+name+"' checked id='"+id+"' value='"+value+"' /><label for='"+id+"'>"+::RepairPolishSymbols(label)+"</label>"
 
 CLASS METHOD HTMLWriter: textarea(name, label, rows, maxlength, text, disabled)
    result:=""

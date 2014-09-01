@@ -2,10 +2,6 @@
    display: none;
 }
 
-td {
-padding: none;
-}
-
 .rowLabel {
    display: block;
    padding: 1px;
@@ -59,17 +55,13 @@ padding: none;
    color: #FF0000;
 }
 
-table {
+.rows {
    border-collapse: collapse;
 }
 
-th {
+.headingRow th {
    background-color: #FFFF99;
    font-size: large;
-}
-
-th, td {
-
 }
 
 hr {
@@ -119,4 +111,17 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
    border: solid 1px #FF0000;
    background-color: #FFFFCC;
+}
+
+#report {
+   border-collapse: collapse;
+}
+
+#report th {
+   background-color: lightgray;
+}
+
+#report th, #report td {
+   padding: 2px;
+   text-align: center;
 }

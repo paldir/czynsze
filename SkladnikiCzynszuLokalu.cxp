@@ -33,6 +33,8 @@
             //dbHelper: ExecuteStatement("INSERT INTO rent_components_deleted SELECT * FROM skl_cz WHERE kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok+" AND nr_skl="+::Params: nr_skl)
             dbHelper: SQLDelete("skl_cz_tmp", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok+" AND nr_skl="+::Params: nr_skl)
             //? "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok+" AND nr_skl="+::Params: nr_skl
+         CASE ::Params: action=="dan_p_edit"
+            dbHelper: SQLUpdate("skl_cz_tmp", {"dan_p"}, {::Params: dan_p}, "nr_skl="+::Params: nr_skl)
       ENDCASE
    ENDIF
 %>
@@ -43,11 +45,10 @@
    <script type="text/javascript" src="scripts.js"></script>
    <title>Logowanie</title>
    <script>
-   function nr_skl_onchange(value) {
-      <%
-         dbHelper: SQLSelect({"nr_skl"}, "czynsz", "s_zaplat=2")
-      %>
-      values=[
+   <%
+      dbHelper: SQLSelect({"nr_skl"}, "czynsz", "s_zaplat=2")
+   %>
+   rentComponentsWithAmount=[
       <%
          FOR i:=1 to LastRec()
             ? "'"+Var2Char(FieldGet(1))+"'"
@@ -61,15 +62,17 @@
       %>
       ];
 
-      for (i=0; i<values.length; i++) {
-         if (values[i]==value)
+   function nr_skl_onchange(value) {
+      for (i=0; i<rentComponentsWithAmount.length; i++) {
+         if (rentComponentsWithAmount[i]==value)
          {
-            document.getElementById("dan_p_span").hidden=false
-            return
+            document.getElementById("dan_p_span").hidden=false;
+
+            return;
          }
       }
 
-      document.getElementById("dan_p_span").hidden=true
+      document.getElementById("dan_p_span").hidden=true;
    }
    </script>
 </head>
@@ -87,12 +90,14 @@
 %>
 <form id="formOfRentComponentOfLocalRemoval" method="get" action="SkladnikiCzynszuLokalu.cxp">
 <%
-   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="edit"
       ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
+      ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj", "editingButtonSpecial", "disabled")
    ENDIF
 
    ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
    ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
+   ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
 
    ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl")
 %>
@@ -103,12 +108,13 @@
 
    ? "Razem: "+Var2Char(FieldGet(1))
 
-   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="edit"
 %>
-<form id="formOfRentComponentOfLocalAdding" method="get" action="SkladnikiCzynszuLokalu.cxp">
+<form id="formOfRentComponentOfLocal" method="get" action="SkladnikiCzynszuLokalu.cxp">
    <%
       ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
       ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
+      ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
       ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl", "nr_skl_onchange(this.value)")
       ? "<span id='dan_p_span'>Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+": "+HTMLWriter(): inputText("dan_p", , "15", t_dan_p, "", "return isFloat(event)")+"</span>"
       ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
@@ -118,12 +124,32 @@
 </form>
 
 <script>
-      document.getElementById("dan_p_span").hidden=true
+   document.getElementById("dan_p_span").hidden=true;
 </script>
 
 <%
    ENDIF
 
+   IF ::Params: action=="edit"
+      dbHelper: ExecuteQuery("SELECT c.nr_skl, ReplacePolishSymbols(c.nazwa), to_char(c.stawka, 'FM999999999.00'), to_char(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), 'FM999999999.00') FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE c.nr_skl="+::Params: nr_skl)
+%>
+<form id="dan_p_edit" method="get" action="SkladnikiCzynszuLokalu.cxp">
+<%
+      ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
+      ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
+      ? HTMLWriter(): inputHidden("nr_skl", ::Params: nr_skl)
+      ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
+      ? "<br /><br />"+HTMLWriter(): inputText("nr_skl", "Numer sk"+HTMLWriter(): _l()+"adnika: ", "3", Var2Char(FieldGet(1)), "disabled")+"<br /><br />"
+      ? HTMLWriter(): inputText("nazwa", "Nazwa: ", "30", Var2Char(FieldGet(2)), "disabled")+"<br /><br />"
+      ? HTMLWriter(): inputText("stawka", "Stawka: ", "10", Var2Char(FieldGet(3)), "disabled")+"<br /><br />"
+      ? HTMLWriter(): inputText("dan_p", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "15", Var2Char(FieldGet(4)), "", "return isFloat(event)")+"<br />"
+      ? HTMLWriter(): buttonSubmit("action", "dan_p_edit", "Zapisz", , "")
+      ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+   ENDIF
+
+%>
+</form>
+<%
    dbHelper: CloseConnection()
 %>
 </body>

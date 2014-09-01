@@ -4,6 +4,7 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
@@ -17,12 +18,31 @@
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
+   t_kod_typ:="("
+   t_budynki:={}
+
+   FOR i:=1 to Len(::Params: collection)
+      IF ::Params:collection[i][1]=="kod_typ"
+         t_kod_typ+=::Params: collection[i][2]+","
+      ENDIF
+   NEXT
+
+   t_kod_typ:=SubStr(t_kod_typ, 1, Len(t_kod_typ)-1)
+   t_kod_typ+=")"
+
+   FOR i:=Val(::Params: kod_1_start) to Val(::Params: kod_1_end)
+      dbHelper: ExecuteQuery("SELECT kod_1, ReplacePolishSymbols(adres), ReplacePolishSymbols(adres_2) FROM budynki WHERE kod_1="+Str(i))
+
+      AAdd(t_budynki, "Nr "+Var2Char(FieldGet(1))+", "+HTMLWriter(): RepairPolishSymbols(Var2Char(FieldGet(2)))+", "+HTMLWriter(): RepairPolishSymbols(Var2Char(FieldGet(3))))
+   NEXT
+
    headers:={"Numer lokalu", "Typ lokalu", "Powierzchnia u"+HTMLWriter(): _z()+"ytkowa", "Nazwisko", "Imi"+HTMLWriter(): _e()}
 
    FOR i:=Val(::Params: kod_1_start) to Val(::Params: kod_1_end)
-      dbHelper: ExecuteQuery("SELECT l.nr_lok, ReplacePolishSymbols(t.typ_lok), l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l LEFT OUTER JOIN typ_lok t ON l.kod_typ=t.kod_typ WHERE l.kod_lok="+str(i)+" ORDER BY nr_lok")
+      dbHelper: ExecuteQuery("SELECT l.nr_lok, ReplacePolishSymbols(t.typ_lok), l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l LEFT OUTER JOIN typ_lok t ON l.kod_typ=t.kod_typ WHERE l.kod_lok="+str(i)+" AND l.kod_typ IN "+t_kod_typ+" ORDER BY "+::Params: orderBy1)
 
-      ? "<table>"
+      ? "<table border='1' id='report'>"
+      ? "<caption style='font-size: "+Str(Val(::Params: fontSize)+4)+"px;'>"+t_budynki[i]+"</caption>"
 
       FOR j:=1 to LastRec()
 
@@ -30,11 +50,11 @@
 
          IF j==1
             FOR k:=1 to Len(headers)
-               ? "<th>"+headers[k]+"</th>"
+               ? "<th style='font-size: "+Str(Val(::Params: fontSize)+2)+"px;'>"+headers[k]+"</th>"
             NEXT
          ELSE
             FOR k:=1 to FCount()
-               ? "<td>"+HTMLWriter(): RepairPolishSymbols(Var2Char(FieldGet(k)))+"</td>"
+               ? "<td style='font-size: "+::Params: fontSize+"px;'>"+HTMLWriter(): RepairPolishSymbols(Var2Char(FieldGet(k)))+"</td>"
             NEXT
          ENDIF
 

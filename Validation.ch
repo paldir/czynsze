@@ -74,7 +74,7 @@ CLASS METHOD Validation: LocalTable(dbHelper, validate_nr_lok, kod_lok, nr_lok, 
       dbHelper: SQLSelect({"kod_lok"}, "lokale", "kod_lok="+kod_lok+" AND nr_lok="+nr_lok)
 
       IF LastRec()>0
-         result+="W wybranym budynku istnieje ju"+HTMLWriter(): _z()+" lokal o podanym numerze! "
+         result+="W wybranym budynku istnieje ju"+HTMLWriter(): _z()+" lokal o podanym numerze! <br />"
       ENDIF
    ENDIF
 

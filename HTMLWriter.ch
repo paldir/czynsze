@@ -121,7 +121,9 @@ CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked, d
       checked:="-1"
    ENDIF
 
-   IF label!=NIL
+   IF label==NIL
+      result:=""
+   ELSE
       result:="<label for='"+name+"'>"+label+"</label><br />"
    ENDIF
 

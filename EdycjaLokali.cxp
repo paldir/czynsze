@@ -32,6 +32,8 @@
    t_nazwisko:=Var2Char(FieldGet(1))
    t_imie:=Var2Char(FieldGet(2))
 
+   ? "<div class='placeOfResultWindow'><div class='resultWindow'>"
+
    DO CASE
       CASE ::Params: action=="add"
          dbHelper: SQLSelect({"nazwisko", "imie"}, "najemcy", "nr_kontr="+::Params: nr_kontr)
@@ -100,6 +102,8 @@
       ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")
       ? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Anuluj")
    ENDIF
+
+   ? "</div></div>"
 
    dbHelper: CloseConnection()
 %>

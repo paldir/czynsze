@@ -29,6 +29,8 @@
    t_stawka_08:=::Params: stawka_08
    t_stawka_09:=::Params: stawka_09
 
+   ? "<div class='placeOfResultWindow'><div class='resultWindow'>"
+
    DO CASE
       CASE ::Params: action=="add"
          validationResult:=Validation(): RentComponent(dbHelper, .T., ::Params: nr_skl, @t_stawka, @t_stawka_inf, @t_data_1, @t_data_2, @t_stawka_00, @t_stawka_01, @t_stawka_02, @t_stawka_03, @t_stawka_04, @t_stawka_05, @t_stawka_06, @t_stawka_07, @t_stawka_08, @t_stawka_09)
@@ -85,6 +87,8 @@
       ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")
       ? HTMLWriter(): inputButton("location.href=&quot;SkladnikiCzynszu.cxp&quot;", "Anuluj")
    ENDIF
+
+   ? "</div></div>"
 
    dbHelper: CloseConnection()
 %>

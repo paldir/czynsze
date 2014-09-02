@@ -16,6 +16,8 @@
    t_il_miesz:=::Params: il_miesz
    t_udzial_w_k:=::Params: udzial_w_k
 
+   ? "<div class='placeOfResultWindow'><div class='resultWindow'>"
+
    DO CASE
       CASE ::Params: action=="add"
          validationResult:=Validation(): Building(dbHelper, .T., ::Params: kod_1, @t_il_miesz, @t_udzial_w_k)
@@ -73,6 +75,8 @@
       ? HTMLWriter(): inputButton("javascript: history.back()", "Popraw")
       ? HTMLWriter(): inputButton("location.href=&quot;Budynki.cxp&quot;", "Anuluj")
    ENDIF
+
+   ? "</div></div>"
 
    dbHelper: CloseConnection()
 %>

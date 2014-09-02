@@ -7,6 +7,7 @@
    <script type="text/javascript" src="scripts.js"></script>
    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+<title>Konfiguracja wydruku</title>
 
 <body>
 <%#Code locality="page-global"%>
@@ -21,7 +22,7 @@
 %>
 <form id="configuration" method="get" action="Wydruk.cxp">
    <table>
-      <tr>
+      <tr valign="top">
          <td>
          <%
             ? HTMLWriter(): inputText("kod_1_start", "Kod pierwszego budynku: ", "5", "", "", "return isInteger(event)")+"<br /><br />"
@@ -41,9 +42,18 @@
          <%
             dbHelper: ExecuteQuery("SELECT 'nr_lok', 'Numer lokalu' UNION ALL SELECT 'typ_lok', 'Typ lokalu' UNION ALL SELECT 'pow_uzyt', 'Powierzchnia u"+HTMLWriter(): _z()+"ytkowa' UNION ALL SELECT 'nazwisko', 'Nazwisko' UNION ALL SELECT 'imie', 'Imi"+HTMLWriter(): _e()+"'")
             ? HTMLWriter(): selectHTML(dbHelper, "orderBy1", "Sortuj wed"+HTMLWriter(): _l()+"ug: ", "nr_lok", "", {"", ""}, "")+"<br />"
-            ? HTMLWriter(): inputRadio("orderBy1o", "",{"ASC", "DESC"}, {"ASC", "DESC"}, {"Rosn"+HTMLWriter(): _a()+"co", "Malej"+HTMLWriter(): _a()+"co"}, "ASC", "")+"<br /><br />"
+            ? HTMLWriter(): inputRadio("order1", ,{"ASC", "DESC"}, {"ASC", "DESC"}, {"rosn"+HTMLWriter(): _a()+"co", "malej"+HTMLWriter(): _a()+"co"}, "ASC", "")+"<br />"
+
+            dbHelper: ExecuteQuery("SELECT 'nr_lok', 'Numer lokalu' UNION ALL SELECT 'typ_lok', 'Typ lokalu' UNION ALL SELECT 'pow_uzyt', 'Powierzchnia u"+HTMLWriter(): _z()+"ytkowa' UNION ALL SELECT 'nazwisko', 'Nazwisko' UNION ALL SELECT 'imie', 'Imi"+HTMLWriter(): _e()+"'")
+            ? HTMLWriter(): selectHTML(dbHelper, "orderBy2", "Nast"+HTMLWriter(): _e()+"pnie wed"+HTMLWriter(): _l()+"ug: ", "nazwisko", "", {"", ""}, "")+"<br />"
+            ? HTMLWriter(): inputRadio("order2", ,{"ASC", "DESC"}, {"ASC", "DESC"}, {"rosn"+HTMLWriter(): _a()+"co", "malej"+HTMLWriter(): _a()+"co"}, "ASC", "")+"<br />"
+
+            dbHelper: ExecuteQuery("SELECT 'nr_lok', 'Numer lokalu' UNION ALL SELECT 'typ_lok', 'Typ lokalu' UNION ALL SELECT 'pow_uzyt', 'Powierzchnia u"+HTMLWriter(): _z()+"ytkowa' UNION ALL SELECT 'nazwisko', 'Nazwisko' UNION ALL SELECT 'imie', 'Imi"+HTMLWriter(): _e()+"'")
+            ? HTMLWriter(): selectHTML(dbHelper, "orderBy3", "Nast"+HTMLWriter(): _e()+"pnie wed"+HTMLWriter(): _l()+"ug: ", "imie", "", {"", ""}, "")+"<br />"
+            ? HTMLWriter(): inputRadio("order3", ,{"ASC", "DESC"}, {"ASC", "DESC"}, {"rosn"+HTMLWriter(): _a()+"co", "malej"+HTMLWriter(): _a()+"co"}, "ASC", "")+"<br />"
 
             ? HTMLWriter(): inputText("fontSize", "Rozmiar czcionki: ", "2", "", "", "return isInteger(event)")+"<br /><br />"
+            ? HTMLWriter(): inputCheckBox("eachBuildingAtNewPage", "eachBuildingAtNewPage", "eachBuildingAtNewPage", "ka"+HTMLWriter(): _z()+"dy budynek na nowej stronie")
          %>
          </td>
       </tr>

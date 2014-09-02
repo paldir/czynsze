@@ -88,6 +88,7 @@ button, input[type="submit"], input[type="button"] {
    color: #FF6600;
    font-size: large;
    border: solid 1px #FF6600;
+   border-radius: 5px;
 }
 
 button:hover, input[type="submit"]:hover, input[type="button"]:hover {
@@ -95,14 +96,16 @@ button:hover, input[type="submit"]:hover, input[type="button"]:hover {
    background-color: #FFCC33;
    color: #FF0000;
    cursor: pointer;
+   box-shadow: 2px 2px 2px #888888;
 }
 
 button:disabled {
    background-color: lightgray;
    color: gray;
    border: solid 1px gray;
+   cursor: auto;
+   box-shadow: none;
 }
-
 
 input, select, textarea {
    border: solid 1px #FF6600;
@@ -111,6 +114,18 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
    border: solid 1px #FF0000;
    background-color: #FFFFCC;
+}
+
+.placeOfResultWindow {
+   text-align: center;
+}
+
+.resultWindow {
+   background-color: #FFFFCC;
+   text-align: center;
+   display: inline-block;
+   border: solid 1px #FF6600;
+   padding: 5px;
 }
 
 #report {
@@ -124,4 +139,9 @@ input:focus, select:focus, textarea:focus {
 #report th, #report td {
    padding: 2px;
    text-align: center;
+}
+
+.page {
+   page-break-after: always;
+   page-break-inside: avoid;
 }

@@ -3,13 +3,7 @@
 <session>
   <active file=".\LokaleWBudynkach_Konfiguracja.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\LokaleWBudynkach_Konfiguracja.cxp" column="11" line="40" />
-    <openfile path=".\HTMLWriter.ch" column="16" line="123" />
-    <openfile path=".\Scripts.js" column="23" line="0" />
-    <openfile path=".\master.layout" column="0" line="12" />
-    <openfile path=".\wydruk.cxp" column="297" line="41" />
-    <openfile path=".\style.css" column="13" line="124" />
-    <openfile path=".\Budynki.cxp" column="0" line="0" />
-    <openfile path=".\Budynek.cxp" column="0" line="0" />
+    <openfile path=".\style.css" column="10" line="97" />
+    <openfile path=".\LokaleWBudynkach_Konfiguracja.cxp" column="119" line="44" />
   </openfiles>
 </session>

@@ -111,4 +111,5 @@ METHOD DbHelper: SQLDelete(table, where)
 RETURN ::ExecuteStatement("DELETE FROM "+table+" WHERE "+where)
 
 METHOD DbHelper: GetLastMessage()
-RETURN ::oSession: getLastMessage()
+//RETURN ::oSession: getLastMessage()
+RETURN "<br />"

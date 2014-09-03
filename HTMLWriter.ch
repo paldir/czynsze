@@ -27,7 +27,7 @@ CLASS HTMLWriter
 ENDCLASS
 
 CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
-   result:="<table border='1' class='rows'>"
+   result:="<table class='rows'>"
    result+="<tr class='headingRow'>"
 
    FOR i:=2 to FCount()
@@ -48,7 +48,21 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
       result+="<td><input class='rowRadio' onchange='ChangeRow(this.id);' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
 
       FOR j:=3 to FCount()
-         result+="<td><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</label></td>"
+         result+="<td><label class='rowLabel'"
+
+         cell:=Var2Char(FieldGet(j))
+
+         FOR k:=1 to Len(cell)
+            IF !IsDigit(cell[k]) .AND. cell[k]!='.'
+               exit
+            ENDIF
+
+            IF k==Len(cell)
+               result+="style='text-align: right;'"
+            ENDIF
+         NEXT
+
+         result+=" for='"+Var2Char(FieldGet(1))+"'>"+::RepairPolishSymbols(Var2Char(FieldGet(j)))+"</label></td>"
       NEXT
 
       /*IF editUrl!=NIL

@@ -16,7 +16,7 @@
 
    DO CASE
       CASE ::Params: action=="add"
-         IF ::HttpRequest: Files: NumItems>0
+         IF ::HttpRequest: Files: NumItems>0 .AND. Lower(SubStr(::HttpRequest: Files: plik: Name, Len(::HttpRequest: Files: plik: Name)-2))=="pdf"
             t_nazwa_pliku:=::HttpRequest: Files: plik: Name
             t_plik:=Bin2Base64(::HttpRequest: Files: plik: Data)
             columns:={"plik", "nazwa_pliku", "opis"}
@@ -90,7 +90,7 @@
          form.action="PlikiNajemcy.cxp";
          form.target="_self";
       };
-   }      
+   }
 </script>
 </body>
 </html>

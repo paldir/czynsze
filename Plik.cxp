@@ -17,6 +17,12 @@
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
    dbHelper: SQLSelect({"length(plik)"}, "pliki", "id="+::Params: id)
+   table:="pliki"
+
+   IF LastRec()==0
+      dbHelper: SQLSelect({"length(plik)"}, "pliki_tmp", "id="+::Params: id)
+      table:="pliki_tmp"
+   ENDIF
 
    length:=FieldGet(1)
    file:=""
@@ -24,7 +30,7 @@
    segment:=100000
 
    DO WHILE pointer<length
-      dbHelper: SQLSelect({"substring(plik FROM "+Str(pointer)+" FOR "+Str(segment)+")"}, "pliki", "id="+::Params: id)
+      dbHelper: SQLSelect({"substring(plik FROM "+Str(pointer)+" FOR "+Str(segment)+")"}, table, "id="+::Params: id)
 
       file+=FieldGet(1)
       pointer+=segment

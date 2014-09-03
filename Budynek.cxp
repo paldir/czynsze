@@ -47,7 +47,7 @@
                ? HTMLWriter(): h2("Usuwanie budynku")
             ELSE
                ? HTMLWriter(): h2("Przegl"+HTMLWriter(): _a()+"danie budynku")
-            ENDIF               
+            ENDIF
 
             globalDisabled:="disabled"
             submitText:="Usu"+HTMLWriter(): _n()
@@ -76,9 +76,8 @@
    ENDCASE
 %>
  <form id="formOfBuilding" method="get" action="EdycjaBudynkow.cxp">
-    <table>
+    <table class="tab">
        <tr valign="top">
-          <td>
              <td>
               <%
                 ? HTMLWriter(): inputHidden("action", ::Params: action)

@@ -18,17 +18,18 @@
   <!--- Page content goes here --->
    <%
       IF ::Session: uzytkownik!=nil
-         ? HTMLWriter(): a("Budynki.cxp", "Budynki", "menu")
-         ? HTMLWriter(): a("Lokale.cxp", "Lokale", "menu")
-         ? HTMLWriter(): a("Najemcy.cxp", "Najemcy", "menu")
-         ? HTMLWriter(): a("SkladnikiCzynszu.cxp", "Sk"+HTMLWriter(): _l()+"adniki czynszu", "menu")
+         ? "<div class='menu'>"
+         ? HTMLWriter(): a("Budynki.cxp", "Budynki", "menuItem")
+         ? HTMLWriter(): a("Lokale.cxp", "Lokale", "menuItem")
+         ? HTMLWriter(): a("Najemcy.cxp", "Najemcy", "menuItem")
+         ? HTMLWriter(): a("SkladnikiCzynszu.cxp", "Sk"+HTMLWriter(): _l()+"adniki czynszu", "menuItem")
    %>
-   <div style="text-align: right; position: absolute; top: 10px; right: 10px;">
+   <div style="text-align: right; position: absolute; top: 13px; right: 13px;">
    <%
       ? "U"+HTMLWriter(): _z()+"ytkownik: "+::Session: uzytkownik+" "+HTMLWriter(): a("UserValidation.cxp", "Wyloguj")
    %>
    </div>
-   <hr>
+   </div>
 
    <div class="content">
    @Render Body

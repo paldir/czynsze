@@ -68,7 +68,7 @@
    ENDCASE
 %>
  <form id="formOfTenant" method="get" action="EdycjaNajemcow.cxp">
-    <table>
+    <table class="tab">
        <tr valign="top">
           <td>
            <%
@@ -100,7 +100,7 @@
             ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
          ELSE
             ? HTMLWriter(): inputButton("javascript: history.back()", "Powr"+HTMLWriter(): _o()+"t")
-         ENDIF            
+         ENDIF
        %>
  </form>
 

@@ -111,7 +111,7 @@ function s_zaplat_onchange(value)
    ENDCASE
 %>
 <form id="formOfRentComponent" method="get" action="EdycjaSkladnikowCzynszu.cxp">
-   <table>
+   <table class="tab">
       <tr valign="top">
          <td>
           <%

@@ -26,9 +26,25 @@
       }
    }
 
-   function resizeIFrame(obj) {
-    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-   }
+function getDocHeight(doc) {
+    doc = doc || document;
+    // stackoverflow.com/questions/1145850/
+    var body = doc.body, html = doc.documentElement;
+    var height = Math.max( body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight );
+    return height;
+}
+
+function setIframeHeight(id) {
+    var ifrm = document.getElementById(id);
+    var doc = ifrm.contentDocument? ifrm.contentDocument:
+        ifrm.contentWindow.document;
+    ifrm.style.visibility = 'hidden';
+    ifrm.style.height = "10px"; // reset to minimal height ...
+    // IE opt. for bing/msn needs a bit added or scrollbar appears
+    ifrm.style.height = getDocHeight( doc ) + 4 + "px";
+    ifrm.style.visibility = 'visible';
+}
 </script>
 
 @section Body
@@ -118,7 +134,9 @@
 <input class="tabRadio" type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="dane" value="dane" checked="checked"><label class="tabLabel" for="dane">Dane</label>
 <input class="tabRadio" type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="skladnikiCzynszu" value="skladnikiCzynszu"><label class="tabLabel" for="skladnikiCzynszu">Sk@(HTMLWriter(): _l())adniki czynszu</label>
 <input class="tabRadio" type="radio" onchange="SwitchTabs(this.value)" name="tabs" id="dokumenty" value="dokumenty"><label class="tabLabel" for="dokumenty">Dokumenty</label>
- <form id="formOfBuilding" method="get" action="EdycjaLokali.cxp">
+ <form id="formOfLocal" method="get" action="EdycjaLokali.cxp">
+    <div class="tabBorder">
+    <div class="tabSeparator"></div>
     <table id="dane_tab" class="tab">
        <tr valign="top">
           <td>
@@ -174,8 +192,9 @@
           </td>
        </tr>
     </table>
-    <iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="@("SkladnikiCzynszuLokalu.cxp?parentAction="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
-    <iframe id="dokumenty_tab" hidden onload="resizeIFrame(this);" src="@("PlikiNajemcy.cxp?parentAction="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
+    <iframe class="tab" id="skladnikiCzynszu_tab" hidden onload="setIframeHeight(this.id)" src="@("SkladnikiCzynszuLokalu.cxp?parentAction="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
+    <iframe class="tab" id="dokumenty_tab" hidden onload="setIframeHeight(this.id)" src="@("PlikiNajemcy.cxp?parentAction="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
+    </div>
     <!--<iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="SkladnikiCzynszuLokalu.cxp?kod_lok=-1&nr_lok=-1")></iframe>-->
     <%
       IF ::Params: action!="browse"

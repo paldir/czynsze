@@ -49,7 +49,7 @@ function ChangeRow(rowId) {
 
    var editingButtonSpecial=document.getElementById("editingButtonSpecial");
 
-   if (rentComponentsWithAmount!=null && editingButtonSpecial!=null) {
+   if (editingButtonSpecial!=null && rentComponentsWithAmount!=null) {
       editingButtonSpecial.disabled=true;
 
       for (var i=0; i<rentComponentsWithAmount.length; i++) {

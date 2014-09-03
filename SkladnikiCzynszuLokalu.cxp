@@ -106,7 +106,24 @@
 
    dbHelper: ExecuteQuery("SELECT to_char(SUM(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END), 'FM999999999.0000')FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
-   ? "Razem: "+Var2Char(FieldGet(1))
+%>
+   <script>
+      var table=document.getElementsByClassName("rows")
+
+      if (table!=null) {
+         table=table[0];
+         var row=table.insertRow(-1);
+         var cell=row.insertCell(-1);
+         cell.innerHTML="Razem: @(Var2Char(FieldGet(1)))";
+         cell.colSpan="6";
+         cell.style.textAlign="right";
+         cell.style.fontWeight="bold";
+         cell.style.paddingRight="75px";
+      }
+   </script>
+<%
+
+   //? "Razem: "+Var2Char(FieldGet(1))
 
    IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="edit"
 %>

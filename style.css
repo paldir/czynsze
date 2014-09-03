@@ -1,27 +1,129 @@
+body, input, select, button {
+   color: #383838;
+   font-size: small;
+}
+
+a {
+   color: dodgerblue;
+}
+
+a:hover {
+   color: black;
+}
+
+button, input[type="submit"], input[type="button"] {
+   background-color: lightsteelblue;
+   background: linear-gradient(lightsteelblue, aliceblue);
+   color: black;
+   border: solid 1px dodgerblue;
+   border-radius: 3px;
+   padding-top: 2px;
+   padding-bottom: 2px;
+   padding-left: 4px;
+   padding-right: 4px;
+   margin: 5px;
+}
+
+button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+   background-color: dodgerblue;
+   background: linear-gradient(dodgerblue, dodgerblue);
+   color: white;
+   cursor: pointer;
+}
+
+button:disabled {
+   background-color: lightgray;
+   background: linear-gradient(lightgray, lightgray);
+   color: gray;
+   border-color: gray;
+   cursor: auto;
+   box-shadow: none;
+}
+
+input, select, textarea {
+   border: solid 1px dodgerblue;
+}
+
+input:focus, select:focus, textarea:focus {
+   border-color: mediumblue;
+   background-color: aliceblue;
+}
+
+.menu {
+   background-color: aliceblue;
+   border: 1px solid dodgerblue;
+   margin-top: 5px;
+   padding: 5px;
+}
+
+.menuItem {
+   color: #606060;
+   text-decoration: none;
+   font-weight: bold;
+   border-right: solid 1px gray;
+   padding-right: 3px;
+}
+
+.rows {
+   border-collapse: collapse;
+   border: 1px solid lightgray;
+}
+
+.headingRow th {
+   background-color: #E8E8E8;
+   font-weight: bold;
+   padding: 3px;
+}
+
+.headingRow th a {
+   text-decoration: none;
+   font-weight: bold;
+   color: #383838;
+}
+
+.headingRow th a:hover {
+   text-decoration: underline;
+}
+
 .rowRadio {
    display: none;
 }
 
 .rowLabel {
    display: block;
-   padding: 1px;
+   padding: 3px;
+   padding-left: 75px;
+   padding-right: 75px;
    cursor: pointer;
 }
 
+.row {
+   border: 1px solid lightgray;
+}
+
 .row:hover {
-   background-color: #FFFF99;
+   background-color: lightgray;
 }
 
 .selectedRow {
-   //background-color: #FF6600;
-   //color: #FFFF99;
-   border: 3px solid #FF0000;
+   background-color: gray;
+   color: white;
 }
 
-.tab, iframe {
-   border-top: solid 3px #FF6600;
-   border-left: none;
+.tabBorder {
+   border: solid 2px mediumblue;
+   margin-top: 1px;
+}
+
+.tabSeparator {
+   height: 10px;
+   background-color: dodgerblue;
+   border-bottom: 2px solid mediumblue;
+}
+
+.tab {
    width: 100%;
+   border: none;
 }
 
 .tabRadio {
@@ -29,102 +131,39 @@
 }
 
 .tabLabel {
-   border-top: solid 1px #FF6600;
-   border-left: solid 1px #FF6600;
-   border-right: solid 1px #FF6600;
-   background-color: #FFFF99;
-   color: #FF6600;
-   font-size: large;
-   padding: 1px;
+   margin-left: 2px;
+   border-top: solid 2px mediumblue;
+   border-left: solid 1px mediumblue;
+   border-right: solid 1px mediumblue;
+   border-top-left-radius: 5px;
+   border-top-right-radius: 5px;
+   background-color: aliceblue;
+   color: #606060;
+   font-weight: bold;
+   padding: 2px;
    cursor: pointer;
 }
 
 .tabRadio:checked+label {
-   border-top: solid 1px #FF6600;
-   border-left: solid 1px #FF6600;
-   border-right: solid 1px #FF6600;
-   background-color: #FF6600;
-   color: #FFFF99;
+   background-color: dodgerblue;
+   color: white;
+   border-bottom: 2px solid dodgerblue;
 }
 
 .tabLabel:hover {
-   border-top: solid 1px #FF0000;
-   border-left: solid 1px #FF0000;
-   border-right: solid 1px #FF0000;
-   background-color: #FFCC33;
-   color: #FF0000;
-}
-
-.rows {
-   border-collapse: collapse;
-}
-
-.headingRow th {
-   background-color: #FFFF99;
-   font-size: large;
-}
-
-hr {
-   border: solid 1px #FF6600;
-}
-
-a {
-   color: #FF6600;
-   text-decoration: none;
-}
-
-a:hover {
-   color: #FF0000;
-   text-decoration: underline;
-}
-
-.menu {
-   font-size: large;
-   padding: 10px;
-}
-
-button, input[type="submit"], input[type="button"] {
-   background-color: #FFFF99;
-   color: #FF6600;
-   font-size: large;
-   border: solid 1px #FF6600;
-   border-radius: 5px;
-}
-
-button:hover, input[type="submit"]:hover, input[type="button"]:hover {
-   border: solid 1px #FF0000;
-   background-color: #FFCC33;
-   color: #FF0000;
-   cursor: pointer;
-   box-shadow: 2px 2px 2px #888888;
-}
-
-button:disabled {
-   background-color: lightgray;
-   color: gray;
-   border: solid 1px gray;
-   cursor: auto;
-   box-shadow: none;
-}
-
-input, select, textarea {
-   border: solid 1px #FF6600;
-}
-
-input:focus, select:focus, textarea:focus {
-   border: solid 1px #FF0000;
-   background-color: #FFFFCC;
+   color: black;
 }
 
 .placeOfResultWindow {
    text-align: center;
+   padding: 10px;
 }
 
 .resultWindow {
-   background-color: #FFFFCC;
+   background-color: aliceblue;
    text-align: center;
    display: inline-block;
-   border: solid 1px #FF6600;
+   border: solid 1px dodgerblue;
    padding: 5px;
 }
 

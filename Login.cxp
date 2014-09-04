@@ -16,7 +16,8 @@
 %>
 
   <!--- Page content goes here --->
-  <form id="login" method="post" action="UserValidation.cxp" style="width: 375px; margin: auto">
+  <div id="placeOfLogin">
+  <form id="login" method="post" action="UserValidation.cxp">
    <table>
       <tr>
          <td>U@(HTMLWriter(): _z())ytkownik: </td>
@@ -29,9 +30,12 @@
       <tr>
          <td colspan="2" style="text-align: right">@(HTMLWriter(): inputSubmit("Submit", "Zaloguj"))</td>
       </tr>
+      <tr>
+         <td colspan="2" style="text-align: center"><img src="logo.bmp" /></td>
+      </tr>
    </table>
   </form>
-
+  </div>
 </body>
 
 </html>

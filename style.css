@@ -1,3 +1,26 @@
+#placeOfLogin {
+   width: 380px;
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   margin-top: -190px;
+   margin-left: -190px;
+   border: solid 3px mediumblue;
+   padding: 20px;
+}
+
+#waterMark {
+   position: fixed;
+   left: 50%;
+   top: 50%;
+   width: 215px;
+   height: 82px;
+   margin-top: -41px;
+   margin-left: -107px;
+   background-image: url(logo.bmp);
+   opacity: 0.1;
+}
+
 body, input, select, button {
    color: #383838;
    font-size: small;
@@ -92,8 +115,8 @@ input:focus, select:focus, textarea:focus {
 .rowLabel {
    display: block;
    padding: 3px;
-   padding-left: 75px;
-   padding-right: 75px;
+   padding-left: 50px;
+   padding-right: 50px;
    cursor: pointer;
 }
 
@@ -124,6 +147,10 @@ input:focus, select:focus, textarea:focus {
 .tab {
    width: 100%;
    border: none;
+}
+
+iframe {
+   height: 600px;
 }
 
 .tabRadio {
@@ -171,13 +198,18 @@ input:focus, select:focus, textarea:focus {
    border-collapse: collapse;
 }
 
-#report th {
-   background-color: lightgray;
+#header {
+   display: block;
+   position: fixed;
+   top: 0;
 }
 
-#report th, #report td {
-   padding: 2px;
-   text-align: center;
+#report tbody {
+  display: table-row-group;
+}
+
+#report tfoot {
+  display: table-footer-group;
 }
 
 .page {

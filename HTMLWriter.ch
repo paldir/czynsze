@@ -104,7 +104,7 @@ RETURN aResult
 CLASS METHOD HTMLWriter: h2(text)
 RETURN "<h2>"+text+"</h2>"
 
-CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onkeypress)
+CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onkeypress, onchange)
    result:=""
 
    IF value==NIL
@@ -121,13 +121,17 @@ CLASS METHOD HTMLWriter: inputText(name, label, maxlength, value, disabled, onke
       value:=Var2Char(Round(Val(value), 2))
    ENDIF
 
+   IF onchange==NIL
+      onchange:=""
+   ENDIF
+
    value:=RTrim(value)
 
    IF label!=NIL
       result+="<label for='"+name+"'>"+label+"</label><br />"
    ENDIF
 
-   result+="<input type='text' name='"+name+"' size='"+maxlength+"' maxlength='"+maxlength+"' value='"+::RepairPolishSymbols(value)+"' "+disabled+" onkeypress='"+onkeypress+"' />"
+   result+="<input type='text' name='"+name+"' size='"+maxlength+"' maxlength='"+maxlength+"' value='"+::RepairPolishSymbols(value)+"' "+disabled+" onkeypress='"+onkeypress+"' onchange='"+onchange+"'/>"
 RETURN result
 
 CLASS METHOD HTMLWriter: inputRadio(name, label, ids, values, labels, checked, disabled)

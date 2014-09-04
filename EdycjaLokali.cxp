@@ -57,7 +57,7 @@
             dbWriteResult:=.F.
          ENDIF
       CASE ::Params: action=="edit"
-         IF ::Params: kod_lok!=::Params: kod_lok_old .OR. ::Params: nr_lok!=::Params: nr_lok_old
+         IF ::Params: kod_lok!=::Params: kod_lok_old .OR. ::Params: nr_lok!=::Params: nr_lok_old .OR. Len(::Params: kod_lok)!=Len(::Params: kod_lok_old) .OR. Len(::Params: nr_lok)!=Len(::Params: nr_lok_old)
             validate_nr_lok:=.T.
          ELSE
             validate_nr_lok:=.F.

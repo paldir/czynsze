@@ -118,7 +118,7 @@
          cell.colSpan="6";
          cell.style.textAlign="right";
          cell.style.fontWeight="bold";
-         cell.style.paddingRight="75px";
+         cell.style.paddingRight="50px";
       }
    </script>
 <%

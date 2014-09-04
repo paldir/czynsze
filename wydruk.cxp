@@ -49,6 +49,8 @@
    ? HTMLWriter(): inputButton("this.hidden=true; window.print();", "Drukuj")
    ? "</div>"
 
+   ? "<div id='header'>header</div>"
+
    FOR i:=Val(::Params: kod_1_start) to Val(::Params: kod_1_end)
       dbHelper: ExecuteQuery("SELECT l.nr_lok, ReplacePolishSymbols(t.typ_lok), l.pow_uzyt, ReplacePolishSymbols(l.nazwisko), ReplacePolishSymbols(l.imie) FROM lokale l LEFT OUTER JOIN typ_lok t ON l.kod_typ=t.kod_typ WHERE l.kod_lok="+str(i)+" AND l.kod_typ IN "+t_kod_typ+" ORDER BY "+::Params: orderBy1+" "+::Params: order1+", "+::Params: orderBy2+" "+::Params: order2+", "+::Params: orderBy3+" "+::Params: order3)
 

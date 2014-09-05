@@ -47,6 +47,8 @@
 %>
 <form id="formOfDocumentRemoval" method="get" action="PlikiNajemcy.cxp">
 <%
+   ? "<div class='floatingMenu'>"
+
    IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
       ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
    ENDIF
@@ -54,7 +56,8 @@
    ? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj", "browsingButton", "disabled")
    ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
    ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
-   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "id")
+   ? "</div>"
+   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "id", "tabTable")
 %>
 </form>
 <form id="formOfDocumentAdding" method="post" enctype="multipart/form-data" action="PlikiNajemcy.cxp">

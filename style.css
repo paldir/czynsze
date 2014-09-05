@@ -87,10 +87,32 @@ input:focus, select:focus, textarea:focus {
    padding-right: 3px;
 }
 
-.rows {
+.rows, .tabTable {
    border-collapse: collapse;
    border: 1px solid lightgray;
+   overflow-x: hidden;
+   overflow-y: scroll;
+   display: inline-block;
 }
+
+.rows {
+   height: 500px;
+}
+
+.tabTable {
+   height: 200px;
+}
+
+/*.rows thead {
+   display: block;
+}
+
+.rows tbody {
+   overflow-x: hidden;
+   overflow-y: scroll;
+   display: block;
+   height: 500px;
+}*/
 
 .headingRow th {
    background-color: #E8E8E8;
@@ -115,8 +137,8 @@ input:focus, select:focus, textarea:focus {
 .rowLabel {
    display: block;
    padding: 3px;
-   padding-left: 50px;
-   padding-right: 50px;
+   padding-left: 25px;
+   padding-right: 25px;
    cursor: pointer;
 }
 
@@ -150,7 +172,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 iframe {
-   height: 600px;
+   height: 500px;
 }
 
 .tabRadio {

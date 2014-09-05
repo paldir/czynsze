@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\Lokal.cxp" target=".\czynsze.web" />
+  <active file=".\Budynek.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\wydruk.cxp" column="36" line="51" />
-    <openfile path=".\style.css" column="19" line="5" />
-    <openfile path=".\Lokal.cxp" column="15" line="163" />
-    <openfile path=".\HTMLWriter.ch" column="196" line="133" />
-    <openfile path=".\Login.cxp" column="35" line="17" />
-    <openfile path=".\EdycjaLokali.cxp" column="206" line="59" />
-    <openfile path=".\Validation.ch" column="0" line="0" />
-    <openfile path=".\SkladnikCzynszu.cxp" column="51" line="120" />
-    <openfile path=".\master.layout" column="29" line="32" />
+    <openfile path=".\Budynki.cxp" column="0" line="0" />
+    <openfile path=".\master.layout" column="6" line="11" />
+    <openfile path=".\style.css" column="12" line="174" />
+    <openfile path=".\Budynek.cxp" column="11" line="24" />
   </openfiles>
 </session>

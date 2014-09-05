@@ -26,8 +26,13 @@ CLASS HTMLWriter
       CLASS METHOD RepairPolishSymbols
 ENDCLASS
 
-CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
-   result:="<table class='rows'>"
+CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk, className)
+   IF className==NIL
+      className="rows"
+   ENDIF      
+
+   result:="<table class='"+className+"'>"
+   result+="<thead>"
    result+="<tr class='headingRow'>"
 
    FOR i:=2 to FCount()
@@ -41,6 +46,9 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
 
       result+="</th>"
    NEXT
+
+   result+="</thead>"
+   result+="<tbody>"
 
    FOR i:=1 to LastRec()
       result+="<tr class='row' id='"+Var2Char(FieldGet(1))+"_row'>"
@@ -88,6 +96,7 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk)
       DbSkip()
    NEXT
 
+   result+="</tbody>"
    result+="</table>"
 RETURN result
 

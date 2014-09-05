@@ -204,8 +204,8 @@ function UpdatePreview(sender) {
           </td>
        </tr>
     </table>
-    <iframe class="tab" id="skladnikiCzynszu_tab" hidden onload="setIframeHeight(this.id)" src="@("SkladnikiCzynszuLokalu.cxp?parentAction="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
-    <iframe class="tab" id="dokumenty_tab" hidden onload="setIframeHeight(this.id)" src="@("PlikiNajemcy.cxp?parentAction="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
+    <iframe class="tab" id="skladnikiCzynszu_tab" hidden src="@("SkladnikiCzynszuLokalu.cxp?parentAction="+::Params: action+Chr(38)+"kod_lok="+Var2Char(t_kod_lok)+Chr(38)+"nr_lok="+Var2Char(t_nr_lok))"></iframe>
+    <iframe class="tab" id="dokumenty_tab" hidden src="@("PlikiNajemcy.cxp?parentAction="+::Params: action+Chr(38)+"nr_system="+Var2Char(t_nr_system))"></iframe>
     </div>
     <!--<iframe id="skladnikiCzynszu_tab" hidden onload="resizeIFrame(this);" src="SkladnikiCzynszuLokalu.cxp?kod_lok=-1&nr_lok=-1")></iframe>-->
     <%

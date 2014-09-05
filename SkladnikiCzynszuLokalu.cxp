@@ -91,15 +91,17 @@
 <form id="formOfRentComponentOfLocalRemoval" method="get" action="SkladnikiCzynszuLokalu.cxp">
 <%
    IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="edit"
+      ? "<div class='floatingMenu'>"
       ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
       ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj", "editingButtonSpecial", "disabled")
+      ? "</div>"
    ENDIF
 
    ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
    ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
    ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
 
-   ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl")
+   ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl", "tabTable")
 %>
 </form>
 <%
@@ -118,7 +120,7 @@
          cell.colSpan="6";
          cell.style.textAlign="right";
          cell.style.fontWeight="bold";
-         cell.style.paddingRight="50px";
+         cell.style.paddingRight="25px";
       }
    </script>
 <%

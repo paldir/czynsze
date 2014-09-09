@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\Budynek.cxp" target=".\czynsze.web" />
+  <active file=".\style.css" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\Budynki.cxp" column="0" line="0" />
-    <openfile path=".\master.layout" column="6" line="11" />
-    <openfile path=".\style.css" column="12" line="174" />
-    <openfile path=".\Budynek.cxp" column="11" line="24" />
+    <openfile path=".\Lokal.cxp" column="0" line="0" />
+    <openfile path=".\Lokale.cxp" column="0" line="0" />
+    <openfile path=".\Login.cxp" column="13" line="29" />
+    <openfile path=".\style.css" column="20" line="6" />
   </openfiles>
 </session>

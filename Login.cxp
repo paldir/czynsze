@@ -14,13 +14,20 @@
      #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
      #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
 %>
+<%
+   dbHelper:=DbHelper(): new("localhost", "czynsze")
+
+   dbHelper: SQLSelect({"naz_wiz"}, "konfig")
+%>
 
   <!--- Page content goes here --->
+
   <div id="placeOfLogin">
+  <span style="position: absolute; left: -3px; top: -20px;">@(FieldGet(1))</span>
   <form id="login" method="post" action="UserValidation.cxp">
    <table>
       <tr>
-         <td>U@(HTMLWriter(): _z())ytkownik: </td>
+         <td style="text-align: right">U@(HTMLWriter(): _z())ytkownik: </td>
          <td>@(HTMLWriter(): inputText("uzytkownik", , "40"))</td>
       </tr>
       <tr>
@@ -31,7 +38,7 @@
          <td colspan="2" style="text-align: right">@(HTMLWriter(): inputSubmit("Submit", "Zaloguj"))</td>
       </tr>
       <tr>
-         <td colspan="2" style="text-align: center"><img src="logo.bmp" /></td>
+         <td colspan="2" style="text-align: center"><img src="logo.png" /></td>
       </tr>
    </table>
   </form>

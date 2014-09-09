@@ -1,10 +1,10 @@
 #placeOfLogin {
-   width: 380px;
+   width: 540px;
    position: absolute;
    left: 50%;
    top: 50%;
    margin-top: -190px;
-   margin-left: -190px;
+   margin-left: -270px;
    border: solid 3px mediumblue;
    padding: 20px;
 }

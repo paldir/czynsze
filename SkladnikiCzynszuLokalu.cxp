@@ -110,7 +110,7 @@
 
 %>
    <script>
-      var table=document.getElementsByClassName("rows")
+      var table=document.getElementsByClassName("tabTable")
 
       if (table!=null) {
          table=table[0];

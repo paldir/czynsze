@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\UserValidation.cxp" target=".\czynsze.web" />
+  <active file=".\style.css" target=".\czynsze.web" />
   <openfiles>
     <openfile path=".\Lokal.cxp" column="36" line="119" />
     <openfile path=".\Lokale.cxp" column="51" line="15" />
     <openfile path=".\Login.cxp" column="59" line="25" />
-    <openfile path=".\style.css" column="14" line="3" />
+    <openfile path=".\style.css" column="14" line="207" />
     <openfile path=".\master.layout" column="30" line="20" />
     <openfile path=".\SkladnikiCzynszuLokalu.cxp" column="0" line="107" />
     <openfile path=".\EdycjaLokali.cxp" column="59" line="80" />

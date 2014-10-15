@@ -10,8 +10,8 @@
 <body>
 <%#Code locality="page-global"%>
 <%
-     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
-     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\DbHelper.ch"
 %>
 
 <%

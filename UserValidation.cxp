@@ -10,23 +10,39 @@
 <body>
 <%#Code locality="page-global"%>
 <%
-     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
-     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\DbHelper.ch"
 %>
 
   <!--- Page content goes here --->
   <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
    t_haslo:=DllCall(Dllload('xbtBase1.dll'), ,"Crypt", ::Params: haslo, "JANKO")
-   ::Session: uzytkownik:=nil
 
    dbHelper: ExecuteQuery("SELECT haslo FROM fk_tuz WHERE uzytkownik='"+::Params: uzytkownik+"'")
 
-   IF LastRec()==1 .AND. RTrim(FieldGet(1))==t_haslo
-      ::Session: uzytkownik:=::Params: uzytkownik
-      ::HttpResponse: Redirect("Budynki.cxp")
+   t_haslo_asc:=""
+
+   FOR i:=1 to Len(t_haslo)
+      t_haslo_asc+=LTrim(Str(Asc(t_haslo[i])))+","
+   NEXT
+
+   IF Len(t_haslo)>0
+      t_haslo_asc:=SubStr(t_haslo_asc, 1, Len(t_haslo_asc)-1)
+   ENDIF
+
+   IF LastRec()==1// .AND. RTrim(FieldGet(1))==t_haslo
+%>
+   <form id='login' method='post' action='/czynsze/Forms/UserValidation.aspx'>
+      <input type='hidden' name='uzytkownik' value='@(::Params: uzytkownik)' />
+      <input type='hidden' name='haslo' value='@(t_haslo_asc)' />
+   </form>
+   <script>
+      document.forms["login"].submit();
+   </script>
+<%
    ELSE
-      ::HttpResponse: Redirect("Login.cxp")
+      ::HttpResponse: Redirect("/czynsze/Login.aspx?reason=IncorrectCredentials")
    ENDIF
 
    dbHelper: CloseConnection()

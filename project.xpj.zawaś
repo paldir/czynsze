@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
 <version number="1.0" />
 <session>
-  <active file=".\style.css" target=".\czynsze.web" />
+  <active file=".\SkladnikiCzynszuLokalu.cxp" target=".\czynsze.web" />
   <openfiles>
-    <openfile path=".\Lokal.cxp" column="36" line="119" />
-    <openfile path=".\Lokale.cxp" column="51" line="15" />
-    <openfile path=".\Login.cxp" column="59" line="25" />
-    <openfile path=".\style.css" column="14" line="207" />
-    <openfile path=".\master.layout" column="30" line="20" />
-    <openfile path=".\SkladnikiCzynszuLokalu.cxp" column="0" line="107" />
-    <openfile path=".\EdycjaLokali.cxp" column="59" line="80" />
-    <openfile path=".\DbHelper.ch" column="0" line="42" />
-    <openfile path=".\Scripts.js" column="25" line="8" />
-    <openfile path=".\UserValidation.cxp" column="52" line="18" />
+    <openfile path=".\UserValidation.cxp" column="0" line="23" />
+    <openfile path=".\PlikiNajemcy.cxp" column="0" line="4" />
+    <openfile path=".\Plik.cxp" column="77" line="6" />
+    <openfile path=".\SkladnikiCzynszuLokalu.cxp" column="522" line="95" />
+    <openfile path=".\HTMLWriter.ch" column="41" line="38" />
+    <openfile path=".\style.css" column="23" line="80" />
+    <openfile path=".\Scripts.js" column="42" line="62" />
+    <openfile path=".\CryptPassword.cxp" column="15" line="27" />
+    <openfile path=".\DbHelper.ch" column="0" line="0" />
   </openfiles>
 </session>

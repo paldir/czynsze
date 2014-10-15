@@ -2,8 +2,8 @@
 <%#Page trace="no"%>
 <%#Code locality="page-global"%>
 <%
-     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
-     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\DbHelper.ch"
 %>
 <%
    dbHelper:=DbHelper(): new("localhost", "czynsze")
@@ -20,7 +20,7 @@
       ENDIF
 
       DO CASE
-         CASE ::Params: action=="add"
+         CASE ::Params: action=="saveAdding"
             dbHelper: SQLSelect({"nr_skl"}, "skl_cz_tmp", "nr_skl="+::Params: nr_skl+" AND kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok)
 
             IF LastRec()==0
@@ -42,6 +42,7 @@
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
    <link rel="stylesheet" type="text/css" href="style.css" />
+   <script type="text/javascript" src="jquery-1.11.1.js"></script>
    <script type="text/javascript" src="scripts.js"></script>
    <title>Logowanie</title>
    <script>
@@ -82,16 +83,25 @@
    //? HTMLWriter(): h2("Sk"+HTMLWriter(): _l()+"adniki czynszu lokalu")
 
    //dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, c.nazwa, c.stawka, sc.dan_p, SUBSTRING((c.stawka*sc.dan_p)::TEXT FROM 1 FOR char_length((c.stawka*sc.dan_p)::TEXT)-4) FROM skl_cz sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok)
-   dbHelper: ExecuteStatement("CREATE FUNCTION pg_temp.ilosc(NUMERIC, NUMERIC, NUMERIC, NUMERIC) RETURNS NUMERIC AS $$ BEGIN CASE $1 WHEN 1 THEN RETURN (SELECT pow_uzyt FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); WHEN 2 THEN RETURN (SELECT dan_p FROM skl_cz_tmp WHERE kod_lok=$2 AND nr_lok=$3 AND nr_skl=$4); WHEN 3 THEN RETURN (SELECT il_osob FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); WHEN 4 THEN RETURN 1; WHEN 6 THEN RETURN (SELECT il_osob FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); END CASE; END; $$ LANGUAGE plpgsql;")
+
+   dbHelper: SQLSelect({"nr_system"}, "lokale", "kod_lok="+::Params: kod_lok+" AND nr_lok="+::Params: nr_lok)
+
+   IF LastRec()>0
+      dbHelper: ExecuteStatement("CREATE OR REPLACE FUNCTION pg_temp.ilosc(NUMERIC, NUMERIC, NUMERIC, NUMERIC) RETURNS NUMERIC AS $$ BEGIN CASE $1 WHEN 1 THEN RETURN (SELECT pow_uzyt FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); WHEN 2 THEN RETURN (SELECT dan_p FROM skl_cz_tmp WHERE kod_lok=$2 AND nr_lok=$3 AND nr_skl=$4); WHEN 3 THEN RETURN (SELECT il_osob FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); WHEN 4 THEN RETURN 1; WHEN 6 THEN RETURN (SELECT il_osob FROM lokale WHERE kod_lok=$2 AND nr_lok=$3); END CASE; END; $$ LANGUAGE plpgsql;")
+   ELSE
+      dbHelper: ExecuteStatement("CREATE OR REPLACE FUNCTION pg_temp.ilosc(NUMERIC, NUMERIC, NUMERIC, NUMERIC) RETURNS NUMERIC AS $$ BEGIN CASE $1 WHEN 1 THEN RETURN (SELECT pow_uzyt FROM lokale_a WHERE kod_lok=$2 AND nr_lok=$3); WHEN 2 THEN RETURN (SELECT dan_p FROM skl_cz_tmp WHERE kod_lok=$2 AND nr_lok=$3 AND nr_skl=$4); WHEN 3 THEN RETURN (SELECT il_osob FROM lokale_a WHERE kod_lok=$2 AND nr_lok=$3); WHEN 4 THEN RETURN 1; WHEN 6 THEN RETURN (SELECT il_osob FROM lokale_a WHERE kod_lok=$2 AND nr_lok=$3); END CASE; END; $$ LANGUAGE plpgsql;")
+   ENDIF
+
    dbHelper: ExecuteStatement("CREATE FUNCTION pg_temp.stawka(NUMERIC, NUMERIC) RETURNS NUMERIC AS $$ BEGIN RETURN (SELECT CASE $1 WHEN 0 THEN stawka_00 WHEN 1 THEN stawka_01 WHEN 2 THEN stawka_02 WHEN 3 THEN stawka_03 WHEN 4 THEN stawka_04 WHEN 5 THEN stawka_05 WHEN 6 THEN stawka_06 WHEN 7 THEN stawka_07 WHEN 8 THEN stawka_08 ELSE stawka_09 END FROM czynsz WHERE nr_skl=$2); END; $$ LANGUAGE plpgsql;")
-   dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, ReplacePolishSymbols(c.nazwa), to_char(c.stawka, 'FM999999999.00'), to_char(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), 'FM999999999.00'), to_char(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END, 'FM999999999.0000') FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl")// WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
+   dbHelper: ExecuteQuery("SELECT c.nr_skl, row_number() OVER(ORDER BY c.nr_skl), c.nr_skl, ReplacePolishSymbols(c.nazwa), to_char(c.stawka, 'FM999999999.00'), to_char(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), 'FM999999999.00'), to_char(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END, 'FM999999999.00') FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl")// WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
    //? HTMLWriter(): inputButton("location.href=&quot;Lokale.cxp&quot;", "Powrót")
 %>
 <form id="formOfRentComponentOfLocalRemoval" method="get" action="SkladnikiCzynszuLokalu.cxp">
 <%
-   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="edit"
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="edit" .AND. ::Params: action!="add"
       ? "<div class='floatingMenu'>"
+      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
       ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
       ? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj", "editingButtonSpecial", "disabled")
       ? "</div>"
@@ -101,27 +111,24 @@
    ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
    ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
 
-   ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl", "tabTable")
+   ? HTMLWriter(): table({"Nr", "Lp.", "Nr", "Nazwa", "Stawka", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "Warto"+HTMLWriter(): _s()+HTMLWriter(): _c()}, , , , "nr_skl", "mainTable")
 %>
 </form>
 <%
 
-   dbHelper: ExecuteQuery("SELECT to_char(SUM(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END), 'FM999999999.0000')FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
+   dbHelper: ExecuteQuery("SELECT to_char(SUM(CASE c.s_zaplat WHEN 6 THEN pg_temp.stawka(pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl), sc.nr_skl) ELSE c.stawka*pg_temp.ilosc(c.s_zaplat, sc.kod_lok, sc.nr_lok, sc.nr_skl) END), 'FM999999999.00')FROM skl_cz_tmp sc JOIN czynsz c ON sc.nr_skl=c.nr_skl WHERE sc.kod_lok="+::Params: kod_lok+" AND sc.nr_lok="+::Params: nr_lok+";")
 
 %>
    <script>
-      var table=document.getElementsByClassName("tabTable")
+      var tbody=document.querySelector(".mainTable tbody")
 
-      if (table!=null) {
-         table=table[0];
-         var row=table.insertRow(-1);
-         var cell=row.insertCell(-1);
-         cell.innerHTML="Razem: @(Var2Char(FieldGet(1)))";
-         cell.colSpan="6";
-         cell.style.textAlign="right";
-         cell.style.fontWeight="bold";
-         cell.style.paddingRight="25px";
+      if (tbody!=null) {
+         var text="<tfoot><tr><td colspan='6' style='display: block; text-align: right; font-weight: bold; padding-right: 22px;'>Razem: @(FieldGet(1))</td></tr></tfoot>";
+
+         $(text).insertAfter(tbody);
       }
+
+
    </script>
 <%
 
@@ -134,9 +141,13 @@
       ? HTMLWriter(): inputHidden("kod_lok", ::Params: kod_lok)
       ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
       ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
-      ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl", "nr_skl_onchange(this.value)")
-      ? "<span id='dan_p_span'>Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+": "+HTMLWriter(): inputText("dan_p", , "15", t_dan_p, "", "return isFloat(event)")+"</span>"
-      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
+
+      IF ::Params: action=="add"
+         ? "Nowy sk"+HTMLWriter(): _l()+"adnik: "+HTMLWriter(): selectHTML(dbHelper, "nr_skl", , "", "", {"nr_skl", "nr_skl", "nazwa"}, "czynsz", "nr_skl", "nr_skl_onchange(this.value)")+"<br />"
+         ? "<span id='dan_p_span'>Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c()+": "+HTMLWriter(): inputText("dan_p", , "15", t_dan_p, "", "return isFloat(event)")+"</span><br />"
+         ? HTMLWriter(): buttonSubmit("action", "saveAdding", "Zapisz", "addingButton", "")
+         ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
+      ENDIF
       //? HTMLWriter(): buttonSubmit("action", "edit", "Edytuj")
       //? HTMLWriter(): buttonSubmit("action", "browse", "Przegl"+HTMLWriter(): _a()+"daj")
    %>
@@ -158,9 +169,9 @@
       ? HTMLWriter(): inputHidden("nr_lok", ::Params: nr_lok)
       ? HTMLWriter(): inputHidden("nr_skl", ::Params: nr_skl)
       ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
-      ? "<br /><br />"+HTMLWriter(): inputText("nr_skl", "Numer sk"+HTMLWriter(): _l()+"adnika: ", "3", Var2Char(FieldGet(1)), "disabled")+"<br /><br />"
-      ? HTMLWriter(): inputText("nazwa", "Nazwa: ", "30", Var2Char(FieldGet(2)), "disabled")+"<br /><br />"
-      ? HTMLWriter(): inputText("stawka", "Stawka: ", "10", Var2Char(FieldGet(3)), "disabled")+"<br /><br />"
+      ? HTMLWriter(): inputText("nr_skl", "Numer sk"+HTMLWriter(): _l()+"adnika: ", "3", Var2Char(FieldGet(1)), "disabled")+"<br />"
+      ? HTMLWriter(): inputText("nazwa", "Nazwa: ", "30", Var2Char(FieldGet(2)), "disabled")+"<br />"
+      ? HTMLWriter(): inputText("stawka", "Stawka: ", "10", Var2Char(FieldGet(3)), "disabled")+"<br />"
       ? HTMLWriter(): inputText("dan_p", "Ilo"+HTMLWriter(): _s()+HTMLWriter(): _c(), "15", Var2Char(FieldGet(4)), "", "return isFloat(event)")+"<br />"
       ? HTMLWriter(): buttonSubmit("action", "dan_p_edit", "Zapisz", , "")
       ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")

@@ -29,14 +29,38 @@ ENDCLASS
 CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk, className)
    IF className==NIL
       className="rows"
-   ENDIF      
+   ENDIF
+
+   widthsOfColumns=Array(Len(headers)-1)
+
+   FOR i:=2 to Len(headers)
+      widthsOfColumns[i-1]:=Len(headers[i])
+   NEXT
+
+   FOR i:=1 to LastRec()
+      FOR j:=2 to FCount()
+         cellWidth:=Len(RTrim(Var2Char(FieldGet(j))))
+
+         IF cellWidth>widthsOfColumns[j-1]
+            widthsOfColumns[j-1]:=cellWidth
+         ENDIF
+      NEXT
+
+      DbSkip()
+   NEXT
+
+   FOR i:=1 to Len(widthsOfColumns)
+      widthsOfColumns[i]*=8
+   NEXT
+
+   DbGoTop()
 
    result:="<table class='"+className+"'>"
    result+="<thead>"
-   result+="<tr class='headingRow'>"
+   result+="<tr class='tableHeaderRow'>"
 
    FOR i:=2 to FCount()
-      result+="<th>"
+      result+="<th class='tableHeaderCell' style='width: "+Str(widthsOfColumns[i-1])+"px;'>"
 
       IF columns==NIL
          result+=headers[i]
@@ -51,21 +75,27 @@ CLASS METHOD HTMLWriter: table(headers, columns, page, sortOrder, pk, className)
    result+="<tbody>"
 
    FOR i:=1 to LastRec()
-      result+="<tr class='row' id='"+Var2Char(FieldGet(1))+"_row'>"
+      result+="<tr class='row tableRow' id='"+Var2Char(FieldGet(1))+"_row'>"
 
-      result+="<td><input class='rowRadio' onchange='ChangeRow(this.id);' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
+      result+="<td style='width: "+Str(widthsOfColumns[1])+"px;'><input class='rowRadio' onchange='ChangeRow(this.id);' type='radio' name='"+pk+"' id='"+Var2Char(FieldGet(1))+"' value='"+Var2Char(FieldGet(1))+"' /><label class='rowLabel' for='"+Var2Char(FieldGet(1))+"'>"+Var2Char(FieldGet(2))+"</label></td>"
 
       FOR j:=3 to FCount()
-         result+="<td><label class='rowLabel'"
+         result+="<td style='width: "+Str(widthsOfColumns[j-1])+"px;'><label class='rowLabel'"
 
-         cell:=Var2Char(FieldGet(j))
+         cell:=RTrim(Var2Char(FieldGet(j)))
+
+         dot:=.F.
 
          FOR k:=1 to Len(cell)
+            IF cell[k]=='.'
+               dot:=.T.
+            ENDIF
+
             IF !IsDigit(cell[k]) .AND. cell[k]!='.'
                exit
             ENDIF
 
-            IF k==Len(cell)
+            IF k==Len(cell) .AND. dot
                result+="style='text-align: right;'"
             ENDIF
          NEXT

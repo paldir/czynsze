@@ -2,12 +2,13 @@
 <%#Page trace="no"%>
 <%#Code locality="page-global"%>
 <%
-     #include "C:\inetpub\wwwroot\czynsze\HTMLWriter.ch"
-     #include "C:\inetpub\wwwroot\czynsze\DbHelper.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\HTMLWriter.ch"
+     #include "C:\inetpub\wwwroot\czynsze1\DbHelper.ch"
 %>
 <html>
 <head>
    <link rel="stylesheet" type="text/css" href="style.css" />
+   <script type="text/javascript" src="jquery-1.11.1.js"></script>
    <script type="text/javascript" src="scripts.js"></script>
 </head>
 <body>
@@ -15,7 +16,7 @@
    dbHelper:=DbHelper(): new("localhost", "czynsze")
 
    DO CASE
-      CASE ::Params: action=="add"
+      CASE ::Params: action=="saveadding"
          IF ::HttpRequest: Files: NumItems>0 .AND. Lower(SubStr(::HttpRequest: Files: plik: Name, Len(::HttpRequest: Files: plik: Name)-2))=="pdf"
             t_nazwa_pliku:=::HttpRequest: Files: plik: Name
             t_plik:=Bin2Base64(::HttpRequest: Files: plik: Data)
@@ -49,7 +50,8 @@
 <%
    ? "<div class='floatingMenu'>"
 
-   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action!="add"
+      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
       ? HTMLWriter(): buttonSubmit("action", "delete", "Usu"+HTMLWriter(): _n(), "deletingButton", "disabled")
    ENDIF
 
@@ -57,17 +59,18 @@
    ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
    ? HTMLWriter(): inputHidden("parentAction", ::Params: parentAction)
    ? "</div>"
-   ? HTMLWriter(): table({"", "Nazwa pliku", "Opis"}, , , , "id", "tabTable")
+   ? HTMLWriter(): table({"Id", "Nazwa pliku", "Opis"}, , , , "id", "mainTable")
 %>
 </form>
 <form id="formOfDocumentAdding" method="post" enctype="multipart/form-data" action="PlikiNajemcy.cxp">
 <%
-   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse"
+   IF ::Params: parentAction!="delete" .AND. ::Params: parentAction!="browse" .AND. ::Params: action=="add"
       ? HTMLWriter(): inputHidden("nr_system", ::Params: nr_system)
       ? "<br />Nowy dokument: <br />"
       ? HTMLWriter(): inputFile("plik", , "", "")+"<br />"
       ? HTMLWriter(): textarea("opis", "Opis: ", "2", "100", "", "")+"<br />"
-      ? HTMLWriter(): buttonSubmit("action", "add", "Dodaj", "addingButton", "")
+      ? HTMLWriter(): buttonSubmit("action", "saveAdding", "Zapisz", "addingButton", "")
+      ? HTMLWriter(): inputButton("javascript: history.back()", "Anuluj")
    ENDIF
 %>
 </form>

@@ -1,38 +1,7 @@
-#placeOfLogin {
-   width: 540px;
-   position: absolute;
-   left: 50%;
-   top: 50%;
-   margin-top: -190px;
-   margin-left: -270px;
-   border: solid 3px mediumblue;
-   padding: 20px;
-}
-
-#waterMark {
-   position: fixed;
-   left: 50%;
-   top: 50%;
-   width: 215px;
-   height: 82px;
-   margin-top: -41px;
-   margin-left: -107px;
-   background-image: url(logo.bmp);
-   opacity: 0.1;
-   pointer-events: none;
-}
-
 body, input, select, button {
-   color: #383838;
-   font-size: small;
-}
-
-a {
-   color: dodgerblue;
-}
-
-a:hover {
-   color: black;
+    color: #383838;
+    font-size: small;
+    font-family: 'Times New Roman';
 }
 
 button, input[type="submit"], input[type="button"] {
@@ -73,62 +42,31 @@ input:focus, select:focus, textarea:focus {
    background-color: aliceblue;
 }
 
-.menu {
-   background-color: aliceblue;
-   border: 1px solid dodgerblue;
-   margin-top: 5px;
-   padding: 5px;
-}
-
-.menuItem {
-   color: #606060;
-   text-decoration: none;
-   font-weight: bold;
-   border-right: solid 1px gray;
-   padding-right: 3px;
-}
-
-.rows, .tabTable {
+.mainTable {
    border-collapse: collapse;
    border: 1px solid lightgray;
-   overflow-x: hidden;
-   overflow-y: scroll;
    display: inline-block;
 }
 
-.rows {
-   height: 500px;
-}
+   .mainTable tbody {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        height: 200px;
+        display: inline-block;
+    }
 
-.tabTable {
-   height: 200px;
-}
+    .mainTable thead, .mainTable .tableHeaderRow {
+        display: block;
+    }
 
-/*.rows thead {
-   display: block;
-}
+    .mainTable tfoot, .mainTable tfoot tr {
+        display: block;
+    }
 
-.rows tbody {
-   overflow-x: hidden;
-   overflow-y: scroll;
-   display: block;
-   height: 500px;
-}*/
-
-.headingRow th {
+.tableHeaderRow th {
    background-color: #E8E8E8;
    font-weight: bold;
-   padding: 3px;
-}
-
-.headingRow th a {
-   text-decoration: none;
-   font-weight: bold;
-   color: #383838;
-}
-
-.headingRow th a:hover {
-   text-decoration: underline;
+   //padding: 3px;
 }
 
 .rowRadio {
@@ -138,8 +76,8 @@ input:focus, select:focus, textarea:focus {
 .rowLabel {
    display: block;
    padding: 3px;
-   padding-left: 25px;
-   padding-right: 25px;
+   //padding-left: 25px;
+   //padding-right: 25px;
    cursor: pointer;
 }
 
@@ -154,88 +92,4 @@ input:focus, select:focus, textarea:focus {
 .selectedRow {
    background-color: gray;
    color: white;
-}
-
-.tabBorder {
-   border: solid 2px mediumblue;
-   margin-top: 1px;
-}
-
-.tabSeparator {
-   height: 10px;
-   background-color: dodgerblue;
-   border-bottom: 2px solid mediumblue;
-}
-
-.tab {
-   width: 100%;
-   border: none;
-}
-
-iframe {
-   height: 500px;
-}
-
-.tabRadio {
-   display: none;
-}
-
-.tabLabel {
-   margin-left: 2px;
-   border-top: solid 2px mediumblue;
-   border-left: solid 1px mediumblue;
-   border-right: solid 1px mediumblue;
-   border-top-left-radius: 5px;
-   border-top-right-radius: 5px;
-   background-color: aliceblue;
-   color: #606060;
-   font-weight: bold;
-   padding: 2px;
-   cursor: pointer;
-}
-
-.tabRadio:checked+label {
-   background-color: dodgerblue;
-   color: white;
-   border-bottom: 2px solid dodgerblue;
-}
-
-.tabLabel:hover {
-   color: black;
-}
-
-.placeOfResultWindow {
-   text-align: center;
-   padding: 10px;
-}
-
-.resultWindow {
-   background-color: aliceblue;
-   text-align: center;
-   display: inline-block;
-   border: solid 1px dodgerblue;
-   padding: 5px;
-}
-
-#report {
-   border-collapse: collapse;
-}
-
-#header {
-   display: block;
-   position: fixed;
-   top: 0;
-}
-
-#report tbody {
-  display: table-row-group;
-}
-
-#report tfoot {
-  display: table-footer-group;
-}
-
-.page {
-   page-break-after: always;
-   page-break-inside: avoid;
 }
